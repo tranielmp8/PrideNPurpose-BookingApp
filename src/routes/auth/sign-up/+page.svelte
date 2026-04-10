@@ -13,7 +13,7 @@
 <div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-6 py-16 text-slate-900">
 	<div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.82fr_1.18fr]">
 		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-[#96C2DB] p-8 text-slate-900 shadow-[0_28px_80px_rgba(93,122,139,0.14)] md:p-10">
-			<p class="text-sm font-semibold uppercase tracking-[0.34em] text-slate-700">Pride N Purpose</p>
+			<p class="brand-script text-2xl text-slate-700 md:text-3xl">Pride N Purpose</p>
 			<h1 class="mt-6 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-5xl">
 				Create your provider account and start accepting bookings.
 			</h1>

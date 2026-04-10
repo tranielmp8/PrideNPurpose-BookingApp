@@ -45,7 +45,7 @@
 
 		<section class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
 			<div class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/90 p-8 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-10">
-				<p class="text-sm font-semibold uppercase tracking-[0.35em] text-slate-500">
+				<p class="brand-script text-2xl text-slate-600 md:text-3xl">
 					Pride N Purpose
 				</p>
 				<h1 class="mt-5 max-w-4xl font-serif text-5xl leading-[0.94] tracking-tight text-[#384959] md:text-7xl">

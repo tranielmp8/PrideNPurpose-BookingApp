@@ -1,3 +1,10 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+.brand-script {
+	font-family: 'Petit Formal Script', cursive;
+	font-weight: 400;
+	letter-spacing: 0;
+	text-transform: none;
+}
