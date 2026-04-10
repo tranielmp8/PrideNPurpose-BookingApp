@@ -1,0 +1,561 @@
+import { and, eq, gte, inArray, lt, ne, or } from 'drizzle-orm';
+import {
+	addDaysToDateKey,
+	formatTimeInTimeZone,
+	getDateKeyInTimeZone,
+	getZonedParts,
+	zonedDateTimeToUtc
+} from '$lib/timezone';
+import { db } from '$lib/server/db';
+import {
+	availabilityOverride,
+	availabilityOverrideWindow,
+	booking,
+	customer,
+	service,
+	weeklyAvailability,
+	type workspace
+} from '$lib/server/db/schema';
+import { getWorkspaceBySlug } from '$lib/server/workspace';
+import {
+	createZohoMeeting,
+	deleteZohoMeeting,
+	formatZohoStartTime,
+	updateZohoMeeting
+} from '$lib/server/zoho';
+
+export type PublicWorkspace = typeof workspace.$inferSelect;
+export type PublicService = typeof service.$inferSelect;
+
+const MINUTE = 60 * 1000;
+
+export function parseTimeToMinutes(value: string) {
+	const [hours, minutes] = value.split(':').map(Number);
+	return hours * 60 + minutes;
+}
+
+export async function getPublicBookingContext(slug: string) {
+	const workspace = await getWorkspaceBySlug(slug);
+	if (!workspace) {
+		return null;
+	}
+
+	const services = await db.query.service.findMany({
+		where: and(eq(service.workspaceId, workspace.id), eq(service.isActive, true)),
+		orderBy: (service, { asc }) => [asc(service.name)]
+	});
+
+	return {
+		workspace,
+		services
+	};
+}
+
+export async function getBookingsForWorkspace(workspaceId: string) {
+	const bookings = await db.query.booking.findMany({
+		where: eq(booking.workspaceId, workspaceId),
+		orderBy: (booking, { desc }) => [desc(booking.startAt)]
+	});
+
+	const services = await db.query.service.findMany({
+		where: eq(service.workspaceId, workspaceId)
+	});
+	const customers = await db.query.customer.findMany({
+		where: eq(customer.workspaceId, workspaceId)
+	});
+
+	const serviceMap = new Map(services.map((item) => [item.id, item]));
+	const customerMap = new Map(customers.map((item) => [item.id, item]));
+
+	return bookings.map((item) => ({
+		...item,
+		service: serviceMap.get(item.serviceId) ?? null,
+		customer: customerMap.get(item.customerId) ?? null
+	}));
+}
+
+async function getOccupiedBookingsForRange(
+	workspaceId: string,
+	from: Date,
+	to: Date,
+	excludeBookingId?: string
+) {
+	const conditions = [
+		eq(booking.workspaceId, workspaceId),
+		eq(booking.status, 'scheduled'),
+		or(
+			and(gte(booking.startAt, from), lt(booking.startAt, to)),
+			and(gte(booking.endAt, from), lt(booking.endAt, to)),
+			and(lt(booking.startAt, from), gte(booking.endAt, to))
+		)
+	];
+
+	if (excludeBookingId) {
+		conditions.push(ne(booking.id, excludeBookingId));
+	}
+
+	const bookings = await db.query.booking.findMany({
+		where: and(...conditions)
+	});
+
+	if (bookings.length === 0) {
+		return [];
+	}
+
+	const serviceIds = [...new Set(bookings.map((item) => item.serviceId))];
+	const bookedServices = await db.query.service.findMany({
+		where: inArray(service.id, serviceIds)
+	});
+	const serviceMap = new Map(bookedServices.map((item) => [item.id, item]));
+
+	return bookings.map((item) => {
+		const bookedService = serviceMap.get(item.serviceId);
+		const bufferBefore = bookedService?.bufferBeforeMinutes ?? 0;
+		const bufferAfter = bookedService?.bufferAfterMinutes ?? 0;
+
+		return {
+			...item,
+			blockedStart: new Date(item.startAt.getTime() - bufferBefore * MINUTE),
+			blockedEnd: new Date(item.endAt.getTime() + bufferAfter * MINUTE)
+		};
+	});
+}
+
+async function getAvailabilityWindowsForDate(workspaceId: string, targetDateKey: string, dayOfWeek: number) {
+	const override = await db.query.availabilityOverride.findFirst({
+		where: and(
+			eq(availabilityOverride.workspaceId, workspaceId),
+			eq(availabilityOverride.overrideDate, targetDateKey)
+		)
+	});
+
+	if (override) {
+		if (override.isUnavailable) {
+			return [];
+		}
+
+		return db.query.availabilityOverrideWindow.findMany({
+			where: eq(availabilityOverrideWindow.overrideId, override.id),
+			orderBy: (availabilityOverrideWindow, { asc }) => [
+				asc(availabilityOverrideWindow.startTime),
+				asc(availabilityOverrideWindow.endTime)
+			]
+		});
+	}
+
+	return db.query.weeklyAvailability.findMany({
+		where: and(
+			eq(weeklyAvailability.workspaceId, workspaceId),
+			eq(weeklyAvailability.dayOfWeek, dayOfWeek),
+			eq(weeklyAvailability.isActive, true)
+		),
+		orderBy: (weeklyAvailability, { asc }) => [
+			asc(weeklyAvailability.startTime),
+			asc(weeklyAvailability.endTime)
+		]
+	});
+}
+
+export async function generateSlotsForService(input: {
+	workspace: PublicWorkspace;
+	service: PublicService;
+	dateKey: string;
+	now?: Date;
+	excludeBookingId?: string;
+}) {
+	if (!/^\d{4}-\d{2}-\d{2}$/.test(input.dateKey)) {
+		return [];
+	}
+
+	const now = input.now ?? new Date();
+	const todayKey = getDateKeyInTimeZone(now, input.workspace.timezone);
+	const lastBookableKey = addDaysToDateKey(todayKey, input.workspace.bookingWindowDays);
+
+	if (input.dateKey < todayKey || input.dateKey > lastBookableKey) {
+		return [];
+	}
+
+	const midday = zonedDateTimeToUtc(input.dateKey, '12:00', input.workspace.timezone);
+	const dayOfWeek = getZonedParts(midday, input.workspace.timezone).weekday;
+
+	const windows = await getAvailabilityWindowsForDate(
+		input.workspace.id,
+		input.dateKey,
+		dayOfWeek
+	);
+
+	if (windows.length === 0) {
+		return [];
+	}
+
+	const occupied = await getOccupiedBookingsForRange(
+		input.workspace.id,
+		zonedDateTimeToUtc(input.dateKey, '00:00', input.workspace.timezone),
+		zonedDateTimeToUtc(addDaysToDateKey(input.dateKey, 1), '00:00', input.workspace.timezone),
+		input.excludeBookingId
+	);
+
+	const earliestStart = new Date(now.getTime() + input.workspace.minNoticeMinutes * MINUTE);
+	const slots: { startAt: Date; endAt: Date; label: string }[] = [];
+
+	for (const window of windows) {
+		const windowStartMinutes = parseTimeToMinutes(window.startTime);
+		const windowEndMinutes = parseTimeToMinutes(window.endTime);
+
+		for (
+			let startMinutes = windowStartMinutes;
+			startMinutes + input.service.durationMinutes <= windowEndMinutes;
+			startMinutes += input.service.durationMinutes
+		) {
+			const hours = Math.floor(startMinutes / 60)
+				.toString()
+				.padStart(2, '0');
+			const minutes = (startMinutes % 60).toString().padStart(2, '0');
+			const startAt = zonedDateTimeToUtc(
+				input.dateKey,
+				`${hours}:${minutes}`,
+				input.workspace.timezone
+			);
+			const endAt = new Date(startAt.getTime() + input.service.durationMinutes * MINUTE);
+
+			if (startAt < earliestStart) {
+				continue;
+			}
+
+			const candidateBlockedStart = new Date(
+				startAt.getTime() - input.service.bufferBeforeMinutes * MINUTE
+			);
+			const candidateBlockedEnd = new Date(
+				endAt.getTime() + input.service.bufferAfterMinutes * MINUTE
+			);
+
+			const hasConflict = occupied.some(
+				(booking) =>
+					candidateBlockedStart < booking.blockedEnd && candidateBlockedEnd > booking.blockedStart
+			);
+
+			if (!hasConflict) {
+				slots.push({
+					startAt,
+					endAt,
+					label: formatTimeInTimeZone(startAt, input.workspace.timezone)
+				});
+			}
+		}
+	}
+
+	if (input.workspace.maxBookingsPerDay !== null && occupied.length >= input.workspace.maxBookingsPerDay) {
+		return [];
+	}
+
+	return slots;
+}
+
+function buildZohoMeetingInput(input: {
+	workspace: PublicWorkspace;
+	service: PublicService;
+	bookingRecord: typeof booking.$inferSelect;
+	startAt: Date;
+	endAt: Date;
+}) {
+	const topicTemplate = input.workspace.zohoDefaultMeetingTopic || input.service.name;
+	const topic = topicTemplate.replaceAll('{customer_name}', input.bookingRecord.customerNameSnapshot);
+	const agenda =
+		input.workspace.zohoDefaultAgenda ||
+		input.bookingRecord.customerNotes ||
+		`Booking for ${input.service.name}`;
+	const participants = input.workspace.zohoAddAttendeeEmails
+		? [{ email: input.bookingRecord.customerEmailSnapshot }]
+		: [];
+
+	return {
+		dataCenter: input.workspace.zohoDataCenter,
+		zsoid: input.workspace.zohoZsoid!,
+		presenter: input.workspace.zohoPresenterUserId!,
+		topic,
+		agenda,
+		startTime: formatZohoStartTime(input.startAt, input.workspace.timezone),
+		durationMs: input.endAt.getTime() - input.startAt.getTime(),
+		timezone: input.workspace.timezone,
+		xZsource: input.workspace.zohoXZsource || input.workspace.name,
+		participants
+	};
+}
+
+function shouldSyncZohoMeeting(
+	workspace: PublicWorkspace,
+	bookingRecord: typeof booking.$inferSelect
+) {
+	return Boolean(
+		bookingRecord.zohoMeetingKey &&
+			workspace.zohoDataCenter &&
+			workspace.zohoZsoid &&
+			workspace.zohoPresenterUserId
+	);
+}
+
+export async function createBookingForPublicPage(input: {
+	workspace: PublicWorkspace;
+	service: PublicService;
+	startAt: Date;
+	name: string;
+	email: string;
+	notes: string;
+}) {
+	const slots = await generateSlotsForService({
+		workspace: input.workspace,
+		service: input.service,
+		dateKey: getDateKeyInTimeZone(input.startAt, input.workspace.timezone)
+	});
+	const matchingSlot = slots.find((slot) => slot.startAt.getTime() === input.startAt.getTime());
+
+	if (!matchingSlot) {
+		return null;
+	}
+
+	let existingCustomer = await db.query.customer.findFirst({
+		where: and(eq(customer.workspaceId, input.workspace.id), eq(customer.email, input.email))
+	});
+
+	if (!existingCustomer) {
+		const [createdCustomer] = await db
+			.insert(customer)
+			.values({
+				workspaceId: input.workspace.id,
+				name: input.name,
+				email: input.email
+			})
+			.returning();
+		existingCustomer = createdCustomer;
+	} else if (existingCustomer.name !== input.name) {
+		const [updatedCustomer] = await db
+			.update(customer)
+			.set({
+				name: input.name,
+				updatedAt: new Date()
+			})
+			.where(eq(customer.id, existingCustomer.id))
+			.returning();
+		existingCustomer = updatedCustomer;
+	}
+
+	const [createdBooking] = await db
+		.insert(booking)
+		.values({
+			workspaceId: input.workspace.id,
+			serviceId: input.service.id,
+			customerId: existingCustomer.id,
+			startAt: matchingSlot.startAt,
+			endAt: matchingSlot.endAt,
+			customerNameSnapshot: input.name,
+			customerEmailSnapshot: input.email,
+			customerNotes: input.notes || null
+		})
+		.returning();
+
+	if (
+		input.workspace.zohoAutoCreateMeetings &&
+		input.workspace.zohoDataCenter &&
+		input.workspace.zohoZsoid &&
+		input.workspace.zohoPresenterUserId
+	) {
+		try {
+			const topicTemplate = input.workspace.zohoDefaultMeetingTopic || input.service.name;
+			const topic = topicTemplate.replaceAll('{customer_name}', input.name);
+			const agenda = input.workspace.zohoDefaultAgenda || input.notes || `Booking for ${input.service.name}`;
+			const participants = input.workspace.zohoAddAttendeeEmails ? [{ email: input.email }] : [];
+			const zohoMeeting = await createZohoMeeting({
+				dataCenter: input.workspace.zohoDataCenter,
+				zsoid: input.workspace.zohoZsoid,
+				presenter: input.workspace.zohoPresenterUserId,
+				topic,
+				agenda,
+				startTime: formatZohoStartTime(matchingSlot.startAt, input.workspace.timezone),
+				durationMs: input.service.durationMinutes * MINUTE,
+				timezone: input.workspace.timezone,
+				xZsource: input.workspace.zohoXZsource || input.workspace.name,
+				participants
+			});
+			const session = zohoMeeting.payload?.session;
+
+			const [updatedBooking] = await db
+				.update(booking)
+				.set({
+					zohoMeetingKey: session?.meetingKey?.toString() ?? null,
+					zohoJoinLink: session?.joinLink ?? null,
+					zohoStartLink: session?.startLink ?? null,
+					zohoMeetingPayload: JSON.stringify(zohoMeeting.payload),
+					updatedAt: new Date()
+				})
+				.where(eq(booking.id, createdBooking.id))
+				.returning();
+
+			return updatedBooking;
+		} catch (error) {
+			const [updatedBooking] = await db
+				.update(booking)
+				.set({
+					zohoMeetingPayload: JSON.stringify({
+						error: error instanceof Error ? error.message : 'Zoho meeting creation failed.'
+					}),
+					updatedAt: new Date()
+				})
+				.where(eq(booking.id, createdBooking.id))
+				.returning();
+
+			return updatedBooking;
+		}
+	}
+
+	return createdBooking;
+}
+
+export async function completeBookingForWorkspace(workspaceId: string, bookingId: string) {
+	const existingBooking = await db.query.booking.findFirst({
+		where: and(eq(booking.id, bookingId), eq(booking.workspaceId, workspaceId))
+	});
+
+	if (!existingBooking) {
+		return null;
+	}
+
+	if (existingBooking.status !== 'scheduled') {
+		return existingBooking;
+	}
+
+	const [updatedBooking] = await db
+		.update(booking)
+		.set({
+			status: 'completed',
+			completedAt: new Date(),
+			updatedAt: new Date()
+		})
+		.where(and(eq(booking.id, bookingId), eq(booking.workspaceId, workspaceId)))
+		.returning();
+
+	return updatedBooking;
+}
+
+export async function cancelBookingForWorkspace(
+	workspaceRecord: PublicWorkspace,
+	bookingId: string
+) {
+	const existingBooking = await db.query.booking.findFirst({
+		where: and(eq(booking.id, bookingId), eq(booking.workspaceId, workspaceRecord.id))
+	});
+
+	if (!existingBooking) {
+		return null;
+	}
+
+	if (existingBooking.status !== 'scheduled') {
+		return existingBooking;
+	}
+
+	if (shouldSyncZohoMeeting(workspaceRecord, existingBooking)) {
+		await deleteZohoMeeting({
+			dataCenter: workspaceRecord.zohoDataCenter,
+			zsoid: workspaceRecord.zohoZsoid!,
+			meetingKey: existingBooking.zohoMeetingKey!,
+			xZsource: workspaceRecord.zohoXZsource || workspaceRecord.name
+		});
+	}
+
+	const [updatedBooking] = await db
+		.update(booking)
+		.set({
+			status: 'cancelled',
+			cancelledAt: new Date(),
+			zohoJoinLink: shouldSyncZohoMeeting(workspaceRecord, existingBooking) ? null : existingBooking.zohoJoinLink,
+			zohoStartLink: shouldSyncZohoMeeting(workspaceRecord, existingBooking) ? null : existingBooking.zohoStartLink,
+			updatedAt: new Date()
+		})
+		.where(and(eq(booking.id, bookingId), eq(booking.workspaceId, workspaceRecord.id)))
+		.returning();
+
+	return updatedBooking;
+}
+
+export async function rescheduleBookingForWorkspace(input: {
+	workspace: PublicWorkspace;
+	bookingId: string;
+	dateKey: string;
+	time: string;
+}) {
+	const existingBooking = await db.query.booking.findFirst({
+		where: and(eq(booking.id, input.bookingId), eq(booking.workspaceId, input.workspace.id))
+	});
+
+	if (!existingBooking) {
+		return null;
+	}
+
+	if (existingBooking.status !== 'scheduled') {
+		return existingBooking;
+	}
+
+	const bookedService = await db.query.service.findFirst({
+		where: and(eq(service.id, existingBooking.serviceId), eq(service.workspaceId, input.workspace.id))
+	});
+
+	if (!bookedService) {
+		throw new Error('The service attached to this booking could not be found.');
+	}
+
+	const startAt = zonedDateTimeToUtc(input.dateKey, input.time, input.workspace.timezone);
+	const slots = await generateSlotsForService({
+		workspace: input.workspace,
+		service: bookedService,
+		dateKey: input.dateKey,
+		excludeBookingId: existingBooking.id
+	});
+	const matchingSlot = slots.find((slot) => slot.startAt.getTime() === startAt.getTime());
+
+	if (!matchingSlot) {
+		throw new Error('That new time is not available under the current booking rules.');
+	}
+
+	let zohoUpdate:
+		| {
+				payload: {
+					session?: {
+						meetingKey?: string | number;
+						joinLink?: string;
+						startLink?: string;
+					};
+				} | null;
+		  }
+		| undefined;
+
+	if (shouldSyncZohoMeeting(input.workspace, existingBooking)) {
+		zohoUpdate = await updateZohoMeeting({
+			...buildZohoMeetingInput({
+				workspace: input.workspace,
+				service: bookedService,
+				bookingRecord: existingBooking,
+				startAt: matchingSlot.startAt,
+				endAt: matchingSlot.endAt
+			}),
+			meetingKey: existingBooking.zohoMeetingKey!
+		});
+	}
+
+	const [updatedBooking] = await db
+		.update(booking)
+		.set({
+			startAt: matchingSlot.startAt,
+			endAt: matchingSlot.endAt,
+			zohoMeetingKey:
+				zohoUpdate?.payload?.session?.meetingKey?.toString() ?? existingBooking.zohoMeetingKey,
+			zohoJoinLink: zohoUpdate?.payload?.session?.joinLink ?? existingBooking.zohoJoinLink,
+			zohoStartLink: zohoUpdate?.payload?.session?.startLink ?? existingBooking.zohoStartLink,
+			zohoMeetingPayload: zohoUpdate?.payload
+				? JSON.stringify(zohoUpdate.payload)
+				: existingBooking.zohoMeetingPayload,
+			updatedAt: new Date()
+		})
+		.where(and(eq(booking.id, input.bookingId), eq(booking.workspaceId, input.workspace.id)))
+		.returning();
+
+	return updatedBooking;
+}
