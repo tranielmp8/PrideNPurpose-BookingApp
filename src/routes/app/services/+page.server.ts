@@ -31,6 +31,7 @@ function serviceFormValues(formData: FormData) {
 	return {
 		name: formData.get('name')?.toString().trim() ?? '',
 		description: formData.get('description')?.toString().trim() ?? '',
+		confirmationMessage: formData.get('confirmationMessage')?.toString().trim() ?? '',
 		durationMinutes: formData.get('durationMinutes')?.toString().trim() ?? '',
 		price: formData.get('price')?.toString().trim() ?? '',
 		currencyCode: formData.get('currencyCode')?.toString().trim().toUpperCase() ?? 'USD',
@@ -89,6 +90,7 @@ export const actions: Actions = {
 			name: values.name,
 			slug: await generateServiceSlug(workspace.id, values.name),
 			description: values.description || null,
+			confirmationMessage: values.confirmationMessage || null,
 			durationMinutes,
 			priceCents,
 			currencyCode: values.currencyCode || 'USD',
@@ -141,6 +143,7 @@ export const actions: Actions = {
 				name: values.name,
 				slug: await generateServiceSlug(workspace.id, values.name, serviceId),
 				description: values.description || null,
+				confirmationMessage: values.confirmationMessage || null,
 				durationMinutes,
 				priceCents,
 				currencyCode: values.currencyCode || 'USD',

@@ -5,6 +5,7 @@
 	type ServiceValues = {
 		name: string;
 		description: string;
+		confirmationMessage: string;
 		durationMinutes: string;
 		price: string;
 		currencyCode: string;
@@ -20,6 +21,7 @@
 		return {
 			name: '',
 			description: '',
+			confirmationMessage: '',
 			durationMinutes: '30',
 			price: '',
 			currencyCode: 'USD',
@@ -147,6 +149,18 @@
 						id="description"
 						name="description"
 					>{getServiceValues().description}</textarea>
+				</div>
+
+				<div>
+					<label class="text-sm font-medium text-stone-700" for="confirmationMessage">
+						Confirmation email override
+					</label>
+					<textarea
+						class="mt-2 block min-h-28 w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+						id="confirmationMessage"
+						name="confirmationMessage"
+						placeholder="Optional. Overrides the workspace default for this service."
+					>{getServiceValues().confirmationMessage}</textarea>
 				</div>
 
 				<button
@@ -280,6 +294,17 @@
 									id={`description-${item.id}`}
 									name="description"
 								>{item.description ?? ''}</textarea>
+							</div>
+
+							<div class="md:col-span-2">
+								<label class="text-sm font-medium text-stone-700" for={`confirmation-${item.id}`}>
+									Confirmation email override
+								</label>
+								<textarea
+									class="mt-2 block min-h-28 w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+									id={`confirmation-${item.id}`}
+									name="confirmationMessage"
+								>{item.confirmationMessage ?? ''}</textarea>
 							</div>
 
 							<div class="md:col-span-2">

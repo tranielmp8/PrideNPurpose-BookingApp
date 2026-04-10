@@ -49,6 +49,7 @@ export const actions: Actions = {
 		const description = normalizeOptional(formData.get('description'));
 		const locationLabel = normalizeOptional(formData.get('locationLabel'));
 		const contactEmail = normalizeOptional(formData.get('contactEmail'));
+		const defaultConfirmationMessage = normalizeOptional(formData.get('defaultConfirmationMessage'));
 		const zohoDataCenter = normalizeOptional(formData.get('zohoDataCenter'));
 		const zohoZsoid = normalizeOptional(formData.get('zohoZsoid'));
 		const zohoPresenterUserId = normalizeOptional(formData.get('zohoPresenterUserId'));
@@ -84,6 +85,7 @@ export const actions: Actions = {
 			description,
 			locationLabel,
 			contactEmail,
+			defaultConfirmationMessage,
 			zohoDataCenter,
 			zohoZsoid,
 			zohoPresenterUserId,

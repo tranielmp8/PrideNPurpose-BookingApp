@@ -99,6 +99,17 @@
 						placeholder="Tell customers what this booking page is for."
 					>{data.workspace.description ?? ''}</textarea>
 				</div>
+				<div class="md:col-span-2">
+					<label class="text-sm font-medium text-stone-700" for="defaultConfirmationMessage">
+						Default confirmation email message
+					</label>
+					<textarea
+						class="mt-2 block min-h-32 w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+						id="defaultConfirmationMessage"
+						name="defaultConfirmationMessage"
+						placeholder={'Use placeholders like {customer_name}, {service_name}, {start_time}, {meeting_link}.'}
+					>{data.workspace.defaultConfirmationMessage ?? ''}</textarea>
+				</div>
 			</div>
 		</section>
 

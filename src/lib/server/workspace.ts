@@ -46,6 +46,7 @@ export async function updateWorkspaceSettings(
 		description: string | null;
 		locationLabel: string | null;
 		contactEmail: string | null;
+		defaultConfirmationMessage: string | null;
 		zohoDataCenter: string | null;
 		zohoZsoid: string | null;
 		zohoPresenterUserId: string | null;
@@ -65,6 +66,7 @@ export async function updateWorkspaceSettings(
 			description: input.description,
 			locationLabel: input.locationLabel,
 			contactEmail: input.contactEmail,
+			defaultConfirmationMessage: input.defaultConfirmationMessage,
 			zohoDataCenter: input.zohoDataCenter,
 			zohoZsoid: input.zohoZsoid,
 			zohoPresenterUserId: input.zohoPresenterUserId,

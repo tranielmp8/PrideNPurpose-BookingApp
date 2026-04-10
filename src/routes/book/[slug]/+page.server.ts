@@ -4,6 +4,7 @@ import {
 	generateSlotsForService,
 	getPublicBookingContext
 } from '$lib/server/bookings';
+import { sendBookingConfirmationEmails } from '$lib/server/email';
 import { getDateKeyInTimeZone } from '$lib/timezone';
 
 function normalizeEmail(value: string) {
@@ -98,6 +99,31 @@ export const actions: Actions = {
 				bookingMessage: 'That slot is no longer available. Please choose another time.',
 				bookingValues: { name, email, notes, serviceId, selectedDate }
 			});
+		}
+
+		try {
+			await sendBookingConfirmationEmails({
+				customerName: createdBooking.customerNameSnapshot,
+				customerEmail: createdBooking.customerEmailSnapshot,
+				service: selectedService,
+				workspace: context.workspace,
+				startAt: createdBooking.startAt,
+				endAt: createdBooking.endAt,
+				dateLabel: createdBooking.startAt.toLocaleDateString('en-US', {
+					timeZone: context.workspace.timezone,
+					weekday: 'long',
+					month: 'long',
+					day: 'numeric'
+				}),
+				timeLabel: createdBooking.startAt.toLocaleTimeString('en-US', {
+					timeZone: context.workspace.timezone,
+					hour: 'numeric',
+					minute: '2-digit'
+				}),
+				meetingLink: createdBooking.zohoJoinLink ?? null
+			});
+		} catch (emailError) {
+			console.error('Booking confirmation email failed', emailError);
 		}
 
 		return {

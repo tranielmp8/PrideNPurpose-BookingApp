@@ -29,6 +29,19 @@ export type PublicService = typeof service.$inferSelect;
 
 const MINUTE = 60 * 1000;
 
+function isBookingOverlapConstraintError(error: unknown) {
+	if (!error || typeof error !== 'object') {
+		return false;
+	}
+
+	return (
+		'code' in error &&
+		error.code === '23P01' &&
+		'constraint_name' in error &&
+		error.constraint_name === 'booking_workspace_scheduled_no_overlap'
+	);
+}
+
 export function parseTimeToMinutes(value: string) {
 	const [hours, minutes] = value.split(':').map(Number);
 	return hours * 60 + minutes;
@@ -339,19 +352,31 @@ export async function createBookingForPublicPage(input: {
 		existingCustomer = updatedCustomer;
 	}
 
-	const [createdBooking] = await db
-		.insert(booking)
-		.values({
-			workspaceId: input.workspace.id,
-			serviceId: input.service.id,
-			customerId: existingCustomer.id,
-			startAt: matchingSlot.startAt,
-			endAt: matchingSlot.endAt,
-			customerNameSnapshot: input.name,
-			customerEmailSnapshot: input.email,
-			customerNotes: input.notes || null
-		})
-		.returning();
+	let createdBooking: typeof booking.$inferSelect;
+
+	try {
+		const [insertedBooking] = await db
+			.insert(booking)
+			.values({
+				workspaceId: input.workspace.id,
+				serviceId: input.service.id,
+				customerId: existingCustomer.id,
+				startAt: matchingSlot.startAt,
+				endAt: matchingSlot.endAt,
+				customerNameSnapshot: input.name,
+				customerEmailSnapshot: input.email,
+				customerNotes: input.notes || null
+			})
+			.returning();
+
+		createdBooking = insertedBooking;
+	} catch (error) {
+		if (isBookingOverlapConstraintError(error)) {
+			return null;
+		}
+
+		throw error;
+	}
 
 	if (
 		input.workspace.zohoAutoCreateMeetings &&
@@ -540,22 +565,34 @@ export async function rescheduleBookingForWorkspace(input: {
 		});
 	}
 
-	const [updatedBooking] = await db
-		.update(booking)
-		.set({
-			startAt: matchingSlot.startAt,
-			endAt: matchingSlot.endAt,
-			zohoMeetingKey:
-				zohoUpdate?.payload?.session?.meetingKey?.toString() ?? existingBooking.zohoMeetingKey,
-			zohoJoinLink: zohoUpdate?.payload?.session?.joinLink ?? existingBooking.zohoJoinLink,
-			zohoStartLink: zohoUpdate?.payload?.session?.startLink ?? existingBooking.zohoStartLink,
-			zohoMeetingPayload: zohoUpdate?.payload
-				? JSON.stringify(zohoUpdate.payload)
-				: existingBooking.zohoMeetingPayload,
-			updatedAt: new Date()
-		})
-		.where(and(eq(booking.id, input.bookingId), eq(booking.workspaceId, input.workspace.id)))
-		.returning();
+	let updatedBooking: typeof booking.$inferSelect;
+
+	try {
+		const [nextBooking] = await db
+			.update(booking)
+			.set({
+				startAt: matchingSlot.startAt,
+				endAt: matchingSlot.endAt,
+				zohoMeetingKey:
+					zohoUpdate?.payload?.session?.meetingKey?.toString() ?? existingBooking.zohoMeetingKey,
+				zohoJoinLink: zohoUpdate?.payload?.session?.joinLink ?? existingBooking.zohoJoinLink,
+				zohoStartLink: zohoUpdate?.payload?.session?.startLink ?? existingBooking.zohoStartLink,
+				zohoMeetingPayload: zohoUpdate?.payload
+					? JSON.stringify(zohoUpdate.payload)
+					: existingBooking.zohoMeetingPayload,
+				updatedAt: new Date()
+			})
+			.where(and(eq(booking.id, input.bookingId), eq(booking.workspaceId, input.workspace.id)))
+			.returning();
+
+		updatedBooking = nextBooking;
+	} catch (error) {
+		if (isBookingOverlapConstraintError(error)) {
+			throw new Error('That new time is no longer available. Please choose another time.');
+		}
+
+		throw error;
+	}
 
 	return updatedBooking;
 }
