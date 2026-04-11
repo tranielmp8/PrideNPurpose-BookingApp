@@ -162,6 +162,19 @@
 					</p>
 					<p class="mt-2 text-sm leading-6 text-slate-800">/book/{page.params.slug}</p>
 				</div>
+
+				<div class="rounded-[1.75rem] border border-[#d5e2e9] bg-[#f8fbfc] p-5">
+					<p class="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">Need help?</p>
+					<p class="mt-2 text-sm leading-6 text-slate-600">
+						Questions before booking or trouble with scheduling?
+					</p>
+					<a
+						class="mt-4 inline-flex rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#eef4f7]"
+						href="/contact"
+					>
+						Contact us
+					</a>
+				</div>
 			</div>
 		</section>
 

@@ -4,6 +4,21 @@
 
 <div class="min-h-screen bg-[linear-gradient(180deg,#f8fbfc_0%,#edf4f7_100%)] px-5 py-10 text-slate-900 md:px-8 md:py-14">
 	<div class="mx-auto max-w-4xl rounded-[2.5rem] border border-[#d5e2e9] bg-white/95 p-7 shadow-[0_30px_90px_rgba(93,122,139,0.12)] md:p-10">
+		<div class="flex flex-wrap gap-3">
+			<a
+				class="inline-flex rounded-full border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-white"
+				href="/"
+			>
+				Back to home
+			</a>
+			<a
+				class="inline-flex rounded-full border border-[#d5e2e9] bg-[#96C2DB] px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1]"
+				href="/book/lets-meet"
+			>
+				Back to booking page
+			</a>
+		</div>
+
 		<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose</p>
 		<h1 class="mt-5 font-serif text-4xl tracking-tight text-[#384959] md:text-5xl">Terms and Conditions</h1>
 		<p class="mt-4 text-sm leading-7 text-slate-600">
