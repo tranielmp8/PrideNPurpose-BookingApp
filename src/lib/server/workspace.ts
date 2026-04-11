@@ -16,6 +16,12 @@ export async function getWorkspaceBySlug(slug: string) {
 	});
 }
 
+export async function getFirstActiveWorkspace() {
+	return db.query.workspace.findFirst({
+		where: eq(workspace.isActive, true)
+	});
+}
+
 export async function createWorkspaceForUser(input: {
 	userId: string;
 	name: string;
