@@ -45,7 +45,7 @@ export function resolveConfirmationEmailMessage(context: BookingEmailContext) {
 function buildPlainTextEmail(context: BookingEmailContext) {
 	const customMessage = resolveConfirmationEmailMessage(context);
 	const lines = [
-		`Booking confirmed for ${context.service.name}.`,
+		`Pride N Purpose booking confirmed for ${context.service.name}.`,
 		'',
 		`Name: ${context.customerName}`,
 		`Email: ${context.customerEmail}`,
@@ -53,7 +53,9 @@ function buildPlainTextEmail(context: BookingEmailContext) {
 		`Time: ${context.timeLabel}`,
 		context.meetingLink ? `Meeting link: ${context.meetingLink}` : null,
 		'',
-		customMessage
+		customMessage,
+		'',
+		'Sent via Pride N Purpose'
 	].filter(Boolean);
 
 	return lines.join('\n');
@@ -65,7 +67,7 @@ export async function sendBookingConfirmationEmails(context: BookingEmailContext
 		return;
 	}
 
-	const subject = `${context.workspace.name}: ${context.service.name} confirmed`;
+	const subject = `Pride N Purpose: ${context.service.name} confirmed`;
 	const text = buildPlainTextEmail(context);
 	const recipients = [context.customerEmail];
 
