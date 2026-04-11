@@ -49,6 +49,7 @@
 		"vitest": "^4.1.4"
 	},
 	"dependencies": {
-		"resend": "^6.10.0"
+		"resend": "^6.10.0",
+		"xlsx": "^0.18.5"
 	}
 }

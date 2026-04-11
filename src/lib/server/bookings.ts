@@ -87,6 +87,29 @@ export async function getBookingsForWorkspace(workspaceId: string) {
 	}));
 }
 
+export function shouldArchiveBooking(
+	bookingRecord: Awaited<ReturnType<typeof getBookingsForWorkspace>>[number],
+	now: Date,
+	archiveAfterDays = 30
+) {
+	if (bookingRecord.archivedAt) {
+		return true;
+	}
+
+	if (bookingRecord.status === 'scheduled') {
+		return false;
+	}
+
+	const archivedAt = bookingRecord.cancelledAt ?? bookingRecord.completedAt;
+	if (!archivedAt) {
+		return false;
+	}
+
+	const archiveThreshold = new Date(archivedAt);
+	archiveThreshold.setDate(archiveThreshold.getDate() + archiveAfterDays);
+	return archiveThreshold <= now;
+}
+
 async function getOccupiedBookingsForRange(
 	workspaceId: string,
 	from: Date,
@@ -453,6 +476,7 @@ export async function completeBookingForWorkspace(workspaceId: string, bookingId
 		.set({
 			status: 'completed',
 			completedAt: new Date(),
+			archivedAt: null,
 			updatedAt: new Date()
 		})
 		.where(and(eq(booking.id, bookingId), eq(booking.workspaceId, workspaceId)))
@@ -491,6 +515,7 @@ export async function cancelBookingForWorkspace(
 		.set({
 			status: 'cancelled',
 			cancelledAt: new Date(),
+			archivedAt: null,
 			zohoJoinLink: shouldSyncZohoMeeting(workspaceRecord, existingBooking) ? null : existingBooking.zohoJoinLink,
 			zohoStartLink: shouldSyncZohoMeeting(workspaceRecord, existingBooking) ? null : existingBooking.zohoStartLink,
 			updatedAt: new Date()
@@ -573,6 +598,7 @@ export async function rescheduleBookingForWorkspace(input: {
 			.set({
 				startAt: matchingSlot.startAt,
 				endAt: matchingSlot.endAt,
+				archivedAt: null,
 				zohoMeetingKey:
 					zohoUpdate?.payload?.session?.meetingKey?.toString() ?? existingBooking.zohoMeetingKey,
 				zohoJoinLink: zohoUpdate?.payload?.session?.joinLink ?? existingBooking.zohoJoinLink,
@@ -593,6 +619,35 @@ export async function rescheduleBookingForWorkspace(input: {
 
 		throw error;
 	}
+
+	return updatedBooking;
+}
+
+export async function archiveBookingForWorkspace(workspaceId: string, bookingId: string) {
+	const existingBooking = await db.query.booking.findFirst({
+		where: and(eq(booking.id, bookingId), eq(booking.workspaceId, workspaceId))
+	});
+
+	if (!existingBooking) {
+		return null;
+	}
+
+	if (existingBooking.status === 'scheduled') {
+		throw new Error('Scheduled bookings cannot be archived.');
+	}
+
+	if (existingBooking.archivedAt) {
+		return existingBooking;
+	}
+
+	const [updatedBooking] = await db
+		.update(booking)
+		.set({
+			archivedAt: new Date(),
+			updatedAt: new Date()
+		})
+		.where(and(eq(booking.id, bookingId), eq(booking.workspaceId, workspaceId)))
+		.returning();
 
 	return updatedBooking;
 }

@@ -1,21 +1,67 @@
 import { fail, type Actions, type ServerLoad } from '@sveltejs/kit';
 import {
+	archiveBookingForWorkspace,
 	cancelBookingForWorkspace,
 	completeBookingForWorkspace,
 	getBookingsForWorkspace,
-	rescheduleBookingForWorkspace
+	rescheduleBookingForWorkspace,
+	shouldArchiveBooking
 } from '$lib/server/bookings';
 import { getWorkspaceForUser } from '$lib/server/workspace';
 
+const ARCHIVE_AFTER_DAYS = 30;
+
 export const load = (async ({ parent }) => {
 	const { workspace } = await parent();
+	const bookings = await getBookingsForWorkspace(workspace.id);
+	const now = new Date();
+	const visibleBookings = bookings.filter(
+		(booking) => !shouldArchiveBooking(booking, now, ARCHIVE_AFTER_DAYS)
+	);
 
 	return {
-		bookings: await getBookingsForWorkspace(workspace.id)
+		bookings: visibleBookings,
+		archiveAfterDays: ARCHIVE_AFTER_DAYS
 	};
 }) satisfies ServerLoad;
 
 export const actions: Actions = {
+	archiveBooking: async ({ locals, request }) => {
+		const workspace = locals.user ? await getWorkspaceForUser(locals.user.id) : null;
+		if (!workspace) {
+			return fail(401, {
+				bookingMessage: 'Workspace not found.'
+			});
+		}
+
+		const formData = await request.formData();
+		const bookingId = formData.get('bookingId')?.toString() ?? '';
+
+		if (!bookingId) {
+			return fail(400, {
+				bookingMessage: 'Missing booking selection.'
+			});
+		}
+
+		try {
+			const updatedBooking = await archiveBookingForWorkspace(workspace.id, bookingId);
+			if (!updatedBooking) {
+				return fail(404, {
+					bookingMessage: 'Booking not found.'
+				});
+			}
+
+			return {
+				bookingMessage:
+					updatedBooking.archivedAt ? 'Booking archived.' : 'Booking could not be archived.'
+			};
+		} catch (error) {
+			return fail(400, {
+				bookingMessage:
+					error instanceof Error ? `Archive failed: ${error.message}` : 'Archive failed.'
+			});
+		}
+	},
 	cancelBooking: async ({ locals, request }) => {
 		const workspace = locals.user ? await getWorkspaceForUser(locals.user.id) : null;
 		if (!workspace) {

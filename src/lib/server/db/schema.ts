@@ -171,6 +171,7 @@ export const booking = pgTable(
 		zohoMeetingPayload: text('zoho_meeting_payload'),
 		cancelledAt: timestamp('cancelled_at', { withTimezone: true }),
 		completedAt: timestamp('completed_at', { withTimezone: true }),
+		archivedAt: timestamp('archived_at', { withTimezone: true }),
 		createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 		updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
 	},

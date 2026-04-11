@@ -6,6 +6,7 @@
 		{ href: '/app/services', label: 'Services' },
 		{ href: '/app/availability', label: 'Availability' },
 		{ href: '/app/bookings', label: 'Bookings' },
+		{ href: '/app/archive', label: 'Archive' },
 		{ href: '/app/settings', label: 'Settings' }
 	];
 

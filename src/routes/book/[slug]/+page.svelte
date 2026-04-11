@@ -21,6 +21,7 @@
 	};
 
 	const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+	let serviceFilterForm = $state<HTMLFormElement | null>(null);
 
 	function getBookingValues(): BookingValues {
 		if (form && typeof form === 'object' && 'bookingValues' in form) {
@@ -109,6 +110,17 @@
 	function getNextMonth() {
 		return shiftMonth(data.selectedDate, 1);
 	}
+
+	function submitServiceSelection() {
+		serviceFilterForm?.requestSubmit();
+	}
+
+	function getSelectedServiceName() {
+		return (
+			data.services.find((service) => service.id === data.selectedServiceId)?.name ??
+			'Selected service'
+		);
+	}
 </script>
 
 <svelte:head>
@@ -190,7 +202,7 @@
 					This provider has not published any active services yet.
 				</div>
 			{:else}
-				<form method="GET" class="mt-8 space-y-8">
+				<form method="GET" bind:this={serviceFilterForm} class="mt-8 space-y-8">
 					<input type="hidden" name="date" value={data.selectedDate} />
 
 					<div>
@@ -208,6 +220,7 @@
 										name="service"
 										value={service.id}
 										checked={service.id === data.selectedServiceId}
+										onchange={submitServiceSelection}
 									/>
 									<span class="block rounded-[1.75rem] border border-[#d5e2e9] bg-[#f8fbfc] px-5 py-4 transition peer-checked:border-[#96C2DB] peer-checked:bg-[#edf5f9] peer-checked:shadow-[0_12px_32px_rgba(93,122,139,0.12)] hover:border-[#b8ccd8]">
 										<span class="block text-base font-semibold text-slate-900">{service.name}</span>
@@ -295,7 +308,9 @@
 					<div class="flex flex-wrap items-center justify-between gap-3">
 						<div>
 							<h3 class="text-lg font-semibold tracking-tight text-[#384959]">3. Choose an available time</h3>
-							<p class="mt-1 text-sm text-slate-500">Times shown in {data.timezone}</p>
+							<p class="mt-1 text-sm text-slate-500">
+								{getSelectedServiceName()} in {data.timezone}
+							</p>
 						</div>
 						<p class="rounded-full bg-[#e5edf1] px-4 py-2 text-sm font-semibold text-slate-700">
 							{formatFriendlyDate(data.selectedDate)}
@@ -329,6 +344,10 @@
 				<form method="POST" action="?/createBooking" use:enhance class="mt-8 space-y-5 rounded-[2rem] border border-[#d5e2e9] bg-white p-6">
 					<input name="serviceId" type="hidden" value={data.selectedServiceId} />
 					<input name="selectedDate" type="hidden" value={data.selectedDate} />
+
+					<div class="rounded-[1.5rem] border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-3 text-sm text-slate-700">
+						Booking service: <span class="font-semibold text-slate-900">{getSelectedServiceName()}</span>
+					</div>
 
 					<div>
 						<label class="text-sm font-medium text-slate-700" for="slotStartAt">4. Select your time</label>
