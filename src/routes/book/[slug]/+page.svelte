@@ -127,9 +127,9 @@
 	<title>Book {data.workspace.name} | Pride N Purpose</title>
 </svelte:head>
 
-<div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-5 py-10 text-slate-900 md:px-8 md:py-14">
+<div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-4 py-8 text-slate-900 sm:px-5 md:px-8 md:py-14">
 	<div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.82fr_1.18fr]">
-		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/92 p-7 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-9">
+		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/92 p-6 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-9">
 			<p class="brand-script text-2xl text-slate-600 md:text-3xl">
 				Pride N Purpose
 			</p>
@@ -178,7 +178,7 @@
 			</div>
 		</section>
 
-		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white p-7 shadow-[0_35px_100px_rgba(93,122,139,0.1)] md:p-9">
+		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white p-6 shadow-[0_35px_100px_rgba(93,122,139,0.1)] md:p-9">
 			<div class="flex flex-wrap items-start justify-between gap-4">
 				<div>
 					<p class="text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">
@@ -219,7 +219,7 @@
 					<input type="hidden" name="date" value={data.selectedDate} />
 
 					<div>
-						<div class="flex items-center justify-between gap-3">
+						<div class="flex flex-wrap items-center justify-between gap-3">
 							<h3 class="text-lg font-semibold tracking-tight text-[#384959]">1. Choose a service</h3>
 							<p class="text-sm text-slate-500">Simple, clear, and calm</p>
 						</div>
@@ -251,20 +251,20 @@
 
 					<div class="grid gap-6 xl:grid-cols-[1fr_220px]">
 						<div>
-							<div class="flex items-center justify-between gap-3">
+							<div class="flex flex-wrap items-center justify-between gap-3">
 							<h3 class="text-lg font-semibold tracking-tight text-[#384959]">2. Choose a day</h3>
 								<p class="text-sm text-slate-500">Selected: {formatFriendlyDate(data.selectedDate)}</p>
 							</div>
 
-							<div class="mt-4 rounded-[2rem] border border-[#d5e2e9] bg-[#f8fbfc] p-5">
-								<div class="flex items-center justify-between gap-3">
+							<div class="mt-4 rounded-[2rem] border border-[#d5e2e9] bg-[#f8fbfc] p-4 sm:p-5">
+								<div class="flex flex-wrap items-center justify-between gap-3">
 									<a
 										class="rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-[#b8ccd8] hover:bg-[#f8fbfc]"
 										href={`?service=${data.selectedServiceId}&date=${getPreviousMonth()}`}
 									>
 										Previous
 									</a>
-								<p class="text-lg font-semibold tracking-tight text-[#384959]">{getMonthLabel(data.selectedDate)}</p>
+								<p class="text-base font-semibold tracking-tight text-[#384959] sm:text-lg">{getMonthLabel(data.selectedDate)}</p>
 									<a
 										class="rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-[#b8ccd8] hover:bg-[#f8fbfc]"
 										href={`?service=${data.selectedServiceId}&date=${getNextMonth()}`}
@@ -273,16 +273,16 @@
 									</a>
 								</div>
 
-								<div class="mt-5 grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+								<div class="mt-5 grid grid-cols-7 gap-1 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 sm:gap-2 sm:text-xs sm:tracking-[0.18em]">
 									{#each weekdayLabels as weekday}
 										<div class="py-2">{weekday}</div>
 									{/each}
 								</div>
 
-								<div class="mt-2 grid grid-cols-7 gap-2">
+								<div class="mt-2 grid grid-cols-7 gap-1 sm:gap-2">
 									{#each getCalendarDays() as day}
 										<a
-											class={`flex h-12 items-center justify-center rounded-2xl text-sm font-semibold transition ${
+											class={`flex h-10 items-center justify-center rounded-xl text-xs font-semibold transition sm:h-12 sm:rounded-2xl sm:text-sm ${
 												day.isSelected
 												? 'bg-[#96C2DB] text-slate-900 shadow-[0_12px_30px_rgba(93,122,139,0.16)]'
 												: day.inMonth
@@ -354,7 +354,7 @@
 					{/if}
 				</div>
 
-				<form method="POST" action="?/createBooking" use:enhance class="mt-8 space-y-5 rounded-[2rem] border border-[#d5e2e9] bg-white p-6">
+				<form method="POST" action="?/createBooking" use:enhance class="mt-8 space-y-5 rounded-[2rem] border border-[#d5e2e9] bg-white p-5 sm:p-6">
 					<input name="serviceId" type="hidden" value={data.selectedServiceId} />
 					<input name="selectedDate" type="hidden" value={data.selectedDate} />
 

@@ -6,13 +6,13 @@
 	<div class="mx-auto max-w-4xl rounded-[2.5rem] border border-[#d5e2e9] bg-white/95 p-7 shadow-[0_30px_90px_rgba(93,122,139,0.12)] md:p-10">
 		<div class="flex flex-wrap gap-3">
 			<a
-				class="inline-flex rounded-full border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-white"
+				class="inline-flex w-full justify-center rounded-full border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-white sm:w-auto"
 				href="/"
 			>
 				Back to home
 			</a>
 			<a
-				class="inline-flex rounded-full border border-[#d5e2e9] bg-[#96C2DB] px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1]"
+				class="inline-flex w-full justify-center rounded-full border border-[#d5e2e9] bg-[#96C2DB] px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1] sm:w-auto"
 				href="/book/lets-meet"
 			>
 				Back to booking page

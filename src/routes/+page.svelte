@@ -41,15 +41,15 @@
 </svelte:head>
 
 <div class="min-h-screen overflow-hidden bg-[linear-gradient(160deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] text-slate-900">
-	<div class="relative mx-auto max-w-7xl px-6 py-8 lg:px-10 lg:py-10">
+	<div class="relative mx-auto max-w-7xl px-5 py-8 sm:px-6 lg:px-10 lg:py-10">
 		<div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem] bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.92),transparent_42%),radial-gradient(circle_at_top_right,rgba(150,194,219,0.2),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(229,237,241,0.75),transparent_38%)]"></div>
 
 		<section class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
-			<div class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/90 p-8 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-10">
+			<div class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/90 p-6 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-10">
 				<p class="brand-script text-2xl text-slate-600 md:text-3xl">
 					Pride N Purpose
 				</p>
-				<h1 class="mt-5 max-w-4xl font-serif text-5xl leading-[0.94] tracking-tight text-[#384959] md:text-7xl">
+				<h1 class="mt-5 max-w-4xl font-serif text-4xl leading-[0.98] tracking-tight text-[#384959] sm:text-5xl md:text-7xl">
 					Book meaningful conversations with color, clarity, and purpose.
 				</h1>
 				<p class="mt-6 max-w-2xl text-base leading-7 text-slate-600 md:text-lg">
@@ -60,20 +60,20 @@
 				<div class="mt-8 flex flex-wrap gap-3">
 					{#if data.workspace}
 						<a
-							class="rounded-full bg-[#96C2DB] px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1]"
+							class="w-full rounded-full bg-[#96C2DB] px-6 py-3 text-center text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1] sm:w-auto"
 							href={`/book/${data.workspace.slug}`}
 						>
 							Book with Pride N Purpose
 						</a>
 					{:else}
-						<span class="rounded-full bg-[#96C2DB] px-6 py-3 text-sm font-semibold text-slate-900">
+						<span class="w-full rounded-full bg-[#96C2DB] px-6 py-3 text-center text-sm font-semibold text-slate-900 sm:w-auto">
 							Public booking page appears after onboarding
 						</span>
 					{/if}
 
 					{#each providerLinks as link}
 						<a
-							class="rounded-full border border-[#d0dde5] bg-white px-6 py-3 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#f8fbfc]"
+							class="w-full rounded-full border border-[#d0dde5] bg-white px-6 py-3 text-center text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#f8fbfc] sm:w-auto"
 							href={link.href}
 						>
 							{link.label}

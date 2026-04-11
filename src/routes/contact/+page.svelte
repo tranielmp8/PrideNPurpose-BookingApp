@@ -32,9 +32,9 @@
 	/>
 </svelte:head>
 
-<div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-5 py-10 text-slate-900 md:px-8 md:py-14">
+<div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-4 py-8 text-slate-900 sm:px-5 md:px-8 md:py-14">
 	<div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/92 p-7 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-9">
+		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/92 p-6 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-9">
 			<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose</p>
 			<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-6xl">
 				Let&apos;s start the conversation.
@@ -76,7 +76,7 @@
 			</div>
 		</section>
 
-		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white p-7 shadow-[0_35px_100px_rgba(93,122,139,0.1)] md:p-9">
+		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white p-6 shadow-[0_35px_100px_rgba(93,122,139,0.1)] md:p-9">
 			<div class="flex flex-wrap items-start justify-between gap-4">
 				<div>
 					<p class="text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">Contact form</p>
@@ -99,8 +99,12 @@
 				</p>
 			{/if}
 
-			<form method="POST" use:enhance class="mt-8 space-y-5 rounded-[2rem] border border-[#d5e2e9] bg-white p-1">
-				<div class="grid gap-4 md:grid-cols-2">
+			<form
+				method="POST"
+				use:enhance
+				class="mt-8 space-y-6 rounded-[2rem] border border-[#d5e2e9] bg-[#f8fbfc] p-5 md:p-6"
+			>
+				<div class="grid gap-5 md:grid-cols-2">
 					<div>
 						<label class="text-sm font-medium text-slate-700" for="firstName">First name</label>
 						<input
