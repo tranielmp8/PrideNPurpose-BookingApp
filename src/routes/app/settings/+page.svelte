@@ -110,7 +110,7 @@
 						class="mt-2 block min-h-32 w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
 						id="defaultConfirmationMessage"
 						name="defaultConfirmationMessage"
-						placeholder={'Use placeholders like {customer_name}, {service_name}, {start_time}, {meeting_link}.'}
+						placeholder={'Use placeholders like {customer}, {date}, {time}, {duration}, {location}, {meeting_link}.'}
 					>{data.workspace.defaultConfirmationMessage ?? ''}</textarea>
 				</div>
 			</div>

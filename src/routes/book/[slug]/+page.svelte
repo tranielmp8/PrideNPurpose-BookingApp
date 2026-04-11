@@ -409,6 +409,17 @@
 					>
 						Confirm booking
 					</button>
+
+					<p class="text-center text-xs leading-6 text-slate-500">
+						By confirming this booking, you agree to the
+						<a class="font-semibold text-slate-700 underline underline-offset-4" href="/terms">
+							Terms and Conditions
+						</a>
+						and acknowledge the
+						<a class="font-semibold text-slate-700 underline underline-offset-4" href="/privacy">
+							Privacy Policy
+						</a>.
+					</p>
 				</form>
 			{/if}
 		</section>

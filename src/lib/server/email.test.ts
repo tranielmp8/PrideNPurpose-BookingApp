@@ -90,4 +90,47 @@ describe('resolveConfirmationEmailMessage', () => {
 			'Thank you Jane Example. Your Discovery Session is booked for Saturday, April 11 at 3:00 PM.'
 		);
 	});
+
+	it('supports the simpler placeholder aliases used in settings', () => {
+		const message = resolveConfirmationEmailMessage({
+			customerName: 'Jane Example',
+			customerEmail: 'jane@example.com',
+			service: createService({
+				durationMinutes: 45
+			}),
+			workspace: createWorkspace({
+				locationLabel: 'Zoom'
+			}),
+			startAt: new Date('2026-04-11T15:00:00.000Z'),
+			endAt: new Date('2026-04-11T15:45:00.000Z'),
+			dateLabel: 'Saturday, April 11',
+			timeLabel: '3:00 PM',
+			meetingLink: 'https://meet.zoho.com/join/123'
+		});
+
+		const aliasMessage = resolveConfirmationEmailMessage({
+			customerName: 'Jane Example',
+			customerEmail: 'jane@example.com',
+			service: createService({
+				durationMinutes: 45,
+				confirmationMessage:
+					'Hello {customer}, thank you for scheduling a meeting with me on {date}. Time: {time}. Duration: {duration}. Location: {location}. Link: {meeting_link}'
+			}),
+			workspace: createWorkspace({
+				locationLabel: 'Zoom'
+			}),
+			startAt: new Date('2026-04-11T15:00:00.000Z'),
+			endAt: new Date('2026-04-11T15:45:00.000Z'),
+			dateLabel: 'Saturday, April 11',
+			timeLabel: '3:00 PM',
+			meetingLink: 'https://meet.zoho.com/join/123'
+		});
+
+		expect(message).toBe(
+			'Thank you Jane Example. Your Discovery Session is booked for Saturday, April 11 at 3:00 PM.'
+		);
+		expect(aliasMessage).toBe(
+			'Hello Jane Example, thank you for scheduling a meeting with me on Saturday, April 11. Time: 3:00 PM. Duration: 45 minutes. Location: Zoom. Link: https://meet.zoho.com/join/123'
+		);
+	});
 });

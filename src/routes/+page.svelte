@@ -4,6 +4,7 @@
 	let { data }: { data: PageData } = $props();
 
 	const providerLinks = [
+		{ href: '/contact', label: 'Contact' },
 		{ href: '/auth/sign-up', label: 'Create provider account' },
 		{ href: '/app/dashboard', label: 'Open provider dashboard' }
 	];
