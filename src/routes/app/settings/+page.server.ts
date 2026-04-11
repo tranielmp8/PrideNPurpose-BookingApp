@@ -1,4 +1,5 @@
 import { fail, type Actions, type ServerLoad } from '@sveltejs/kit';
+import { getEmailConfigurationStatus } from '$lib/server/email';
 import { slugify } from '$lib/server/slug';
 import { getZonedParts } from '$lib/timezone';
 import { getWorkspaceForUser, slugExists, updateWorkspaceSettings } from '$lib/server/workspace';
@@ -9,7 +10,8 @@ export const load = (async ({ parent }) => {
 
 	return {
 		workspace,
-		zohoStatus: getZohoWorkspaceStatus(workspace)
+		zohoStatus: getZohoWorkspaceStatus(workspace),
+		emailStatus: getEmailConfigurationStatus()
 	};
 }) satisfies ServerLoad;
 

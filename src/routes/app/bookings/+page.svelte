@@ -346,7 +346,8 @@
 						method="POST"
 						action={pendingAction.type === 'cancel' ? '?/cancelBooking' : '?/completeBooking'}
 						use:enhance={() => {
-							return async () => {
+							return async ({ update }) => {
+								await update();
 								closeActionModal();
 							};
 						}}

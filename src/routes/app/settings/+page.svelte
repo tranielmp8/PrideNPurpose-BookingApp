@@ -6,6 +6,9 @@
 
 	function getReadinessItems() {
 		return [
+			{ label: 'Resend API key in env', ready: data.emailStatus.hasResendApiKey },
+			{ label: 'EMAIL_FROM in env', ready: data.emailStatus.hasEmailFrom },
+			{ label: 'EMAIL_FROM format valid', ready: data.emailStatus.hasValidEmailFrom },
 			{ label: 'Client ID in env', ready: data.zohoStatus.hasClientId },
 			{ label: 'Client secret in env', ready: data.zohoStatus.hasClientSecret },
 			{ label: 'Refresh token in env', ready: data.zohoStatus.hasRefreshToken },
@@ -168,6 +171,15 @@
 						</p>
 					</div>
 				{/each}
+			</div>
+
+			<div class="mt-4 rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-700">
+				<p class="font-medium text-stone-900">Custom confirmation email sender</p>
+				<p class="mt-1 break-all">{data.emailStatus.emailFrom || 'Not set'}</p>
+				<p class="mt-2 text-stone-600">
+					Use the format Business Name &lt;name@yourdomain.com&gt;. The domain also needs to be
+					verified in Resend.
+				</p>
 			</div>
 
 			<div class="mt-6 flex flex-wrap items-center gap-3">

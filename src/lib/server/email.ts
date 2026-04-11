@@ -14,8 +14,22 @@ type BookingEmailContext = {
 	meetingLink: string | null;
 };
 
+const EMAIL_FROM_PATTERN = /^[^<>\r\n]+<[^<>\s@]+@[^<>\s@]+\.[^<>\s@]+>$/;
+
+export function getEmailConfigurationStatus() {
+	const emailFrom = env.EMAIL_FROM?.trim() ?? '';
+
+	return {
+		hasResendApiKey: Boolean(env.RESEND_API_KEY),
+		hasEmailFrom: Boolean(emailFrom),
+		emailFrom,
+		hasValidEmailFrom: EMAIL_FROM_PATTERN.test(emailFrom)
+	};
+}
+
 function getResendClient() {
-	if (!env.RESEND_API_KEY || !env.EMAIL_FROM) {
+	const status = getEmailConfigurationStatus();
+	if (!status.hasResendApiKey || !status.hasValidEmailFrom) {
 		return null;
 	}
 
@@ -62,9 +76,20 @@ function buildPlainTextEmail(context: BookingEmailContext) {
 }
 
 export async function sendBookingConfirmationEmails(context: BookingEmailContext) {
+	const status = getEmailConfigurationStatus();
 	const resend = getResendClient();
-	if (!resend || !env.EMAIL_FROM) {
-		return;
+	if (!resend) {
+		if (!status.hasResendApiKey) {
+			throw new Error('RESEND_API_KEY is missing.');
+		}
+
+		if (!status.hasEmailFrom) {
+			throw new Error('EMAIL_FROM is missing.');
+		}
+
+		throw new Error(
+			`EMAIL_FROM must look like "Business Name <name@yourdomain.com>". Received: ${status.emailFrom}`
+		);
 	}
 
 	const subject = `Pride N Purpose: ${context.service.name} confirmed`;
@@ -78,7 +103,7 @@ export async function sendBookingConfirmationEmails(context: BookingEmailContext
 	await Promise.all(
 		recipients.map((to) =>
 			resend.emails.send({
-				from: env.EMAIL_FROM!,
+				from: status.emailFrom,
 				to,
 				subject,
 				text
