@@ -1,9 +1,11 @@
+import { env } from '$env/dynamic/private';
 import { fail, error, type Actions, type ServerLoad } from '@sveltejs/kit';
 import {
 	cancelBookingForCustomer,
 	getCustomerManageContext,
 	rescheduleBookingForCustomer
 } from '$lib/server/bookings';
+import { sendBookingCancelledEmails, sendBookingRescheduledEmails } from '$lib/server/email';
 import { getZonedParts } from '$lib/timezone';
 
 function getDefaultDateValue(date: Date, timeZone: string) {
@@ -26,6 +28,27 @@ function requireManageToken(token: string | undefined) {
 	return token;
 }
 
+function getManageUrl(token: string, fallbackOrigin: string) {
+	return `${env.ORIGIN?.trim() || fallbackOrigin}/manage/${token}`;
+}
+
+function getBookingDateLabel(date: Date, timeZone: string) {
+	return date.toLocaleDateString('en-US', {
+		timeZone,
+		weekday: 'long',
+		month: 'long',
+		day: 'numeric'
+	});
+}
+
+function getBookingTimeLabel(date: Date, timeZone: string) {
+	return date.toLocaleTimeString('en-US', {
+		timeZone,
+		hour: 'numeric',
+		minute: '2-digit'
+	});
+}
+
 export const load = (async ({ params }) => {
 	const context = await getCustomerManageContext(requireManageToken(params.token));
 
@@ -46,6 +69,13 @@ export const load = (async ({ params }) => {
 export const actions: Actions = {
 	cancelBooking: async ({ params }) => {
 		const token = requireManageToken(params.token);
+		const context = await getCustomerManageContext(token);
+
+		if (!context) {
+			return fail(404, {
+				manageMessage: 'Booking not found.'
+			});
+		}
 
 		try {
 			const updatedBooking = await cancelBookingForCustomer(token);
@@ -54,6 +84,25 @@ export const actions: Actions = {
 				return fail(404, {
 					manageMessage: 'Booking not found.'
 				});
+			}
+
+			if (updatedBooking.status === 'cancelled') {
+				try {
+					await sendBookingCancelledEmails({
+						customerName: updatedBooking.customerNameSnapshot,
+						customerEmail: updatedBooking.customerEmailSnapshot,
+						service: context.service,
+						workspace: context.workspace,
+						startAt: updatedBooking.startAt,
+						endAt: updatedBooking.endAt,
+						dateLabel: getBookingDateLabel(updatedBooking.startAt, context.workspace.timezone),
+						timeLabel: getBookingTimeLabel(updatedBooking.startAt, context.workspace.timezone),
+						meetingLink: null,
+						manageUrl: null
+					});
+				} catch (emailError) {
+					console.error('Customer cancellation email failed', emailError);
+				}
 			}
 
 			return {
@@ -69,8 +118,15 @@ export const actions: Actions = {
 			});
 		}
 	},
-	rescheduleBooking: async ({ params, request }) => {
+	rescheduleBooking: async ({ params, request, url }) => {
 		const token = requireManageToken(params.token);
+		const context = await getCustomerManageContext(token);
+
+		if (!context) {
+			return fail(404, {
+				manageMessage: 'Booking not found.'
+			});
+		}
 		const formData = await request.formData();
 		const rescheduleDate = formData.get('rescheduleDate')?.toString().trim() ?? '';
 		const rescheduleTime = formData.get('rescheduleTime')?.toString().trim() ?? '';
@@ -94,6 +150,25 @@ export const actions: Actions = {
 					manageMessage: 'Booking not found.',
 					rescheduleValues: { rescheduleDate, rescheduleTime }
 				});
+			}
+
+			if (updatedBooking.status === 'scheduled') {
+				try {
+					await sendBookingRescheduledEmails({
+						customerName: updatedBooking.customerNameSnapshot,
+						customerEmail: updatedBooking.customerEmailSnapshot,
+						service: context.service,
+						workspace: context.workspace,
+						startAt: updatedBooking.startAt,
+						endAt: updatedBooking.endAt,
+						dateLabel: getBookingDateLabel(updatedBooking.startAt, context.workspace.timezone),
+						timeLabel: getBookingTimeLabel(updatedBooking.startAt, context.workspace.timezone),
+						meetingLink: updatedBooking.zohoJoinLink ?? null,
+						manageUrl: getManageUrl(token, url.origin)
+					});
+				} catch (emailError) {
+					console.error('Customer reschedule email failed', emailError);
+				}
 			}
 
 			return {

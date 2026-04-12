@@ -22,6 +22,8 @@ type ContactFormContext = {
 	message: string;
 };
 
+type BookingStatusEmailVariant = 'confirmed' | 'rescheduled' | 'cancelled';
+
 const EMAIL_FROM_PATTERN = /^[^<>\r\n]+<[^<>\s@]+@[^<>\s@]+\.[^<>\s@]+>$/;
 const DEFAULT_CONTACT_FORM_TO = 'tpride@pridendevelopment.com';
 
@@ -109,6 +111,32 @@ function buildPlainTextEmail(context: BookingEmailContext) {
 		context.manageUrl ? `Manage booking: ${context.manageUrl}` : null,
 		'',
 		customMessage,
+		'',
+		'Sent via Pride N Purpose Booking'
+	].filter(Boolean);
+
+	return lines.join('\n');
+}
+
+function buildStatusPlainTextEmail(context: BookingEmailContext, variant: BookingStatusEmailVariant) {
+	if (variant === 'confirmed') {
+		return buildPlainTextEmail(context);
+	}
+
+	const actionLabel = variant === 'rescheduled' ? 'rescheduled' : 'cancelled';
+	const lines = [
+		`Your ${context.service.name} booking has been ${actionLabel}.`,
+		'',
+		`Name: ${context.customerName}`,
+		`Email: ${context.customerEmail}`,
+		`Date: ${context.dateLabel}`,
+		`Time: ${context.timeLabel}`,
+		variant === 'rescheduled' && context.meetingLink ? `Meeting link: ${context.meetingLink}` : null,
+		variant === 'rescheduled' && context.manageUrl ? `Manage booking: ${context.manageUrl}` : null,
+		'',
+		variant === 'rescheduled'
+			? 'Your meeting details have been updated successfully.'
+			: 'This booking has been cancelled successfully.',
 		'',
 		'Sent via Pride N Purpose Booking'
 	].filter(Boolean);
@@ -205,6 +233,101 @@ function buildHtmlEmail(context: BookingEmailContext) {
 	`;
 }
 
+function buildStatusHtmlEmail(context: BookingEmailContext, variant: BookingStatusEmailVariant) {
+	if (variant === 'confirmed') {
+		return buildHtmlEmail(context);
+	}
+
+	const locationLabel = context.workspace.locationLabel ?? 'Online';
+	const details = [
+		{ label: 'Date', value: context.dateLabel },
+		{ label: 'Time', value: context.timeLabel },
+		{ label: 'Duration', value: `${context.service.durationMinutes} minutes` },
+		{ label: 'Location', value: locationLabel },
+		...(variant === 'rescheduled' && context.meetingLink
+			? [{ label: 'Meeting link', value: context.meetingLink, isLink: true }]
+			: [])
+	];
+
+	const detailsHtml = details
+		.map((item) => {
+			const value =
+				'isLink' in item && item.isLink
+					? `<a href="${escapeHtml(item.value)}" style="color:#0f766e; text-decoration:none; font-weight:600;">${escapeHtml(item.value)}</a>`
+					: escapeHtml(item.value);
+
+			return `
+				<tr>
+					<td style="padding:12px 0; border-bottom:1px solid #dbe7ee; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#64748b; width:140px;">${escapeHtml(item.label)}</td>
+					<td style="padding:12px 0; border-bottom:1px solid #dbe7ee; font-size:15px; line-height:1.6; color:#0f172a;">${value}</td>
+				</tr>
+			`;
+		})
+		.join('');
+
+	const headline =
+		variant === 'rescheduled' ? 'Your meeting has been rescheduled.' : 'Your meeting has been cancelled.';
+	const bodyCopy =
+		variant === 'rescheduled'
+			? `${escapeHtml(context.service.name)} has been updated successfully for ${escapeHtml(context.customerName)}.`
+			: `${escapeHtml(context.service.name)} has been cancelled for ${escapeHtml(context.customerName)}.`;
+	const footerCopy =
+		variant === 'rescheduled'
+			? 'If you need to make another change while the change window is still open, use the manage booking link below.'
+			: 'If you need to book another session, please use the booking page again or contact us directly.';
+
+	return `
+		<!doctype html>
+		<html lang="en">
+			<head>
+				<meta charset="utf-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				<title>${escapeHtml(context.workspace.name)} booking update</title>
+			</head>
+			<body style="margin:0; padding:0; background-color:#edf4f7; font-family:Georgia, 'Times New Roman', serif; color:#0f172a;">
+				<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:linear-gradient(180deg,#f8fbfc 0%,#edf4f7 100%); padding:32px 16px;">
+					<tr>
+						<td align="center">
+							<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px; background:#ffffff; border:1px solid #d5e2e9; border-radius:28px; overflow:hidden; box-shadow:0 24px 80px rgba(93,122,139,0.12);">
+								<tr>
+									<td style="padding:40px 40px 24px; background:linear-gradient(135deg,#ffffff 0%,#f3f8fa 100%);">
+										<div style="font-size:28px; line-height:1.2; color:#64748b; font-style:italic;">Pride N Purpose Booking</div>
+										<h1 style="margin:18px 0 0; font-size:34px; line-height:1.2; font-weight:700; color:#384959;">${headline}</h1>
+										<p style="margin:14px 0 0; font-size:16px; line-height:1.7; color:#475569;">
+											${bodyCopy}
+										</p>
+									</td>
+								</tr>
+								<tr>
+									<td style="padding:0 40px 18px;">
+										<div style="border:1px solid #d5e2e9; border-radius:24px; background:#f8fbfc; padding:24px;">
+											<table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+												${detailsHtml}
+											</table>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td style="padding:8px 40px 40px;">
+										${
+											variant === 'rescheduled' && context.manageUrl
+												? `<a href="${escapeHtml(context.manageUrl)}" style="display:inline-block; padding:14px 24px; border-radius:999px; border:1px solid #cbd5e1; color:#0f172a; font-size:15px; font-weight:700; text-decoration:none; background:#ffffff;">Manage booking</a>`
+												: ''
+										}
+										<p style="margin:18px 0 0; font-size:13px; line-height:1.7; color:#64748b;">
+											${footerCopy}
+										</p>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</body>
+		</html>
+	`;
+}
+
 function buildContactFormPlainTextEmail(context: ContactFormContext) {
 	const lines = [
 		'New contact form submission',
@@ -269,6 +392,13 @@ function buildContactFormHtmlEmail(context: ContactFormContext) {
 }
 
 export async function sendBookingConfirmationEmails(context: BookingEmailContext) {
+	return sendBookingStatusEmails(context, 'confirmed');
+}
+
+async function sendBookingStatusEmails(
+	context: BookingEmailContext,
+	variant: BookingStatusEmailVariant
+) {
 	const status = getEmailConfigurationStatus();
 	const resend = getResendClient();
 	if (!resend) {
@@ -285,9 +415,14 @@ export async function sendBookingConfirmationEmails(context: BookingEmailContext
 		);
 	}
 
-	const subject = `Pride N Purpose Booking: ${context.service.name} confirmed`;
-	const text = buildPlainTextEmail(context);
-	const html = buildHtmlEmail(context);
+	const subject =
+		variant === 'confirmed'
+			? `Pride N Purpose Booking: ${context.service.name} confirmed`
+			: variant === 'rescheduled'
+				? `Pride N Purpose Booking: ${context.service.name} rescheduled`
+				: `Pride N Purpose Booking: ${context.service.name} cancelled`;
+	const text = buildStatusPlainTextEmail(context, variant);
+	const html = buildStatusHtmlEmail(context, variant);
 	const recipients = [context.customerEmail];
 
 	if (context.workspace.contactEmail && context.workspace.contactEmail !== context.customerEmail) {
@@ -305,6 +440,14 @@ export async function sendBookingConfirmationEmails(context: BookingEmailContext
 			})
 		)
 	);
+}
+
+export async function sendBookingRescheduledEmails(context: BookingEmailContext) {
+	return sendBookingStatusEmails(context, 'rescheduled');
+}
+
+export async function sendBookingCancelledEmails(context: BookingEmailContext) {
+	return sendBookingStatusEmails(context, 'cancelled');
 }
 
 export async function sendContactFormNotification(context: ContactFormContext) {

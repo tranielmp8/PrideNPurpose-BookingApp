@@ -3,6 +3,14 @@
 
 	let { data, form } = $props();
 
+	function getRescheduleValues(): { rescheduleDate?: string; rescheduleTime?: string } | null {
+		if (form && 'rescheduleValues' in form) {
+			return form.rescheduleValues as { rescheduleDate?: string; rescheduleTime?: string } | null;
+		}
+
+		return null;
+	}
+
 	function formatDateTime(value: string | Date) {
 		return new Intl.DateTimeFormat('en-US', {
 			timeZone: data.workspace.timezone,
@@ -71,7 +79,7 @@
 							id="rescheduleDate"
 							name="rescheduleDate"
 							type="date"
-							value={form?.rescheduleValues?.rescheduleDate ?? data.defaultRescheduleDate}
+							value={getRescheduleValues()?.rescheduleDate ?? data.defaultRescheduleDate}
 						/>
 					</div>
 
@@ -82,7 +90,7 @@
 							id="rescheduleTime"
 							name="rescheduleTime"
 							type="time"
-							value={form?.rescheduleValues?.rescheduleTime ?? data.defaultRescheduleTime}
+							value={getRescheduleValues()?.rescheduleTime ?? data.defaultRescheduleTime}
 						/>
 					</div>
 
