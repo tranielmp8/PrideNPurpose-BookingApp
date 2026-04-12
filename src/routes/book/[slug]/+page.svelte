@@ -23,6 +23,13 @@
 	const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 	let serviceFilterForm = $state<HTMLFormElement | null>(null);
 	let selectedSlot = $state('');
+	let showLimitModal = $state(false);
+
+	$effect(() => {
+		if (form && 'bookingLimitReached' in form && form.bookingLimitReached) {
+			showLimitModal = true;
+		}
+	});
 
 	function getBookingValues(): BookingValues {
 		if (form && typeof form === 'object' && 'bookingValues' in form) {
@@ -176,6 +183,66 @@
 	<title>Book {data.workspace.name} | Pride N Purpose</title>
 </svelte:head>
 
+{#if showLimitModal}
+	<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+	<div
+		class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-5 backdrop-blur-sm"
+		onclick={() => { showLimitModal = false; }}
+	>
+		<div
+			class="w-full max-w-md rounded-[2.5rem] border border-[#d5e2e9] bg-white p-8 shadow-[0_40px_100px_rgba(93,122,139,0.22)]"
+			onclick={(e) => e.stopPropagation()}
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="limit-modal-title"
+		>
+			<div class="flex items-start justify-between gap-4">
+				<div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-100">
+					<svg class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+					</svg>
+				</div>
+				<button
+					type="button"
+					onclick={() => { showLimitModal = false; }}
+					class="rounded-full border border-[#d5e2e9] bg-[#f8fbfc] px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-white"
+				>
+					Close
+				</button>
+			</div>
+
+			<h2 id="limit-modal-title" class="mt-5 font-serif text-2xl tracking-tight text-[#384959]">
+				You've already completed your Intro Session
+			</h2>
+			<p class="mt-3 text-sm leading-7 text-slate-600">
+				The Intro Conversation is a one-time first-step session for new customers and can only be
+				booked once per customer. It looks like you've already had yours — great news, you're all
+				set to move forward!
+			</p>
+			<p class="mt-3 text-sm leading-7 text-slate-600">
+				To book a follow-up or your next session, choose a different service from the list above.
+				If you have questions, feel free to reach out through the contact page.
+			</p>
+
+			<div class="mt-7 flex flex-wrap gap-3">
+				<button
+					type="button"
+					onclick={() => { showLimitModal = false; }}
+					class="rounded-full bg-[#96C2DB] px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1]"
+				>
+					Choose another service
+				</button>
+				<a
+					href={`/book/${page.params.slug}/contact`}
+					class="rounded-full border border-[#d5e2e9] bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#f8fbfc]"
+				>
+					Contact us
+				</a>
+			</div>
+		</div>
+	</div>
+{/if}
+
 <div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-4 py-8 text-slate-900 sm:px-5 md:px-8 md:py-14">
 	<div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.82fr_1.18fr]">
 		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/92 p-6 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-9">
@@ -283,8 +350,8 @@
 				{/if}
 			</div>
 
-			{#if form?.bookingMessage}
-				<p class="mt-6 rounded-[1.5rem] border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-3 text-sm text-slate-700">
+			{#if form?.bookingMessage && !form?.bookingSuccess}
+				<p class="mt-6 rounded-[1.5rem] border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
 					{form.bookingMessage}
 				</p>
 			{/if}

@@ -109,11 +109,14 @@ export const actions: Actions = {
 				customerAccountId: customerAccount?.id ?? null
 			});
 		} catch (bookingError) {
+			const message =
+				bookingError instanceof Error
+					? bookingError.message
+					: 'Unable to complete this booking. Please try again.';
+			const bookingLimitReached = message.toLowerCase().includes('booking limit');
 			return fail(400, {
-				bookingMessage:
-					bookingError instanceof Error
-						? bookingError.message
-						: 'Unable to complete this booking. Please try again.',
+				bookingMessage: message,
+				bookingLimitReached,
 				bookingValues: { name, email, notes, serviceId, selectedDate }
 			});
 		}
