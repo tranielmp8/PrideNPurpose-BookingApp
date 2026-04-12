@@ -1,3 +1,4 @@
+import { env } from '$env/dynamic/private';
 import { fail, error, type Actions, type ServerLoad } from '@sveltejs/kit';
 import {
 	createBookingForPublicPage,
@@ -46,7 +47,7 @@ export const load = (async ({ params, url }) => {
 }) satisfies ServerLoad;
 
 export const actions: Actions = {
-	createBooking: async ({ params, request }) => {
+	createBooking: async ({ params, request, url }) => {
 		const slug = params.slug;
 		if (!slug) {
 			throw error(404, 'Booking page not found');
@@ -102,6 +103,8 @@ export const actions: Actions = {
 		}
 
 		try {
+			const siteOrigin = env.ORIGIN?.trim() || url.origin;
+			const manageUrl = `${siteOrigin}/manage/${createdBooking.manageToken}`;
 			await sendBookingConfirmationEmails({
 				customerName: createdBooking.customerNameSnapshot,
 				customerEmail: createdBooking.customerEmailSnapshot,
@@ -120,7 +123,8 @@ export const actions: Actions = {
 					hour: 'numeric',
 					minute: '2-digit'
 				}),
-				meetingLink: createdBooking.zohoJoinLink ?? null
+				meetingLink: createdBooking.zohoJoinLink ?? null,
+				manageUrl
 			});
 		} catch (emailError) {
 			console.error('Booking confirmation email failed', emailError);

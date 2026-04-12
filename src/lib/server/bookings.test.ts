@@ -11,6 +11,7 @@ type MockBooking = {
 	customerNameSnapshot: string;
 	customerEmailSnapshot: string;
 	customerNotes: string | null;
+	manageToken: string;
 	zohoMeetingKey: string | null;
 	zohoJoinLink: string | null;
 	zohoStartLink: string | null;
@@ -188,6 +189,7 @@ function createWorkspace(overrides: Record<string, unknown> = {}) {
 		zohoDefaultMeetingTopic: null,
 		zohoDefaultAgenda: null,
 		zohoAddAttendeeEmails: false,
+		customerChangeCutoffMinutes: 120,
 		...overrides
 	} as Parameters<typeof generateSlotsForService>[0]['workspace'];
 }
@@ -216,6 +218,7 @@ function createBooking(overrides: Partial<MockBooking> = {}) {
 		customerNameSnapshot: 'Jane Example',
 		customerEmailSnapshot: 'jane@example.com',
 		customerNotes: 'Looking forward to it',
+		manageToken: 'manage-token-1',
 		zohoMeetingKey: null,
 		zohoJoinLink: null,
 		zohoStartLink: null,

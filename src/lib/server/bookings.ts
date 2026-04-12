@@ -1,4 +1,5 @@
 import { and, eq, gte, inArray, lt, ne, or } from 'drizzle-orm';
+import { randomBytes } from 'node:crypto';
 import {
 	addDaysToDateKey,
 	formatTimeInTimeZone,
@@ -14,7 +15,7 @@ import {
 	customer,
 	service,
 	weeklyAvailability,
-	type workspace
+	workspace
 } from '$lib/server/db/schema';
 import { getWorkspaceBySlug } from '$lib/server/workspace';
 import {
@@ -352,6 +353,27 @@ function getStoredZohoMeetingKey(bookingRecord: typeof booking.$inferSelect) {
 	return bookingRecord.zohoMeetingKey ?? getZohoMeetingKeyFromPayload(bookingRecord.zohoMeetingPayload);
 }
 
+function createBookingManageToken() {
+	return randomBytes(24).toString('base64url');
+}
+
+function isCustomerChangeWindowOpen(workspaceRecord: PublicWorkspace, bookingRecord: typeof booking.$inferSelect) {
+	const cutoffTime = new Date(
+		new Date(bookingRecord.startAt).getTime() - workspaceRecord.customerChangeCutoffMinutes * MINUTE
+	);
+
+	return Date.now() <= cutoffTime.getTime();
+}
+
+function assertCustomerCanChangeBooking(
+	workspaceRecord: PublicWorkspace,
+	bookingRecord: typeof booking.$inferSelect
+) {
+	if (!isCustomerChangeWindowOpen(workspaceRecord, bookingRecord)) {
+		throw new Error('This booking can no longer be changed online.');
+	}
+}
+
 function shouldDeleteZohoMeeting(
 	workspace: PublicWorkspace,
 	bookingRecord: typeof booking.$inferSelect
@@ -417,7 +439,8 @@ export async function createBookingForPublicPage(input: {
 				endAt: matchingSlot.endAt,
 				customerNameSnapshot: input.name,
 				customerEmailSnapshot: input.email,
-				customerNotes: input.notes || null
+				customerNotes: input.notes || null,
+				manageToken: createBookingManageToken()
 			})
 			.returning();
 
@@ -512,6 +535,75 @@ export async function completeBookingForWorkspace(workspaceId: string, bookingId
 		.returning();
 
 	return updatedBooking;
+}
+
+export async function getCustomerManageContext(manageToken: string) {
+	const bookingRecord = await db.query.booking.findFirst({
+		where: eq(booking.manageToken, manageToken)
+	});
+
+	if (!bookingRecord) {
+		return null;
+	}
+
+	const workspaceRecord = await db.query.workspace.findFirst({
+		where: eq(workspace.id, bookingRecord.workspaceId)
+	});
+	const serviceRecord = await db.query.service.findFirst({
+		where: eq(service.id, bookingRecord.serviceId)
+	});
+
+	if (!workspaceRecord || !serviceRecord) {
+		return null;
+	}
+
+	return {
+		booking: bookingRecord,
+		workspace: workspaceRecord,
+		service: serviceRecord,
+		canChange: bookingRecord.status === 'scheduled' && isCustomerChangeWindowOpen(workspaceRecord, bookingRecord)
+	};
+}
+
+export async function cancelBookingForCustomer(manageToken: string) {
+	const context = await getCustomerManageContext(manageToken);
+
+	if (!context) {
+		return null;
+	}
+
+	if (context.booking.status !== 'scheduled') {
+		return context.booking;
+	}
+
+	assertCustomerCanChangeBooking(context.workspace, context.booking);
+
+	return cancelBookingForWorkspace(context.workspace, context.booking.id);
+}
+
+export async function rescheduleBookingForCustomer(input: {
+	manageToken: string;
+	dateKey: string;
+	time: string;
+}) {
+	const context = await getCustomerManageContext(input.manageToken);
+
+	if (!context) {
+		return null;
+	}
+
+	if (context.booking.status !== 'scheduled') {
+		return context.booking;
+	}
+
+	assertCustomerCanChangeBooking(context.workspace, context.booking);
+
+	return rescheduleBookingForWorkspace({
+		workspace: context.workspace,
+		bookingId: context.booking.id,
+		dateKey: input.dateKey,
+		time: input.time
+	});
 }
 
 export async function cancelBookingForWorkspace(

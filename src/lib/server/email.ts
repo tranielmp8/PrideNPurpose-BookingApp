@@ -12,6 +12,7 @@ type BookingEmailContext = {
 	timeLabel: string;
 	dateLabel: string;
 	meetingLink: string | null;
+	manageUrl: string | null;
 };
 
 type ContactFormContext = {
@@ -105,6 +106,7 @@ function buildPlainTextEmail(context: BookingEmailContext) {
 		`Date: ${context.dateLabel}`,
 		`Time: ${context.timeLabel}`,
 		context.meetingLink ? `Meeting link: ${context.meetingLink}` : null,
+		context.manageUrl ? `Manage booking: ${context.manageUrl}` : null,
 		'',
 		customMessage,
 		'',
@@ -184,8 +186,13 @@ function buildHtmlEmail(context: BookingEmailContext) {
 												? `<a href="${escapeHtml(context.meetingLink)}" style="display:inline-block; padding:14px 24px; border-radius:999px; background:#96c2db; color:#0f172a; font-size:15px; font-weight:700; text-decoration:none;">Join meeting</a>`
 												: ''
 										}
+										${
+											context.manageUrl
+												? `<a href="${escapeHtml(context.manageUrl)}" style="display:inline-block; margin-left:12px; padding:14px 24px; border-radius:999px; border:1px solid #cbd5e1; color:#0f172a; font-size:15px; font-weight:700; text-decoration:none; background:#ffffff;">Manage booking</a>`
+												: ''
+										}
 										<p style="margin:18px 0 0; font-size:13px; line-height:1.7; color:#64748b;">
-											If you need to make any changes before the meeting, reply to this email or use the contact information provided by ${escapeHtml(context.workspace.name)}.
+											Use the manage booking link to cancel or reschedule online while changes are still allowed. If the change window has passed, reply to this email or use the contact information provided by ${escapeHtml(context.workspace.name)}.
 										</p>
 									</td>
 								</tr>

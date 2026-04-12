@@ -28,16 +28,17 @@ function parsePositiveInteger(value: string) {
 export const load = (async ({ parent }) => {
 	const { workspace } = await parent();
 
-	return {
-		days: DAYS,
-		weeklyAvailability: await getWeeklyAvailabilityForWorkspace(workspace.id),
-		availabilityOverrides: await getAvailabilityOverridesForWorkspace(workspace.id),
-		bookingRules: {
-			minNoticeMinutes: workspace.minNoticeMinutes,
-			bookingWindowDays: workspace.bookingWindowDays,
-			maxBookingsPerDay: workspace.maxBookingsPerDay
-		}
-	};
+		return {
+			days: DAYS,
+			weeklyAvailability: await getWeeklyAvailabilityForWorkspace(workspace.id),
+			availabilityOverrides: await getAvailabilityOverridesForWorkspace(workspace.id),
+			bookingRules: {
+				minNoticeMinutes: workspace.minNoticeMinutes,
+				customerChangeCutoffMinutes: workspace.customerChangeCutoffMinutes,
+				bookingWindowDays: workspace.bookingWindowDays,
+				maxBookingsPerDay: workspace.maxBookingsPerDay
+			}
+		};
 }) satisfies ServerLoad;
 
 export const actions: Actions = {
@@ -53,6 +54,9 @@ export const actions: Actions = {
 		const minNoticeMinutes = parsePositiveInteger(
 			formData.get('minNoticeMinutes')?.toString().trim() ?? ''
 		);
+		const customerChangeCutoffMinutes = parsePositiveInteger(
+			formData.get('customerChangeCutoffMinutes')?.toString().trim() ?? ''
+		);
 		const bookingWindowDays = parsePositiveInteger(
 			formData.get('bookingWindowDays')?.toString().trim() ?? ''
 		);
@@ -61,6 +65,7 @@ export const actions: Actions = {
 
 		if (
 			Number.isNaN(minNoticeMinutes) ||
+			Number.isNaN(customerChangeCutoffMinutes) ||
 			Number.isNaN(bookingWindowDays) ||
 			(maxBookingsPerDay !== null && Number.isNaN(maxBookingsPerDay))
 		) {
@@ -72,6 +77,7 @@ export const actions: Actions = {
 		await updateWorkspaceBookingRules({
 			workspaceId: workspace.id,
 			minNoticeMinutes,
+			customerChangeCutoffMinutes,
 			bookingWindowDays,
 			maxBookingsPerDay
 		});

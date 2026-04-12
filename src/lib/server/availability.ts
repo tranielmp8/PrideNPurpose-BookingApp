@@ -57,6 +57,7 @@ export async function getAvailabilityOverridesForWorkspace(workspaceId: string) 
 export async function updateWorkspaceBookingRules(input: {
 	workspaceId: string;
 	minNoticeMinutes: number;
+	customerChangeCutoffMinutes: number;
 	bookingWindowDays: number;
 	maxBookingsPerDay: number | null;
 }) {
@@ -64,6 +65,7 @@ export async function updateWorkspaceBookingRules(input: {
 		.update(workspace)
 		.set({
 			minNoticeMinutes: input.minNoticeMinutes,
+			customerChangeCutoffMinutes: input.customerChangeCutoffMinutes,
 			bookingWindowDays: input.bookingWindowDays,
 			maxBookingsPerDay: input.maxBookingsPerDay,
 			updatedAt: new Date()

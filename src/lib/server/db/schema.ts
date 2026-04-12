@@ -41,6 +41,7 @@ export const workspace = pgTable(
 		zohoAddAttendeeEmails: boolean('zoho_add_attendee_emails').notNull().default(true),
 		zohoAutoCreateMeetings: boolean('zoho_auto_create_meetings').notNull().default(true),
 		minNoticeMinutes: integer('min_notice_minutes').notNull().default(120),
+		customerChangeCutoffMinutes: integer('customer_change_cutoff_minutes').notNull().default(120),
 		bookingWindowDays: integer('booking_window_days').notNull().default(60),
 		maxBookingsPerDay: integer('max_bookings_per_day'),
 		isActive: boolean('is_active').notNull().default(true),
@@ -165,6 +166,7 @@ export const booking = pgTable(
 		customerNameSnapshot: text('customer_name_snapshot').notNull(),
 		customerEmailSnapshot: text('customer_email_snapshot').notNull(),
 		customerNotes: text('customer_notes'),
+		manageToken: text('manage_token').notNull(),
 		zohoMeetingKey: text('zoho_meeting_key'),
 		zohoJoinLink: text('zoho_join_link'),
 		zohoStartLink: text('zoho_start_link'),
@@ -178,6 +180,7 @@ export const booking = pgTable(
 	(table) => [
 		index('booking_workspace_start_idx').on(table.workspaceId, table.startAt),
 		index('booking_service_start_idx').on(table.serviceId, table.startAt),
+		uniqueIndex('booking_manage_token_unique_idx').on(table.manageToken),
 		index('booking_customer_idx').on(table.customerId)
 	]
 );

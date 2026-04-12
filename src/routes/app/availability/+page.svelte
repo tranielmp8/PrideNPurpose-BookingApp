@@ -26,7 +26,7 @@
 	<div class="grid gap-6 xl:grid-cols-2">
 		<section class="rounded-[1.5rem] border border-stone-200 p-6">
 			<h2 class="text-xl font-semibold tracking-tight">Booking rules</h2>
-			<form method="POST" action="?/updateBookingRules" use:enhance class="mt-6 grid gap-4 md:grid-cols-3">
+			<form method="POST" action="?/updateBookingRules" use:enhance class="mt-6 grid gap-4 md:grid-cols-4">
 				<div>
 					<label class="text-sm font-medium text-stone-700" for="minNoticeMinutes">Minimum notice</label>
 					<input
@@ -37,6 +37,21 @@
 						min="0"
 						step="1"
 						value={data.bookingRules.minNoticeMinutes}
+					/>
+				</div>
+
+				<div>
+					<label class="text-sm font-medium text-stone-700" for="customerChangeCutoffMinutes"
+						>Customer change cutoff</label
+					>
+					<input
+						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+						id="customerChangeCutoffMinutes"
+						name="customerChangeCutoffMinutes"
+						type="number"
+						min="0"
+						step="1"
+						value={data.bookingRules.customerChangeCutoffMinutes}
 					/>
 				</div>
 
@@ -68,6 +83,13 @@
 				</div>
 
 				<div class="md:col-span-3">
+					<p class="text-sm leading-6 text-stone-500">
+						Customers can cancel or reschedule only until this cutoff before the meeting starts.
+						Use `0` to allow changes up to the start time.
+					</p>
+				</div>
+
+				<div class="md:col-span-4">
 					<button
 						class="rounded-full bg-stone-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-stone-800"
 						type="submit"

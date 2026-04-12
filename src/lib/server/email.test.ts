@@ -22,6 +22,7 @@ function createWorkspace(overrides: Record<string, unknown> = {}) {
 		zohoAddAttendeeEmails: true,
 		zohoAutoCreateMeetings: true,
 		minNoticeMinutes: 120,
+		customerChangeCutoffMinutes: 120,
 		bookingWindowDays: 60,
 		maxBookingsPerDay: null,
 		isActive: true,
@@ -65,7 +66,8 @@ describe('resolveConfirmationEmailMessage', () => {
 			endAt: new Date('2026-04-11T16:00:00.000Z'),
 			dateLabel: 'Saturday, April 11',
 			timeLabel: '3:00 PM',
-			meetingLink: 'https://meet.zoho.com/join/123'
+			meetingLink: 'https://meet.zoho.com/join/123',
+			manageUrl: 'https://example.com/manage/token'
 		});
 
 		expect(message).toBe(
@@ -83,7 +85,8 @@ describe('resolveConfirmationEmailMessage', () => {
 			endAt: new Date('2026-04-11T16:00:00.000Z'),
 			dateLabel: 'Saturday, April 11',
 			timeLabel: '3:00 PM',
-			meetingLink: null
+			meetingLink: null,
+			manageUrl: 'https://example.com/manage/token'
 		});
 
 		expect(message).toBe(
@@ -105,7 +108,8 @@ describe('resolveConfirmationEmailMessage', () => {
 			endAt: new Date('2026-04-11T15:45:00.000Z'),
 			dateLabel: 'Saturday, April 11',
 			timeLabel: '3:00 PM',
-			meetingLink: 'https://meet.zoho.com/join/123'
+			meetingLink: 'https://meet.zoho.com/join/123',
+			manageUrl: 'https://example.com/manage/token'
 		});
 
 		const aliasMessage = resolveConfirmationEmailMessage({
@@ -123,7 +127,8 @@ describe('resolveConfirmationEmailMessage', () => {
 			endAt: new Date('2026-04-11T15:45:00.000Z'),
 			dateLabel: 'Saturday, April 11',
 			timeLabel: '3:00 PM',
-			meetingLink: 'https://meet.zoho.com/join/123'
+			meetingLink: 'https://meet.zoho.com/join/123',
+			manageUrl: 'https://example.com/manage/token'
 		});
 
 		expect(message).toBe(
