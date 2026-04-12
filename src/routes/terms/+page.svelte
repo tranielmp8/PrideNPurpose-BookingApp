@@ -22,7 +22,7 @@
 		<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Bookings</p>
 		<h1 class="mt-5 font-serif text-4xl tracking-tight text-[#384959] md:text-5xl">Terms and Conditions</h1>
 		<p class="mt-4 text-sm leading-7 text-slate-600">
-			Last updated: April 11, 2026
+			Last updated: April 12, 2026
 		</p>
 
 		<div class="prose prose-slate mt-8 max-w-none">
@@ -35,6 +35,20 @@
 			<p>
 				By using this booking app, you agree to provide accurate information and to use the service
 				only for lawful and legitimate scheduling purposes.
+			</p>
+
+			<h2>Service Fees and Charges</h2>
+			<p>
+				Pride N Purpose Bookings is a platform that enables service providers to offer their own
+				services, consultations, and sessions. Any fees, charges, or rates associated with a
+				booking are set entirely at the discretion of the individual service provider. Pride N
+				Purpose Bookings does not set, control, or guarantee the pricing of any service offered
+				through this platform.
+			</p>
+			<p>
+				Customers are responsible for reviewing the fees associated with any service before
+				completing a booking. By submitting a booking request, you acknowledge and agree to the
+				terms and pricing set by the service provider.
 			</p>
 
 			<h2>Bookings</h2>

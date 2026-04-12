@@ -125,6 +125,20 @@
 						</p>
 					{/if}
 				</div>
+
+				<div class="rounded-[2.25rem] border border-[#d5e2e9] bg-white/92 p-7 shadow-[0_18px_60px_rgba(93,122,139,0.08)] backdrop-blur">
+					<p class="text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">
+						Pricing
+					</p>
+					<p class="mt-4 text-2xl font-bold tracking-tight text-[#384959]">
+						Free
+					</p>
+					<p class="mt-1 text-sm text-slate-500">during early access</p>
+					<p class="mt-3 text-sm leading-6 text-slate-600">
+						Pricing plans are coming soon. For now, Pride N Purpose Bookings is completely
+						free while we build and refine the experience together.
+					</p>
+				</div>
 			</div>
 		</section>
 	</div>
