@@ -1,4 +1,4 @@
-import { and, eq, gte, inArray, lt, ne, or } from 'drizzle-orm';
+import { and, count, eq, gte, inArray, lt, ne, or } from 'drizzle-orm';
 import { randomBytes } from 'node:crypto';
 import {
 	addDaysToDateKey,
@@ -357,6 +357,32 @@ function createBookingManageToken() {
 	return randomBytes(24).toString('base64url');
 }
 
+async function getBookingCountForService(input: {
+	workspaceId: string;
+	serviceId: string;
+	customerId?: string | null;
+	customerAccountId?: string | null;
+}) {
+	const customerCondition = input.customerAccountId
+		? eq(booking.customerAccountId, input.customerAccountId)
+		: input.customerId
+			? eq(booking.customerId, input.customerId)
+			: eq(booking.id, '');
+
+	const [result] = await db
+		.select({ value: count() })
+		.from(booking)
+		.where(
+			and(
+				eq(booking.workspaceId, input.workspaceId),
+				eq(booking.serviceId, input.serviceId),
+				customerCondition
+			)
+		);
+
+	return Number(result?.value ?? 0);
+}
+
 function isCustomerChangeWindowOpen(workspaceRecord: PublicWorkspace, bookingRecord: typeof booking.$inferSelect) {
 	const cutoffTime = new Date(
 		new Date(bookingRecord.startAt).getTime() - workspaceRecord.customerChangeCutoffMinutes * MINUTE
@@ -388,6 +414,7 @@ export async function createBookingForPublicPage(input: {
 	name: string;
 	email: string;
 	notes: string;
+	customerAccountId?: string | null;
 }) {
 	const slots = await generateSlotsForService({
 		workspace: input.workspace,
@@ -426,6 +453,27 @@ export async function createBookingForPublicPage(input: {
 		existingCustomer = updatedCustomer;
 	}
 
+	if (!input.service.allowGuestBooking && !input.customerAccountId) {
+		throw new Error('This service requires a customer account before booking.');
+	}
+
+	if (input.service.requiresCustomerAccount && !input.customerAccountId) {
+		throw new Error('Please sign in to book this service.');
+	}
+
+	if (input.service.maxBookingsPerCustomer !== null) {
+		const existingBookingsForService = await getBookingCountForService({
+			workspaceId: input.workspace.id,
+			serviceId: input.service.id,
+			customerId: existingCustomer.id,
+			customerAccountId: input.customerAccountId ?? null
+		});
+
+		if (existingBookingsForService >= input.service.maxBookingsPerCustomer) {
+			throw new Error('This service has reached its booking limit for this customer.');
+		}
+	}
+
 	let createdBooking: typeof booking.$inferSelect;
 
 	try {
@@ -435,6 +483,7 @@ export async function createBookingForPublicPage(input: {
 				workspaceId: input.workspace.id,
 				serviceId: input.service.id,
 				customerId: existingCustomer.id,
+				customerAccountId: input.customerAccountId ?? null,
 				startAt: matchingSlot.startAt,
 				endAt: matchingSlot.endAt,
 				customerNameSnapshot: input.name,

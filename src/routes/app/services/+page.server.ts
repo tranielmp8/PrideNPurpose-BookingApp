@@ -36,7 +36,11 @@ function serviceFormValues(formData: FormData) {
 		price: formData.get('price')?.toString().trim() ?? '',
 		currencyCode: formData.get('currencyCode')?.toString().trim().toUpperCase() ?? 'USD',
 		bufferBeforeMinutes: formData.get('bufferBeforeMinutes')?.toString().trim() ?? '0',
-		bufferAfterMinutes: formData.get('bufferAfterMinutes')?.toString().trim() ?? '0'
+		bufferAfterMinutes: formData.get('bufferAfterMinutes')?.toString().trim() ?? '0',
+		maxBookingsPerCustomer: formData.get('maxBookingsPerCustomer')?.toString().trim() ?? '',
+		isIntroOffer: formData.get('isIntroOffer') === 'on',
+		allowGuestBooking: formData.get('allowGuestBooking') === 'on',
+		requiresCustomerAccount: formData.get('requiresCustomerAccount') === 'on'
 	};
 }
 
@@ -57,6 +61,9 @@ export const actions: Actions = {
 		const priceCents = parsePriceToCents(values.price);
 		const bufferBeforeMinutes = parseNonNegativeInteger(values.bufferBeforeMinutes);
 		const bufferAfterMinutes = parseNonNegativeInteger(values.bufferAfterMinutes);
+		const maxBookingsPerCustomer = values.maxBookingsPerCustomer
+			? parseNonNegativeInteger(values.maxBookingsPerCustomer)
+			: null;
 
 		if (!workspace) {
 			return fail(401, {
@@ -85,6 +92,13 @@ export const actions: Actions = {
 			});
 		}
 
+		if (maxBookingsPerCustomer !== null && Number.isNaN(maxBookingsPerCustomer)) {
+			return fail(400, {
+				serviceMessage: 'Max bookings per customer must be a whole number that is zero or greater.',
+				serviceValues: values
+			});
+		}
+
 		await db.insert(service).values({
 			workspaceId: workspace.id,
 			name: values.name,
@@ -95,7 +109,11 @@ export const actions: Actions = {
 			priceCents,
 			currencyCode: values.currencyCode || 'USD',
 			bufferBeforeMinutes,
-			bufferAfterMinutes
+			bufferAfterMinutes,
+			isIntroOffer: values.isIntroOffer,
+			allowGuestBooking: values.allowGuestBooking,
+			requiresCustomerAccount: values.requiresCustomerAccount,
+			maxBookingsPerCustomer
 		});
 
 		return {
@@ -112,6 +130,9 @@ export const actions: Actions = {
 		const priceCents = parsePriceToCents(values.price);
 		const bufferBeforeMinutes = parseNonNegativeInteger(values.bufferBeforeMinutes);
 		const bufferAfterMinutes = parseNonNegativeInteger(values.bufferAfterMinutes);
+		const maxBookingsPerCustomer = values.maxBookingsPerCustomer
+			? parseNonNegativeInteger(values.maxBookingsPerCustomer)
+			: null;
 
 		if (!workspace) {
 			return fail(401, {
@@ -137,6 +158,12 @@ export const actions: Actions = {
 			});
 		}
 
+		if (maxBookingsPerCustomer !== null && Number.isNaN(maxBookingsPerCustomer)) {
+			return fail(400, {
+				serviceMessage: 'Max bookings per customer must be a whole number that is zero or greater.'
+			});
+		}
+
 		await db
 			.update(service)
 			.set({
@@ -149,6 +176,10 @@ export const actions: Actions = {
 				currencyCode: values.currencyCode || 'USD',
 				bufferBeforeMinutes,
 				bufferAfterMinutes,
+				isIntroOffer: values.isIntroOffer,
+				allowGuestBooking: values.allowGuestBooking,
+				requiresCustomerAccount: values.requiresCustomerAccount,
+				maxBookingsPerCustomer,
 				updatedAt: new Date()
 			})
 			.where(and(eq(service.id, serviceId), eq(service.workspaceId, workspace.id)));

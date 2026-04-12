@@ -2,20 +2,30 @@
 	<title>Privacy Policy | Booking App</title>
 </svelte:head>
 
+<script lang="ts">
+	let { data } = $props();
+</script>
+
 <div class="min-h-screen bg-[linear-gradient(180deg,#f8fbfc_0%,#edf4f7_100%)] px-5 py-10 text-slate-900 md:px-8 md:py-14">
 	<div class="mx-auto max-w-4xl rounded-[2.5rem] border border-[#d5e2e9] bg-white/95 p-7 shadow-[0_30px_90px_rgba(93,122,139,0.12)] md:p-10">
 		<div class="flex flex-wrap gap-3">
 			<a
-				class="inline-flex w-full justify-center rounded-full border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-white sm:w-auto"
-				href="/"
-			>
-				Back to home
-			</a>
-			<a
 				class="inline-flex w-full justify-center rounded-full border border-[#d5e2e9] bg-[#96C2DB] px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1] sm:w-auto"
-				href="/book/lets-meet"
+				href={`/book/${data.workspace.slug}`}
 			>
 				Back to booking page
+			</a>
+			<a
+				class="inline-flex w-full justify-center rounded-full border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-white sm:w-auto"
+				href={`/book/${data.workspace.slug}/contact`}
+			>
+				Contact
+			</a>
+			<a
+				class="inline-flex w-full justify-center rounded-full border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-white sm:w-auto"
+				href={`/book/${data.workspace.slug}/terms`}
+			>
+				Terms and Conditions
 			</a>
 		</div>
 

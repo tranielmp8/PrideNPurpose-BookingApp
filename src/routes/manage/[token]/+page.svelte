@@ -34,6 +34,33 @@
 		<p class="mt-3 max-w-2xl text-sm leading-6 text-stone-600">
 			Review your scheduled time, join link, and online change options for this booking.
 		</p>
+
+		<div class="mt-5 flex flex-wrap gap-3">
+			<a
+				class="rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-900 transition hover:bg-stone-100"
+				href={`/book/${data.workspace.slug}`}
+			>
+				Booking page
+			</a>
+			<a
+				class="rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-900 transition hover:bg-stone-100"
+				href={`/book/${data.workspace.slug}/contact`}
+			>
+				Contact
+			</a>
+			<a
+				class="rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-900 transition hover:bg-stone-100"
+				href={`/book/${data.workspace.slug}/privacy`}
+			>
+				Privacy
+			</a>
+			<a
+				class="rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-900 transition hover:bg-stone-100"
+				href={`/book/${data.workspace.slug}/terms`}
+			>
+				Terms
+			</a>
+		</div>
 	</div>
 
 	{#if form?.manageMessage}

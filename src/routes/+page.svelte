@@ -47,14 +47,14 @@
 		<section class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
 			<div class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/90 p-6 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-10">
 				<p class="brand-script text-2xl text-slate-600 md:text-3xl">
-					Pride N Purpose
+					Pride N Purpose Bookings
 				</p>
 				<h1 class="mt-5 max-w-4xl font-serif text-4xl leading-[0.98] tracking-tight text-[#384959] sm:text-5xl md:text-7xl">
 					Book meaningful conversations with color, clarity, and purpose.
 				</h1>
 				<p class="mt-6 max-w-2xl text-base leading-7 text-slate-600 md:text-lg">
-					A joyful scheduling experience for clients and a practical booking system for you.
-					Share one link, let people choose a time, and keep the meeting details in motion.
+					Need help keeping up with your meetings, but want a platform that is not confusing?
+					Pride N Purpose Bookings fits those needs. Set exactly what you need with nothing extra.
 				</p>
 
 				<div class="mt-8 flex flex-wrap gap-3">

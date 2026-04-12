@@ -11,6 +11,10 @@
 		currencyCode: string;
 		bufferBeforeMinutes: string;
 		bufferAfterMinutes: string;
+		maxBookingsPerCustomer: string;
+		isIntroOffer: boolean;
+		allowGuestBooking: boolean;
+		requiresCustomerAccount: boolean;
 	};
 
 	function getServiceValues(): ServiceValues {
@@ -26,7 +30,11 @@
 			price: '',
 			currencyCode: 'USD',
 			bufferBeforeMinutes: '0',
-			bufferAfterMinutes: '0'
+			bufferAfterMinutes: '0',
+			maxBookingsPerCustomer: '',
+			isIntroOffer: false,
+			allowGuestBooking: true,
+			requiresCustomerAccount: false
 		};
 	}
 
@@ -143,6 +151,52 @@
 				</div>
 
 				<div>
+					<label class="text-sm font-medium text-stone-700" for="maxBookingsPerCustomer"
+						>Max bookings per customer</label
+					>
+					<input
+						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+						id="maxBookingsPerCustomer"
+						name="maxBookingsPerCustomer"
+						type="number"
+						min="0"
+						step="1"
+						placeholder="Optional"
+						value={getServiceValues().maxBookingsPerCustomer}
+					/>
+				</div>
+
+				<label class="flex items-start gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-700">
+					<input
+						class="mt-1 rounded border-stone-300"
+						name="isIntroOffer"
+						type="checkbox"
+						checked={getServiceValues().isIntroOffer}
+					/>
+					<span>Mark this as an intro session or first-step offer.</span>
+				</label>
+
+				<label class="flex items-start gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-700">
+					<input
+						class="mt-1 rounded border-stone-300"
+						name="allowGuestBooking"
+						type="checkbox"
+						checked={getServiceValues().allowGuestBooking}
+					/>
+					<span>Allow guest booking for this service.</span>
+				</label>
+
+				<label class="flex items-start gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-700">
+					<input
+						class="mt-1 rounded border-stone-300"
+						name="requiresCustomerAccount"
+						type="checkbox"
+						checked={getServiceValues().requiresCustomerAccount}
+					/>
+					<span>Require a signed-in customer account to book this service.</span>
+				</label>
+
+				<div>
 					<label class="text-sm font-medium text-stone-700" for="description">Description</label>
 					<textarea
 						class="mt-2 block min-h-28 w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
@@ -192,6 +246,18 @@
 									{/if}
 									{#if item.bufferBeforeMinutes || item.bufferAfterMinutes}
 										, buffers {item.bufferBeforeMinutes}/{item.bufferAfterMinutes} min
+									{/if}
+									{#if item.isIntroOffer}
+										, intro offer
+									{/if}
+									{#if !item.allowGuestBooking}
+										, guests off
+									{/if}
+									{#if item.requiresCustomerAccount}
+										, account required
+									{/if}
+									{#if item.maxBookingsPerCustomer !== null}
+										, max {item.maxBookingsPerCustomer}/customer
 									{/if}
 									, {item.isActive ? 'Active' : 'Archived'}
 								</p>
@@ -286,6 +352,51 @@
 									value={item.bufferAfterMinutes}
 								/>
 							</div>
+
+							<div>
+								<label class="text-sm font-medium text-stone-700" for={`max-per-customer-${item.id}`}
+									>Max bookings per customer</label
+								>
+								<input
+									class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+									id={`max-per-customer-${item.id}`}
+									name="maxBookingsPerCustomer"
+									type="number"
+									min="0"
+									step="1"
+									value={item.maxBookingsPerCustomer ?? ''}
+								/>
+							</div>
+
+							<label class="flex items-start gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-700">
+								<input
+									class="mt-1 rounded border-stone-300"
+									name="isIntroOffer"
+									type="checkbox"
+									checked={item.isIntroOffer}
+								/>
+								<span>Intro session or first-step offer</span>
+							</label>
+
+							<label class="flex items-start gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-700">
+								<input
+									class="mt-1 rounded border-stone-300"
+									name="allowGuestBooking"
+									type="checkbox"
+									checked={item.allowGuestBooking}
+								/>
+								<span>Allow guest booking</span>
+							</label>
+
+							<label class="flex items-start gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-700">
+								<input
+									class="mt-1 rounded border-stone-300"
+									name="requiresCustomerAccount"
+									type="checkbox"
+									checked={item.requiresCustomerAccount}
+								/>
+								<span>Require customer account</span>
+							</label>
 
 							<div class="md:col-span-2">
 								<label class="text-sm font-medium text-stone-700" for={`description-${item.id}`}>Description</label>

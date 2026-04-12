@@ -199,6 +199,11 @@
 												{item.customerNameSnapshot}
 											</h3>
 											<p class="mt-1 text-sm text-stone-500">{item.customerEmailSnapshot}</p>
+											<p class="mt-2">
+												<span class="rounded-full bg-stone-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-stone-600">
+													{item.customerAccountId ? 'Account customer' : 'Guest customer'}
+												</span>
+											</p>
 										</div>
 
 										<div class="flex items-start gap-3">

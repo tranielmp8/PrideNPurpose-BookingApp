@@ -29,8 +29,8 @@
 		}
 
 		return {
-			name: '',
-			email: '',
+			name: data.customerAccount?.name ?? '',
+			email: data.customerAccount?.email ?? '',
 			notes: '',
 			serviceId: data.selectedServiceId,
 			selectedDate: data.selectedDate
@@ -121,6 +121,54 @@
 			'Selected service'
 		);
 	}
+
+	function getSelectedService() {
+		return data.services.find((service) => service.id === data.selectedServiceId) ?? null;
+	}
+
+	function getServiceRuleBadges(service: (typeof data.services)[number]) {
+		const badges: string[] = [];
+
+		if (service.isIntroOffer) {
+			badges.push('Intro session');
+		}
+
+		if (service.requiresCustomerAccount) {
+			badges.push('Account required');
+		} else if (!service.allowGuestBooking) {
+			badges.push('No guest booking');
+		}
+
+		if (service.maxBookingsPerCustomer !== null) {
+			badges.push(`Max ${service.maxBookingsPerCustomer} per customer`);
+		}
+
+		return badges;
+	}
+
+	function getSelectedServiceMessage(service: (typeof data.services)[number] | null) {
+		if (!service) {
+			return null;
+		}
+
+		if (service.isIntroOffer && service.maxBookingsPerCustomer === 1) {
+			return 'Start here with Intro Conversation. It is the first-step session for new customers and can be booked once per customer.';
+		}
+
+		if (service.isIntroOffer) {
+			return 'Start here with Intro Conversation. This service is designed as the first-step conversation for new customers.';
+		}
+
+		if (service.requiresCustomerAccount) {
+			return 'Website Creation is for returning customers and requires a customer account before booking.';
+		}
+
+		if (service.maxBookingsPerCustomer !== null) {
+			return `This service is limited to ${service.maxBookingsPerCustomer} booking${service.maxBookingsPerCustomer === 1 ? '' : 's'} per customer.`;
+		}
+
+		return null;
+	}
 </script>
 
 <svelte:head>
@@ -130,9 +178,7 @@
 <div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-4 py-8 text-slate-900 sm:px-5 md:px-8 md:py-14">
 	<div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.82fr_1.18fr]">
 		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/92 p-6 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-9">
-			<p class="brand-script text-2xl text-slate-600 md:text-3xl">
-				Pride N Purpose
-			</p>
+			<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Bookings</p>
 			<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-6xl">
 				Book your next conversation with intention.
 			</h1>
@@ -170,10 +216,44 @@
 					</p>
 					<a
 						class="mt-4 inline-flex rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#eef4f7]"
-						href="/contact"
+						href={`/book/${page.params.slug}/contact`}
 					>
 						Contact us
 					</a>
+				</div>
+
+				<div class="rounded-[1.75rem] border border-[#d5e2e9] bg-[#f8fbfc] p-5">
+					<p class="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">Customer account</p>
+					<p class="mt-2 text-sm leading-6 text-slate-600">
+						{#if data.customerAccount}
+							You are signed in as {data.customerAccount.email}.
+						{:else}
+							Create an account to manage bookings from a customer dashboard.
+						{/if}
+					</p>
+					<div class="mt-4 flex flex-wrap gap-3">
+						{#if data.customerAccount}
+							<a
+								class="inline-flex rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#eef4f7]"
+								href="/customer/dashboard"
+							>
+								Open dashboard
+							</a>
+						{:else}
+							<a
+								class="inline-flex rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#eef4f7]"
+								href={`/customer/sign-in?workspace=${page.params.slug}`}
+							>
+								Sign in
+							</a>
+							<a
+								class="inline-flex rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#eef4f7]"
+								href={`/customer/sign-up?workspace=${page.params.slug}`}
+							>
+								Create account
+							</a>
+						{/if}
+					</div>
 				</div>
 			</div>
 		</section>
@@ -185,10 +265,15 @@
 						Public booking page
 					</p>
 					<h2 class="mt-3 text-3xl font-semibold tracking-tight text-[#384959] md:text-4xl">Reserve a session</h2>
-					<p class="mt-3 text-sm leading-6 text-slate-600">
-						Choose your service, select a day from the calendar, then confirm your details.
-					</p>
-				</div>
+						<p class="mt-3 text-sm leading-6 text-slate-600">
+							Start with Intro Conversation. Website Creation is for returning customers. Choose your service, select a day from the calendar, then confirm your details.
+						</p>
+						{#if getSelectedServiceMessage(getSelectedService())}
+							<p class="mt-3 rounded-2xl border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-3 text-sm text-slate-700">
+								{getSelectedServiceMessage(getSelectedService())}
+							</p>
+						{/if}
+					</div>
 
 				{#if form?.bookingSuccess}
 					<p class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
@@ -221,8 +306,12 @@
 					<div>
 						<div class="flex flex-wrap items-center justify-between gap-3">
 							<h3 class="text-lg font-semibold tracking-tight text-[#384959]">1. Choose a service</h3>
-							<p class="text-sm text-slate-500">Simple, clear, and calm</p>
+							<p class="text-sm text-slate-500">Start with Intro Conversation</p>
 						</div>
+
+						<p class="mt-3 text-sm leading-6 text-slate-600">
+							Intro Conversation is the first step for new customers. Website Creation is for returning customers who are ready to move forward.
+						</p>
 
 						<div class="mt-4 grid gap-3 md:grid-cols-2">
 							{#each data.services as service}
@@ -243,6 +332,15 @@
 												· ${(service.priceCents / 100).toFixed(2)}
 											{/if}
 										</span>
+										{#if getServiceRuleBadges(service).length > 0}
+											<div class="mt-3 flex flex-wrap gap-2">
+												{#each getServiceRuleBadges(service) as badge}
+													<span class="rounded-full border border-[#cfdce4] bg-white px-3 py-1 text-xs font-semibold text-slate-700">
+														{badge}
+													</span>
+												{/each}
+											</div>
+										{/if}
 									</span>
 								</label>
 							{/each}
@@ -425,11 +523,11 @@
 
 					<p class="text-center text-xs leading-6 text-slate-500">
 						By confirming this booking, you agree to the
-						<a class="font-semibold text-slate-700 underline underline-offset-4" href="/terms">
+						<a class="font-semibold text-slate-700 underline underline-offset-4" href={`/book/${page.params.slug}/terms`}>
 							Terms and Conditions
 						</a>
 						and acknowledge the
-						<a class="font-semibold text-slate-700 underline underline-offset-4" href="/privacy">
+						<a class="font-semibold text-slate-700 underline underline-offset-4" href={`/book/${page.params.slug}/privacy`}>
 							Privacy Policy
 						</a>.
 					</p>

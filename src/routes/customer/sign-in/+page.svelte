@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { ActionData } from './$types';
+	import type { ActionData, PageData } from './$types';
 
-	let { form }: { form: ActionData } = $props();
+	let { data, form }: { data: PageData; form: ActionData } = $props();
 </script>
 
 <svelte:head>
-	<title>Sign In | Pride N Purpose</title>
+	<title>Customer Sign In | Pride N Purpose Bookings</title>
 </svelte:head>
 
 <div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-6 py-16 text-slate-900">
@@ -16,30 +16,29 @@
 				<p class="brand-script text-2xl text-slate-700 md:text-3xl">Pride N Purpose Bookings</p>
 				<a
 					class="rounded-full border border-white/60 bg-white/30 px-4 py-2 text-sm text-slate-900 transition hover:bg-white/55"
-					href="/"
+					href={data.workspace ? `/book/${data.workspace.slug}` : '/'}
 				>
-					Home
+					Back
 				</a>
 			</div>
 			<h1 class="mt-6 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-5xl">
-				Sign in to manage your schedule with calm and clarity.
+				Sign in to manage your bookings.
 			</h1>
 			<p class="mt-5 max-w-xl text-base leading-7 text-slate-700">
-				Access your provider dashboard, update availability, manage bookings, and keep every
-				customer touchpoint organized.
+				View upcoming sessions, manage booking changes, and keep your appointment history in one place.
 			</p>
 		</section>
 
 		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white p-8 shadow-[0_28px_80px_rgba(93,122,139,0.1)] md:p-10">
-			<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Auth</p>
-			<h2 class="mt-4 text-3xl font-semibold tracking-tight text-[#384959]">
-				Sign in to your workspace
-			</h2>
+			<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Customer access</p>
+			<h2 class="mt-4 text-3xl font-semibold tracking-tight text-[#384959]">Customer sign in</h2>
 			<p class="mt-3 text-sm leading-6 text-slate-600">
-				Use your provider account to manage services, availability, and bookings.
+				Use your customer account to manage bookings for {data.workspace?.name ?? 'this workspace'}.
 			</p>
 
 			<form method="POST" use:enhance class="mt-8 space-y-5">
+				<input type="hidden" name="workspaceSlug" value={data.workspaceSlug} />
+
 				<div>
 					<label class="text-sm font-medium text-slate-700" for="email">Email</label>
 					<input
@@ -78,7 +77,13 @@
 			</form>
 
 			<p class="mt-6 text-sm text-slate-600">
-				Need an account? <a class="font-medium text-slate-900 underline" href="/auth/sign-up">Create one</a>
+				Need an account?
+				<a
+					class="font-medium text-slate-900 underline"
+					href={`/customer/sign-up${data.workspaceSlug ? `?workspace=${data.workspaceSlug}` : ''}`}
+				>
+					Create one
+				</a>
 			</p>
 		</section>
 	</div>

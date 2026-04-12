@@ -20,6 +20,8 @@ type ContactFormContext = {
 	lastName: string;
 	email: string;
 	message: string;
+	recipientEmail?: string | null;
+	subjectPrefix?: string | null;
 };
 
 type BookingStatusEmailVariant = 'confirmed' | 'rescheduled' | 'cancelled';
@@ -469,9 +471,9 @@ export async function sendContactFormNotification(context: ContactFormContext) {
 
 	await resend.emails.send({
 		from: status.emailFrom,
-		to: status.contactFormTo,
+		to: context.recipientEmail?.trim() || status.contactFormTo,
 		replyTo: context.email,
-		subject: `New contact form message from ${context.firstName} ${context.lastName}`,
+		subject: `${context.subjectPrefix?.trim() || 'New contact form message'} from ${context.firstName} ${context.lastName}`,
 		text: buildContactFormPlainTextEmail(context),
 		html: buildContactFormHtmlEmail(context)
 	});

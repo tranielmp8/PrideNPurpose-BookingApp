@@ -5,6 +5,7 @@ import {
 	generateSlotsForService,
 	getPublicBookingContext
 } from '$lib/server/bookings';
+import { getCustomerAccountForUserAndWorkspace } from '$lib/server/customer-accounts';
 import { sendBookingConfirmationEmails } from '$lib/server/email';
 import { getDateKeyInTimeZone } from '$lib/timezone';
 
@@ -12,7 +13,7 @@ function normalizeEmail(value: string) {
 	return value.trim().toLowerCase();
 }
 
-export const load = (async ({ params, url }) => {
+export const load = (async ({ params, url, locals }) => {
 	const slug = params.slug;
 	if (!slug) {
 		throw error(404, 'Booking page not found');
@@ -36,18 +37,23 @@ export const load = (async ({ params, url }) => {
 			})
 		: [];
 
+	const customerAccount = locals.user
+		? await getCustomerAccountForUserAndWorkspace(locals.user.id, context.workspace.id)
+		: null;
+
 	return {
 		workspace: context.workspace,
 		services: context.services,
 		selectedServiceId: selectedService?.id ?? '',
 		selectedDate,
 		slots,
-		timezone: context.workspace.timezone
+		timezone: context.workspace.timezone,
+		customerAccount
 	};
 }) satisfies ServerLoad;
 
 export const actions: Actions = {
-	createBooking: async ({ params, request, url }) => {
+	createBooking: async ({ params, request, url, locals }) => {
 		const slug = params.slug;
 		if (!slug) {
 			throw error(404, 'Booking page not found');
@@ -86,13 +92,18 @@ export const actions: Actions = {
 			});
 		}
 
+		const customerAccount = locals.user
+			? await getCustomerAccountForUserAndWorkspace(locals.user.id, context.workspace.id)
+			: null;
+
 		const createdBooking = await createBookingForPublicPage({
 			workspace: context.workspace,
 			service: selectedService,
 			startAt: bookingStart,
 			name,
 			email,
-			notes
+			notes,
+			customerAccountId: customerAccount?.id ?? null
 		});
 
 		if (!createdBooking) {

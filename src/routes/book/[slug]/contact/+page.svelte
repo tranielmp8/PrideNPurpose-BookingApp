@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
-	let { form } = $props();
+	let { data, form } = $props();
 
 	type ContactValues = {
 		firstName: string;
@@ -25,10 +25,10 @@
 </script>
 
 <svelte:head>
-	<title>Contact | Pride N Purpose Bookings</title>
+	<title>Contact | {data.workspace.name}</title>
 	<meta
 		name="description"
-		content="Send a message to Pride N Purpose Bookings through the contact form."
+		content={`Send a message to ${data.workspace.name} about booking questions or scheduling help.`}
 	/>
 </svelte:head>
 
@@ -37,17 +37,21 @@
 		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/92 p-6 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-9">
 			<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Bookings</p>
 			<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-6xl">
-				Let&apos;s start the conversation.
+				Get help before you book.
 			</h1>
 			<p class="mt-5 text-base leading-7 text-slate-600">
-				Use the form to send a message, ask a question, or share what you need support with. Your
-				message will be delivered directly by email.
+				Ask a question about services, availability, or anything else related to booking with {data.workspace.name}.
 			</p>
 
 			<div class="mt-8 grid gap-4">
 				<div class="rounded-[1.75rem] border border-[#d5e2e9] bg-[#f8fbfc] p-5">
-					<p class="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">Email replies</p>
-					<p class="mt-2 text-base font-semibold">We can reply directly to the email you submit.</p>
+					<p class="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">Booking page</p>
+					<a
+						class="mt-3 inline-flex rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#eef4f7]"
+						href={`/book/${data.workspace.slug}`}
+					>
+						Back to booking page
+					</a>
 				</div>
 
 				<div class="rounded-[1.75rem] border border-[#d5e2e9] bg-[#96C2DB] p-5 text-slate-900">
@@ -55,19 +59,13 @@
 					<div class="mt-3 flex flex-wrap gap-3">
 						<a
 							class="rounded-full border border-white/60 bg-white/65 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-white"
-							href="/"
-						>
-							Booking page
-						</a>
-						<a
-							class="rounded-full border border-white/60 bg-white/65 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-white"
-							href="/privacy"
+							href={`/book/${data.workspace.slug}/privacy`}
 						>
 							Privacy Policy
 						</a>
 						<a
 							class="rounded-full border border-white/60 bg-white/65 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-white"
-							href="/terms"
+							href={`/book/${data.workspace.slug}/terms`}
 						>
 							Terms and Conditions
 						</a>
@@ -79,10 +77,10 @@
 		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white p-6 shadow-[0_35px_100px_rgba(93,122,139,0.1)] md:p-9">
 			<div class="flex flex-wrap items-start justify-between gap-4">
 				<div>
-					<p class="text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">Contact form</p>
+					<p class="text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">Customer contact</p>
 					<h2 class="mt-3 text-3xl font-semibold tracking-tight text-[#384959] md:text-4xl">Send a message</h2>
 					<p class="mt-3 text-sm leading-6 text-slate-600">
-						Fill out the form below and your message will be sent by email.
+						Fill out the form below and your message will be sent to {data.workspace.name}.
 					</p>
 				</div>
 

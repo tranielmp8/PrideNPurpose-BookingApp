@@ -70,6 +70,10 @@ export const service = pgTable(
 		currencyCode: text('currency_code').notNull().default('USD'),
 		bufferBeforeMinutes: integer('buffer_before_minutes').notNull().default(0),
 		bufferAfterMinutes: integer('buffer_after_minutes').notNull().default(0),
+		isIntroOffer: boolean('is_intro_offer').notNull().default(false),
+		allowGuestBooking: boolean('allow_guest_booking').notNull().default(true),
+		requiresCustomerAccount: boolean('requires_customer_account').notNull().default(false),
+		maxBookingsPerCustomer: integer('max_bookings_per_customer'),
 		isActive: boolean('is_active').notNull().default(true),
 		createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 		updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
@@ -147,6 +151,30 @@ export const customer = pgTable(
 	]
 );
 
+export const customerAccount = pgTable(
+	'customer_account',
+	{
+		id: uuid('id').defaultRandom().primaryKey(),
+		workspaceId: uuid('workspace_id')
+			.notNull()
+			.references(() => workspace.id, { onDelete: 'cascade' }),
+		userId: text('user_id')
+			.notNull()
+			.references(() => user.id, { onDelete: 'cascade' }),
+		name: text('name').notNull(),
+		email: text('email').notNull(),
+		isActive: boolean('is_active').notNull().default(true),
+		createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+		updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
+	},
+	(table) => [
+		index('customer_account_workspace_idx').on(table.workspaceId),
+		index('customer_account_user_idx').on(table.userId),
+		uniqueIndex('customer_account_workspace_email_unique_idx').on(table.workspaceId, table.email),
+		uniqueIndex('customer_account_user_unique_idx').on(table.userId)
+	]
+);
+
 export const booking = pgTable(
 	'booking',
 	{
@@ -160,6 +188,9 @@ export const booking = pgTable(
 		customerId: uuid('customer_id')
 			.notNull()
 			.references(() => customer.id, { onDelete: 'restrict' }),
+		customerAccountId: uuid('customer_account_id').references(() => customerAccount.id, {
+			onDelete: 'set null'
+		}),
 		status: bookingStatusEnum('status').notNull().default('scheduled'),
 		startAt: timestamp('start_at', { withTimezone: true }).notNull(),
 		endAt: timestamp('end_at', { withTimezone: true }).notNull(),
@@ -181,7 +212,8 @@ export const booking = pgTable(
 		index('booking_workspace_start_idx').on(table.workspaceId, table.startAt),
 		index('booking_service_start_idx').on(table.serviceId, table.startAt),
 		uniqueIndex('booking_manage_token_unique_idx').on(table.manageToken),
-		index('booking_customer_idx').on(table.customerId)
+		index('booking_customer_idx').on(table.customerId),
+		index('booking_customer_account_idx').on(table.customerAccountId)
 	]
 );
 
