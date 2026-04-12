@@ -2,7 +2,15 @@ import { redirect, type RequestEvent, type ServerLoad } from '@sveltejs/kit';
 import { getCustomerAccountForUser } from '$lib/server/customer-accounts';
 import { getWorkspaceById, getWorkspaceForUser } from '$lib/server/workspace';
 
-export const load = (async ({ locals }: RequestEvent) => {
+export const load = (async ({ locals, url }: RequestEvent) => {
+	const pathname = url.pathname;
+	const isPublicCustomerAuthRoute =
+		pathname === '/customer/sign-in' || pathname === '/customer/sign-up';
+
+	if (isPublicCustomerAuthRoute) {
+		return {};
+	}
+
 	if (!locals.user) {
 		throw redirect(302, '/customer/sign-in');
 	}

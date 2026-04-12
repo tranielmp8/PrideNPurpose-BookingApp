@@ -33,7 +33,7 @@
 				<div class="rounded-[1.5rem] border border-stone-200 p-6">
 					<h3 class="text-lg font-semibold tracking-tight">{item.service?.name ?? 'Booking'}</h3>
 					<p class="mt-2 text-sm text-stone-600">
-						{formatDateTime(item.startAt, data.workspace.timezone)}
+						{formatDateTime(item.startAt, data.workspace?.timezone ?? 'America/Chicago')}
 					</p>
 					<div class="mt-4 flex flex-wrap gap-3">
 						<a
@@ -67,7 +67,7 @@
 				<div class="rounded-[1.5rem] border border-stone-200 p-6">
 					<h3 class="text-lg font-semibold tracking-tight">{item.service?.name ?? 'Booking'}</h3>
 					<p class="mt-2 text-sm text-stone-600">
-						{item.status} on {formatDateTime(item.startAt, data.workspace.timezone)}
+						{item.status} on {formatDateTime(item.startAt, data.workspace?.timezone ?? 'America/Chicago')}
 					</p>
 				</div>
 			{/each}
