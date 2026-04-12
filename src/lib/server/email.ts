@@ -99,7 +99,7 @@ function formatMessageAsHtml(message: string) {
 function buildPlainTextEmail(context: BookingEmailContext) {
 	const customMessage = resolveConfirmationEmailMessage(context);
 	const lines = [
-		`Pride N Purpose booking confirmed for ${context.service.name}.`,
+		`Pride N Purpose Booking confirmed for ${context.service.name}.`,
 		'',
 		`Name: ${context.customerName}`,
 		`Email: ${context.customerEmail}`,
@@ -110,7 +110,7 @@ function buildPlainTextEmail(context: BookingEmailContext) {
 		'',
 		customMessage,
 		'',
-		'Sent via Pride N Purpose'
+		'Sent via Pride N Purpose Booking'
 	].filter(Boolean);
 
 	return lines.join('\n');
@@ -158,7 +158,7 @@ function buildHtmlEmail(context: BookingEmailContext) {
 							<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px; background:#ffffff; border:1px solid #d5e2e9; border-radius:28px; overflow:hidden; box-shadow:0 24px 80px rgba(93,122,139,0.12);">
 								<tr>
 									<td style="padding:40px 40px 24px; background:linear-gradient(135deg,#ffffff 0%,#f3f8fa 100%);">
-										<div style="font-size:28px; line-height:1.2; color:#64748b; font-style:italic;">Pride N Purpose</div>
+										<div style="font-size:28px; line-height:1.2; color:#64748b; font-style:italic;">Pride N Purpose Booking</div>
 										<h1 style="margin:18px 0 0; font-size:34px; line-height:1.2; font-weight:700; color:#384959;">Your meeting is confirmed.</h1>
 										<p style="margin:14px 0 0; font-size:16px; line-height:1.7; color:#475569;">
 											${escapeHtml(context.service.name)} has been scheduled successfully for ${escapeHtml(context.customerName)}.
@@ -236,7 +236,7 @@ function buildContactFormHtmlEmail(context: ContactFormContext) {
 							<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px; background:#ffffff; border:1px solid #d5e2e9; border-radius:28px; overflow:hidden; box-shadow:0 24px 80px rgba(93,122,139,0.12);">
 								<tr>
 									<td style="padding:40px 40px 24px; background:linear-gradient(135deg,#ffffff 0%,#f3f8fa 100%);">
-										<div style="font-size:28px; line-height:1.2; color:#64748b; font-style:italic;">Pride N Purpose</div>
+										<div style="font-size:28px; line-height:1.2; color:#64748b; font-style:italic;">Pride N Purpose Booking</div>
 										<h1 style="margin:18px 0 0; font-size:34px; line-height:1.2; font-weight:700; color:#384959;">New contact message</h1>
 										<p style="margin:14px 0 0; font-size:16px; line-height:1.7; color:#475569;">
 											A visitor submitted the contact form.
@@ -285,7 +285,7 @@ export async function sendBookingConfirmationEmails(context: BookingEmailContext
 		);
 	}
 
-	const subject = `Pride N Purpose: ${context.service.name} confirmed`;
+	const subject = `Pride N Purpose Booking: ${context.service.name} confirmed`;
 	const text = buildPlainTextEmail(context);
 	const html = buildHtmlEmail(context);
 	const recipients = [context.customerEmail];

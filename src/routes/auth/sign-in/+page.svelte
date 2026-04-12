@@ -12,7 +12,15 @@
 <div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-6 py-16 text-slate-900">
 	<div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
 		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-[#96C2DB] p-8 text-slate-900 shadow-[0_28px_80px_rgba(93,122,139,0.14)] md:p-10">
-			<p class="brand-script text-2xl text-slate-700 md:text-3xl">Pride N Purpose</p>
+			<div class="flex items-start justify-between gap-4">
+				<p class="brand-script text-2xl text-slate-700 md:text-3xl">Pride N Purpose Booking</p>
+				<a
+					class="rounded-full border border-white/60 bg-white/30 px-4 py-2 text-sm text-slate-900 transition hover:bg-white/55"
+					href="/"
+				>
+					Home
+				</a>
+			</div>
 			<h1 class="mt-6 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-5xl">
 				Sign in to manage your schedule with calm and clarity.
 			</h1>
