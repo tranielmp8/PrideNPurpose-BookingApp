@@ -22,6 +22,7 @@
 
 	const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 	let serviceFilterForm = $state<HTMLFormElement | null>(null);
+	let selectedSlot = $state('');
 
 	function getBookingValues(): BookingValues {
 		if (form && typeof form === 'object' && 'bookingValues' in form) {
@@ -38,7 +39,7 @@
 	}
 
 	function isSelectedSlot(isoString: string) {
-		return form?.confirmedBooking?.startAt === isoString;
+		return form?.confirmedBooking?.startAt === isoString || selectedSlot === isoString;
 	}
 
 	function parseDateKey(dateKey: string) {
@@ -435,18 +436,20 @@
 					{:else}
 						<div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
 							{#each data.slots as slot}
-								<div
-									class={`rounded-[1.5rem] border px-4 py-4 text-left text-sm ${
+								<button
+									type="button"
+									onclick={() => { selectedSlot = slot.startAt.toISOString(); }}
+									class={`rounded-[1.5rem] border px-4 py-4 text-left text-sm transition ${
 										isSelectedSlot(slot.startAt.toISOString())
-													? 'border-[#96C2DB] bg-[#edf5f9] text-slate-900'
-													: 'border-[#d5e2e9] bg-white'
+											? 'border-[#96C2DB] bg-[#edf5f9] text-slate-900 shadow-[0_8px_24px_rgba(93,122,139,0.14)]'
+											: 'border-[#d5e2e9] bg-white hover:border-[#b8ccd8] hover:bg-[#f4f9fb]'
 									}`}
 								>
 									<span class="block text-base font-semibold">{slot.label}</span>
 									<span class="mt-1 block text-xs uppercase tracking-[0.2em] text-slate-500">
-										Available
+										{isSelectedSlot(slot.startAt.toISOString()) ? 'Selected' : 'Available'}
 									</span>
-								</div>
+								</button>
 							{/each}
 						</div>
 					{/if}
@@ -461,19 +464,17 @@
 					</div>
 
 					<div>
-						<label class="text-sm font-medium text-slate-700" for="slotStartAt">4. Select your time</label>
+						<label class="text-sm font-medium text-slate-700" for="slotStartAt">4. Confirm your time</label>
 						<select
 							class="mt-2 block w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm"
 							id="slotStartAt"
 							name="slotStartAt"
 							required
+							bind:value={selectedSlot}
 						>
 							<option value="">Choose a time</option>
 							{#each data.slots as slot}
-								<option
-									value={slot.startAt.toISOString()}
-									selected={isSelectedSlot(slot.startAt.toISOString())}
-								>
+								<option value={slot.startAt.toISOString()}>
 									{slot.label}
 								</option>
 							{/each}

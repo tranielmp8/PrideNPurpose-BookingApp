@@ -96,15 +96,27 @@ export const actions: Actions = {
 			? await getCustomerAccountForUserAndWorkspace(locals.user.id, context.workspace.id)
 			: null;
 
-		const createdBooking = await createBookingForPublicPage({
-			workspace: context.workspace,
-			service: selectedService,
-			startAt: bookingStart,
-			name,
-			email,
-			notes,
-			customerAccountId: customerAccount?.id ?? null
-		});
+		let createdBooking;
+
+		try {
+			createdBooking = await createBookingForPublicPage({
+				workspace: context.workspace,
+				service: selectedService,
+				startAt: bookingStart,
+				name,
+				email,
+				notes,
+				customerAccountId: customerAccount?.id ?? null
+			});
+		} catch (bookingError) {
+			return fail(400, {
+				bookingMessage:
+					bookingError instanceof Error
+						? bookingError.message
+						: 'Unable to complete this booking. Please try again.',
+				bookingValues: { name, email, notes, serviceId, selectedDate }
+			});
+		}
 
 		if (!createdBooking) {
 			return fail(409, {

@@ -3,6 +3,11 @@
 	import type { ActionData, PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
+
+	let password = $state('');
+	let confirmPassword = $state('');
+
+	const passwordMismatch = $derived(confirmPassword.length > 0 && password !== confirmPassword);
 </script>
 
 <svelte:head>
@@ -76,7 +81,24 @@
 						type="password"
 						minlength="8"
 						required
+						bind:value={password}
 					/>
+				</div>
+
+				<div>
+					<label class="text-sm font-medium text-slate-700" for="confirmPassword">Confirm password</label>
+					<input
+						class="mt-2 block w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm {passwordMismatch ? 'border-red-400 ring-1 ring-red-300' : ''}"
+						id="confirmPassword"
+						name="confirmPassword"
+						type="password"
+						minlength="8"
+						required
+						bind:value={confirmPassword}
+					/>
+					{#if passwordMismatch}
+						<p class="mt-2 text-xs text-red-600">Passwords do not match.</p>
+					{/if}
 				</div>
 
 				{#if form?.message}
@@ -89,7 +111,7 @@
 					<button
 						class="w-full rounded-full bg-[#96C2DB] px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1] disabled:cursor-not-allowed disabled:bg-[#c9dbe5] disabled:text-slate-600"
 						type="submit"
-						disabled={!data.workspaceSlug}
+						disabled={!data.workspaceSlug || passwordMismatch}
 					>
 						Create account
 					</button>

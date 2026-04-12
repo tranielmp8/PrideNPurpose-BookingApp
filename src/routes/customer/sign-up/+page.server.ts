@@ -36,6 +36,7 @@ export const actions: Actions = {
 		const name = formData.get('name')?.toString().trim() ?? '';
 		const email = formData.get('email')?.toString().trim().toLowerCase() ?? '';
 		const password = formData.get('password')?.toString() ?? '';
+		const confirmPassword = formData.get('confirmPassword')?.toString() ?? '';
 		const workspaceSlug = formData.get('workspaceSlug')?.toString().trim() ?? '';
 
 		if (!name || !email || !password || !workspaceSlug) {
@@ -48,6 +49,13 @@ export const actions: Actions = {
 		if (password.length < 8) {
 			return fail(400, {
 				message: 'Password must be at least 8 characters.',
+				values: { name, email, workspaceSlug }
+			});
+		}
+
+		if (password !== confirmPassword) {
+			return fail(400, {
+				message: 'Passwords do not match.',
 				values: { name, email, workspaceSlug }
 			});
 		}
