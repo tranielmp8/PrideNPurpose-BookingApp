@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>Privacy Policy | Booking App</title>
+	<title>Privacy Policy | Pride N Purpose Conversations</title>
 </svelte:head>
 
 <div class="min-h-screen bg-[linear-gradient(180deg,#f8fbfc_0%,#edf4f7_100%)] px-5 py-10 text-slate-900 md:px-8 md:py-14">
@@ -19,7 +19,7 @@
 			</a>
 		</div>
 
-		<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Bookings</p>
+		<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Conversations</p>
 		<h1 class="mt-5 font-serif text-4xl tracking-tight text-[#384959] md:text-5xl">Privacy Policy</h1>
 		<p class="mt-4 text-sm leading-7 text-slate-600">
 			Last updated: April 11, 2026
@@ -27,7 +27,7 @@
 
 		<div class="prose prose-slate mt-8 max-w-none">
 			<p>
-				This Privacy Policy explains how this booking app collects, uses, and protects personal
+				This Privacy Policy explains how this Pride N Purpose Conversations collects, uses, and protects personal
 				information when you schedule a meeting or submit your information through this site.
 			</p>
 

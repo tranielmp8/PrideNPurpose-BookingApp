@@ -20,7 +20,7 @@
 </script>
 
 <svelte:head>
-	<title>Settings | Booking App</title>
+	<title>Settings | Pride N Purpose Conversations</title>
 </svelte:head>
 
 <section class="space-y-8">

@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>Account Access | Pride N Purpose Bookings</title>
+	<title>Account Access | Pride N Purpose Conversations</title>
 </svelte:head>
 
 <div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-6 py-16 text-slate-900">
@@ -7,7 +7,7 @@
 		<div class="rounded-[2.5rem] border border-[#d5e2e9] bg-white p-8 shadow-[0_28px_80px_rgba(93,122,139,0.1)] md:p-10">
 			<div class="flex items-start justify-between gap-4">
 				<div>
-					<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Bookings</p>
+					<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Conversations</p>
 					<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-5xl">
 						Choose the right sign in.
 					</h1>

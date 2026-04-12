@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>Terms and Conditions | Booking App</title>
+	<title>Terms and Conditions | Pride N Purpose Conversations</title>
 </svelte:head>
 
 <script lang="ts">
@@ -29,7 +29,7 @@
 			</a>
 		</div>
 
-		<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Bookings</p>
+		<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Conversations</p>
 		<h1 class="mt-5 font-serif text-4xl tracking-tight text-[#384959] md:text-5xl">Terms and Conditions</h1>
 		<p class="mt-4 text-sm leading-7 text-slate-600">
 			Last updated: April 12, 2026
@@ -37,19 +37,19 @@
 
 		<div class="prose prose-slate mt-8 max-w-none">
 			<p>
-				These Terms and Conditions govern your use of this booking app and your scheduling of
+				These Terms and Conditions govern your use of this Pride N Purpose Conversations and your scheduling of
 				meetings, consultations, or related services through this site.
 			</p>
 
 			<h2>Use of the Booking Service</h2>
 			<p>
-				By using this booking app, you agree to provide accurate information and to use the service
+				By using this Pride N Purpose Conversations, you agree to provide accurate information and to use the service
 				only for lawful and legitimate scheduling purposes.
 			</p>
 
 			<h2>Service Fees and Charges</h2>
 			<p>
-				Pride N Purpose Bookings is a platform that enables service providers to offer their own
+				Pride N Purpose Conversations is a platform that enables service providers to offer their own
 				services, consultations, and sessions. Any fees, charges, or rates associated with a
 				booking are set entirely at the discretion of the individual service provider. Pride N
 				Purpose Bookings does not set, control, or guarantee the pricing of any service offered
@@ -99,7 +99,7 @@
 			<h2>Limitation of Liability</h2>
 			<p>
 				To the maximum extent permitted by law, we are not liable for indirect, incidental, special,
-				or consequential damages arising from your use of this booking app or any meeting scheduled
+				or consequential damages arising from your use of this Pride N Purpose Conversations or any meeting scheduled
 				through it.
 			</p>
 
@@ -111,13 +111,13 @@
 
 			<h2>Intellectual Property</h2>
 			<p>
-				All content, branding, design, and materials on this booking app remain the property of
+				All content, branding, design, and materials on this Pride N Purpose Conversations remain the property of
 				their respective owner unless otherwise stated.
 			</p>
 
 			<h2>Changes to These Terms</h2>
 			<p>
-				We may update these Terms and Conditions at any time. Continued use of the booking app after
+				We may update these Terms and Conditions at any time. Continued use of the Pride N Purpose Conversations after
 				changes are posted means you accept the updated terms.
 			</p>
 

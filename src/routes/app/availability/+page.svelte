@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-	<title>Availability | Booking App</title>
+	<title>Availability | Pride N Purpose Conversations</title>
 </svelte:head>
 
 <section class="space-y-8">

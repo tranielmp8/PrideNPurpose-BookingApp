@@ -25,17 +25,17 @@
 </script>
 
 <svelte:head>
-	<title>Contact | Pride N Purpose Bookings</title>
+	<title>Contact | Pride N Purpose Conversations</title>
 	<meta
 		name="description"
-		content="Send a message to Pride N Purpose Bookings through the contact form."
+		content="Send a message to Pride N Purpose Conversations through the contact form."
 	/>
 </svelte:head>
 
 <div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-4 py-8 text-slate-900 sm:px-5 md:px-8 md:py-14">
 	<div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.85fr_1.15fr]">
 		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/92 p-6 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-9">
-			<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Bookings</p>
+			<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Conversations</p>
 			<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-6xl">
 				Let&apos;s start the conversation.
 			</h1>

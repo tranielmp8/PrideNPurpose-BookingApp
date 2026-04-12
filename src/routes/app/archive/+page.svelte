@@ -35,7 +35,7 @@
 </script>
 
 <svelte:head>
-	<title>Archive | Booking App</title>
+	<title>Archive | Pride N Purpose Conversations</title>
 </svelte:head>
 
 <section class="space-y-8">

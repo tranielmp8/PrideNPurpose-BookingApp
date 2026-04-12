@@ -11,14 +11,14 @@
 </script>
 
 <svelte:head>
-	<title>Customer Sign Up | Pride N Purpose Bookings</title>
+	<title>Customer Sign Up | Pride N Purpose Conversations</title>
 </svelte:head>
 
 <div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-6 py-16 text-slate-900">
 	<div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.82fr_1.18fr]">
 		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-[#96C2DB] p-8 text-slate-900 shadow-[0_28px_80px_rgba(93,122,139,0.14)] md:p-10">
 			<div class="flex items-start justify-between gap-4">
-				<p class="brand-script text-2xl text-slate-700 md:text-3xl">Pride N Purpose Bookings</p>
+				<p class="brand-script text-2xl text-slate-700 md:text-3xl">Pride N Purpose Conversations</p>
 				<a
 					class="rounded-full border border-white/60 bg-white/30 px-4 py-2 text-sm text-slate-900 transition hover:bg-white/55"
 					href={data.workspace ? `/book/${data.workspace.slug}` : '/'}

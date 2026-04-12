@@ -33,7 +33,7 @@
 </script>
 
 <svelte:head>
-	<title>Pride N Purpose Bookings</title>
+	<title>Pride N Purpose Conversations</title>
 	<meta
 		name="description"
 		content="Bright, modern scheduling for Pride N Purpose with public booking, provider management, and Zoho Meeting sync."
@@ -47,14 +47,14 @@
 		<section class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
 			<div class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/90 p-6 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-10">
 				<p class="brand-script text-2xl text-slate-600 md:text-3xl">
-					Pride N Purpose Bookings
+					Pride N Purpose Conversations
 				</p>
 				<h1 class="mt-5 max-w-4xl font-serif text-4xl leading-[0.98] tracking-tight text-[#384959] sm:text-5xl md:text-7xl">
 					Book meaningful conversations with color, clarity, and purpose.
 				</h1>
 				<p class="mt-6 max-w-2xl text-base leading-7 text-slate-600 md:text-lg">
 					Need help keeping up with your meetings, but want a platform that is not confusing?
-					Pride N Purpose Bookings fits those needs. Set exactly what you need with nothing extra.
+					Pride N Purpose Conversations fits those needs. Set exactly what you need with nothing extra.
 				</p>
 
 				<div class="mt-8 flex flex-wrap gap-3">
@@ -135,7 +135,7 @@
 					</p>
 					<p class="mt-1 text-sm text-slate-500">during early access</p>
 					<p class="mt-3 text-sm leading-6 text-slate-600">
-						Pricing plans are coming soon. For now, Pride N Purpose Bookings is completely
+						Pricing plans are coming soon. For now, Pride N Purpose Conversations is completely
 						free while we build and refine the experience together.
 					</p>
 				</div>

@@ -147,7 +147,7 @@
 </script>
 
 <svelte:head>
-	<title>Bookings | Booking App</title>
+	<title>Conversations | Pride N Purpose Conversations</title>
 </svelte:head>
 
 <section class="space-y-8">

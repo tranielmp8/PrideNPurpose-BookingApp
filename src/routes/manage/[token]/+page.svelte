@@ -24,7 +24,7 @@
 </script>
 
 <svelte:head>
-	<title>Manage Booking | Booking App</title>
+	<title>Manage Conversation | Pride N Purpose Conversations</title>
 </svelte:head>
 
 <section class="mx-auto max-w-3xl space-y-8 px-4 py-12 sm:px-6">
