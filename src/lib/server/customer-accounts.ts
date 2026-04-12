@@ -80,3 +80,12 @@ export async function getBookingsForCustomerAccount(customerAccountId: string) {
 		service: serviceMap.get(item.serviceId) ?? null
 	}));
 }
+
+export async function findWorkspaceMatchForCustomerEmail(email: string) {
+	const normalizedEmail = email.trim().toLowerCase();
+
+	return db.query.customer.findFirst({
+		where: eq(customer.email, normalizedEmail),
+		orderBy: [desc(customer.updatedAt), desc(customer.createdAt)]
+	});
+}

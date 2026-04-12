@@ -2,6 +2,8 @@ import { fail, redirect, type Actions, type RequestEvent, type ServerLoad } from
 import { APIError } from 'better-auth/api';
 import { auth } from '$lib/server/auth';
 import {
+	createCustomerAccountForUser,
+	findWorkspaceMatchForCustomerEmail,
 	getCustomerAccountForUser,
 	linkGuestBookingsToCustomerAccount
 } from '$lib/server/customer-accounts';
@@ -84,17 +86,54 @@ export const actions: Actions = {
 				? authResult.user.id
 				: null;
 
+		const signedInUserName =
+			authResult &&
+			typeof authResult === 'object' &&
+			'user' in authResult &&
+			authResult.user &&
+			typeof authResult.user === 'object' &&
+			'name' in authResult.user &&
+			typeof authResult.user.name === 'string'
+				? authResult.user.name
+				: '';
+
 		if (signedInUserId) {
-			const customerAccount = await getCustomerAccountForUser(signedInUserId);
+			let customerAccount = await getCustomerAccountForUser(signedInUserId);
+
+			if (!customerAccount) {
+				const workspaceFromSlug = workspaceSlug ? await getWorkspaceBySlug(workspaceSlug) : null;
+				const matchedCustomer = workspaceFromSlug
+					? null
+					: await findWorkspaceMatchForCustomerEmail(email);
+				const targetWorkspaceId = workspaceFromSlug?.id ?? matchedCustomer?.workspaceId ?? null;
+				const targetName = signedInUserName || matchedCustomer?.name || email;
+
+				if (targetWorkspaceId) {
+					customerAccount = await createCustomerAccountForUser({
+						userId: signedInUserId,
+						workspaceId: targetWorkspaceId,
+						name: targetName,
+						email
+					});
+				}
+			}
+
 			if (customerAccount) {
 				await linkGuestBookingsToCustomerAccount({
 					customerAccountId: customerAccount.id,
 					workspaceId: customerAccount.workspaceId,
 					email: customerAccount.email
 				});
+
+				throw redirect(302, '/customer/dashboard');
 			}
 		}
 
-		throw redirect(302, '/customer/dashboard');
+		return fail(400, {
+			message:
+				'This sign-in was successful, but no customer booking profile was found yet. Start from a booking page or create your customer account from that workspace first.',
+			email,
+			workspaceSlug
+		});
 	}
 };
