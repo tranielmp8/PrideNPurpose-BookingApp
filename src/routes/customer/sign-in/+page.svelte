@@ -35,6 +35,11 @@
 			<p class="mt-3 text-sm leading-6 text-slate-600">
 				Use your customer account to manage bookings for {data.workspace?.name ?? 'this workspace'}.
 			</p>
+			{#if !data.workspace}
+				<p class="mt-3 rounded-2xl border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-3 text-sm text-slate-700">
+					If you are creating a new customer account, start from a booking page so your account connects to the correct workspace.
+				</p>
+			{/if}
 
 			<form method="POST" use:enhance class="mt-8 space-y-5">
 				<input type="hidden" name="workspaceSlug" value={data.workspaceSlug} />
@@ -84,6 +89,9 @@
 				>
 					Create one
 				</a>
+			</p>
+			<p class="mt-3 text-sm text-slate-600">
+				Provider account? <a class="font-medium text-slate-900 underline" href="/auth">Use provider sign in</a>
 			</p>
 		</section>
 	</div>

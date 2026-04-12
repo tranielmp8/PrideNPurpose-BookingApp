@@ -32,7 +32,7 @@
 		</section>
 
 		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white p-8 shadow-[0_28px_80px_rgba(93,122,139,0.1)] md:p-10">
-			<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Auth</p>
+			<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Provider access</p>
 			<h2 class="mt-4 text-3xl font-semibold tracking-tight text-[#384959]">
 				Create your provider account
 			</h2>
@@ -116,6 +116,9 @@
 
 			<p class="mt-6 text-sm text-slate-600">
 				Already have an account? <a class="font-medium text-slate-900 underline" href="/auth/sign-in">Sign in</a>
+			</p>
+			<p class="mt-3 text-sm text-slate-600">
+				Looking for customer access? <a class="font-medium text-slate-900 underline" href="/auth">Choose customer sign in instead</a>
 			</p>
 		</section>
 	</div>

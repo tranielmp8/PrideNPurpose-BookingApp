@@ -35,6 +35,11 @@
 			<p class="mt-3 max-w-xl text-sm leading-6 text-slate-600">
 				This account will be connected to {data.workspace?.name ?? 'this booking workspace'}.
 			</p>
+			{#if !data.workspaceSlug}
+				<p class="mt-4 rounded-2xl border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-3 text-sm text-slate-700">
+					Start customer sign-up from a booking page so your account connects to the right booking workspace.
+				</p>
+			{/if}
 
 			<form method="POST" use:enhance class="mt-8 grid gap-5">
 				<input type="hidden" name="workspaceSlug" value={data.workspaceSlug} />
@@ -82,8 +87,9 @@
 
 				<div>
 					<button
-						class="w-full rounded-full bg-[#96C2DB] px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1]"
+						class="w-full rounded-full bg-[#96C2DB] px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1] disabled:cursor-not-allowed disabled:bg-[#c9dbe5] disabled:text-slate-600"
 						type="submit"
+						disabled={!data.workspaceSlug}
 					>
 						Create account
 					</button>
@@ -98,6 +104,9 @@
 				>
 					Sign in
 				</a>
+			</p>
+			<p class="mt-3 text-sm text-slate-600">
+				Provider account? <a class="font-medium text-slate-900 underline" href="/auth">Use provider sign in</a>
 			</p>
 		</section>
 	</div>
