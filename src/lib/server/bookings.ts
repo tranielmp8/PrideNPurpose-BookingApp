@@ -330,6 +330,35 @@ function shouldSyncZohoMeeting(
 	);
 }
 
+function getZohoMeetingKeyFromPayload(payload: string | null) {
+	if (!payload) {
+		return null;
+	}
+
+	try {
+		const parsed = JSON.parse(payload) as {
+			session?: {
+				meetingKey?: string | number | null;
+			};
+		};
+		const meetingKey = parsed.session?.meetingKey;
+		return meetingKey == null ? null : meetingKey.toString();
+	} catch {
+		return null;
+	}
+}
+
+function getStoredZohoMeetingKey(bookingRecord: typeof booking.$inferSelect) {
+	return bookingRecord.zohoMeetingKey ?? getZohoMeetingKeyFromPayload(bookingRecord.zohoMeetingPayload);
+}
+
+function shouldDeleteZohoMeeting(
+	workspace: PublicWorkspace,
+	bookingRecord: typeof booking.$inferSelect
+) {
+	return Boolean(getStoredZohoMeetingKey(bookingRecord) && workspace.zohoDataCenter && workspace.zohoZsoid);
+}
+
 export async function createBookingForPublicPage(input: {
 	workspace: PublicWorkspace;
 	service: PublicService;
@@ -501,11 +530,14 @@ export async function cancelBookingForWorkspace(
 		return existingBooking;
 	}
 
-	if (shouldSyncZohoMeeting(workspaceRecord, existingBooking)) {
+	const zohoMeetingKey = getStoredZohoMeetingKey(existingBooking);
+	const shouldRemoveZohoMeeting = shouldDeleteZohoMeeting(workspaceRecord, existingBooking);
+
+	if (shouldRemoveZohoMeeting) {
 		await deleteZohoMeeting({
 			dataCenter: workspaceRecord.zohoDataCenter,
 			zsoid: workspaceRecord.zohoZsoid!,
-			meetingKey: existingBooking.zohoMeetingKey!,
+			meetingKey: zohoMeetingKey!,
 			xZsource: workspaceRecord.zohoXZsource || workspaceRecord.name
 		});
 	}
@@ -516,8 +548,10 @@ export async function cancelBookingForWorkspace(
 			status: 'cancelled',
 			cancelledAt: new Date(),
 			archivedAt: null,
-			zohoJoinLink: shouldSyncZohoMeeting(workspaceRecord, existingBooking) ? null : existingBooking.zohoJoinLink,
-			zohoStartLink: shouldSyncZohoMeeting(workspaceRecord, existingBooking) ? null : existingBooking.zohoStartLink,
+			zohoMeetingKey: shouldRemoveZohoMeeting ? null : existingBooking.zohoMeetingKey,
+			zohoJoinLink: shouldRemoveZohoMeeting ? null : existingBooking.zohoJoinLink,
+			zohoStartLink: shouldRemoveZohoMeeting ? null : existingBooking.zohoStartLink,
+			zohoMeetingPayload: shouldRemoveZohoMeeting ? null : existingBooking.zohoMeetingPayload,
 			updatedAt: new Date()
 		})
 		.where(and(eq(booking.id, bookingId), eq(booking.workspaceId, workspaceRecord.id)))

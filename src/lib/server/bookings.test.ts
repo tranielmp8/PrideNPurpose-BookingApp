@@ -641,8 +641,40 @@ describe('booking state changes', () => {
 		});
 		expect(mockState.lastUpdateValues).toMatchObject({
 			status: 'cancelled',
+			zohoMeetingKey: null,
 			zohoJoinLink: null,
-			zohoStartLink: null
+			zohoStartLink: null,
+			zohoMeetingPayload: null
+		});
+	});
+
+	it('cancels a booking using the meeting key stored in the Zoho payload', async () => {
+		const workspace = createWorkspace({
+			zohoDataCenter: 'com',
+			zohoZsoid: 'zsoid-1',
+			zohoXZsource: 'Pride N Purpose'
+		});
+		mockState.findFirstBooking = createBooking({
+			zohoMeetingKey: null,
+			zohoJoinLink: 'https://meet.zoho.com/join/123',
+			zohoStartLink: 'https://meet.zoho.com/start/123',
+			zohoMeetingPayload: '{"session":{"meetingKey":"meeting-123"}}'
+		});
+
+		await cancelBookingForWorkspace(workspace, 'booking-1');
+
+		expect(zohoMocks.deleteZohoMeeting).toHaveBeenCalledWith({
+			dataCenter: 'com',
+			zsoid: 'zsoid-1',
+			meetingKey: 'meeting-123',
+			xZsource: 'Pride N Purpose'
+		});
+		expect(mockState.lastUpdateValues).toMatchObject({
+			status: 'cancelled',
+			zohoMeetingKey: null,
+			zohoJoinLink: null,
+			zohoStartLink: null,
+			zohoMeetingPayload: null
 		});
 	});
 
