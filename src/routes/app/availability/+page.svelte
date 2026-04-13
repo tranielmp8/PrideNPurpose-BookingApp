@@ -26,11 +26,21 @@
 	<div class="grid gap-6 xl:grid-cols-2">
 		<section class="rounded-[1.5rem] border border-stone-200 p-6">
 			<h2 class="text-xl font-semibold tracking-tight">Booking rules</h2>
-			<form method="POST" action="?/updateBookingRules" use:enhance class="mt-6 grid gap-4 md:grid-cols-4">
-				<div>
-					<label class="text-sm font-medium text-stone-700" for="minNoticeMinutes">Minimum notice</label>
+			<form method="POST" action="?/updateBookingRules" use:enhance class="mt-6 space-y-5">
+				<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+					<div class="grid content-start gap-2 rounded-3xl border border-stone-200 bg-stone-50/60 p-4">
+						<label
+							class="flex min-h-[2.5rem] items-end text-sm font-medium text-stone-700"
+							for="minNoticeMinutes"
+						>
+							Minimum notice
+						</label>
+						<p class="min-h-[3.75rem] text-xs leading-5 text-stone-500">
+							How much lead time someone needs before a slot can be booked. Use minutes. `1440`
+							means at least 24 hours.
+						</p>
 					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+							class="block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
 						id="minNoticeMinutes"
 						name="minNoticeMinutes"
 						type="number"
@@ -38,14 +48,21 @@
 						step="1"
 						value={data.bookingRules.minNoticeMinutes}
 					/>
-				</div>
+					</div>
 
-				<div>
-					<label class="text-sm font-medium text-stone-700" for="customerChangeCutoffMinutes"
-						>Customer change cutoff</label
-					>
+					<div class="grid content-start gap-2 rounded-3xl border border-stone-200 bg-stone-50/60 p-4">
+						<label
+							class="flex min-h-[2.5rem] items-end text-sm font-medium text-stone-700"
+							for="customerChangeCutoffMinutes"
+						>
+							Customer change cutoff
+						</label>
+						<p class="min-h-[3.75rem] text-xs leading-5 text-stone-500">
+							How long before the meeting a customer can still cancel or reschedule online. `0`
+							means changes stay open until the meeting starts.
+						</p>
 					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+							class="block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
 						id="customerChangeCutoffMinutes"
 						name="customerChangeCutoffMinutes"
 						type="number"
@@ -53,12 +70,21 @@
 						step="1"
 						value={data.bookingRules.customerChangeCutoffMinutes}
 					/>
-				</div>
+					</div>
 
-				<div>
-					<label class="text-sm font-medium text-stone-700" for="bookingWindowDays">Booking window</label>
+					<div class="grid content-start gap-2 rounded-3xl border border-stone-200 bg-stone-50/60 p-4">
+						<label
+							class="flex min-h-[2.5rem] items-end text-sm font-medium text-stone-700"
+							for="bookingWindowDays"
+						>
+							Booking window
+						</label>
+						<p class="min-h-[3.75rem] text-xs leading-5 text-stone-500">
+							How many days ahead people can book. Smaller values keep the calendar tighter and
+							prevent far-future bookings.
+						</p>
 					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+							class="block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
 						id="bookingWindowDays"
 						name="bookingWindowDays"
 						type="number"
@@ -66,12 +92,20 @@
 						step="1"
 						value={data.bookingRules.bookingWindowDays}
 					/>
-				</div>
+					</div>
 
-				<div>
-					<label class="text-sm font-medium text-stone-700" for="maxBookingsPerDay">Max bookings/day</label>
+					<div class="grid content-start gap-2 rounded-3xl border border-stone-200 bg-stone-50/60 p-4">
+						<label
+							class="flex min-h-[2.5rem] items-end text-sm font-medium text-stone-700"
+							for="maxBookingsPerDay"
+						>
+							Max bookings/day
+						</label>
+						<p class="min-h-[3.75rem] text-xs leading-5 text-stone-500">
+							Optional daily cap across all services. Leave blank if you do not want a limit.
+						</p>
 					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+							class="block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
 						id="maxBookingsPerDay"
 						name="maxBookingsPerDay"
 						type="number"
@@ -80,16 +114,10 @@
 						value={data.bookingRules.maxBookingsPerDay ?? ''}
 						placeholder="Optional"
 					/>
+					</div>
 				</div>
 
-				<div class="md:col-span-3">
-					<p class="text-sm leading-6 text-stone-500">
-						Customers can cancel or reschedule only until this cutoff before the meeting starts.
-						Use `0` to allow changes up to the start time.
-					</p>
-				</div>
-
-				<div class="md:col-span-4">
+				<div>
 					<button
 						class="rounded-full bg-stone-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-stone-800"
 						type="submit"
