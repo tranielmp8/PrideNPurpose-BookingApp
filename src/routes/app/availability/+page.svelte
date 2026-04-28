@@ -8,7 +8,7 @@
 	<title>Availability | Pride N Purpose Conversations</title>
 </svelte:head>
 
-<section class="space-y-8">
+<section class="space-y-8 text-slate-900">
 	<div>
 		<p class="text-sm uppercase tracking-[0.3em] text-stone-500">Availability</p>
 		<h1 class="mt-3 text-4xl font-semibold tracking-tight">Control when customers can book time.</h1>
@@ -27,99 +27,107 @@
 		<section class="rounded-[1.5rem] border border-stone-200 p-6">
 			<h2 class="text-xl font-semibold tracking-tight">Booking rules</h2>
 			<form method="POST" action="?/updateBookingRules" use:enhance class="mt-6 space-y-5">
-				<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-					<div class="grid content-start gap-2 rounded-3xl border border-stone-200 bg-stone-50/60 p-4">
+				<div class="flex flex-wrap gap-4">
+					<div
+						class="flex min-w-0 flex-1 basis-full flex-col gap-3 rounded-3xl border border-stone-200 bg-stone-50/60 p-5 sm:basis-[calc(50%-0.5rem)]"
+					>
 						<label
-							class="flex min-h-[2.5rem] items-end text-sm font-medium text-stone-700"
+							class="text-sm font-medium leading-5 text-stone-700"
 							for="minNoticeMinutes"
 						>
 							Minimum notice
 						</label>
-						<p class="min-h-[3.75rem] text-xs leading-5 text-stone-500">
+						<p class="break-words text-xs leading-5 text-stone-500">
 							How much lead time someone needs before a slot can be booked. Use minutes. `1440`
 							means at least 24 hours.
 						</p>
-					<input
-							class="block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="minNoticeMinutes"
-						name="minNoticeMinutes"
-						type="number"
-						min="0"
-						step="1"
-						value={data.bookingRules.minNoticeMinutes}
-					/>
+						<input
+							class="mt-auto block w-full min-w-0 rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
+							id="minNoticeMinutes"
+							name="minNoticeMinutes"
+							type="number"
+							min="0"
+							step="1"
+							value={data.bookingRules.minNoticeMinutes}
+						/>
 					</div>
 
-					<div class="grid content-start gap-2 rounded-3xl border border-stone-200 bg-stone-50/60 p-4">
+					<div
+						class="flex min-w-0 flex-1 basis-full flex-col gap-3 rounded-3xl border border-stone-200 bg-stone-50/60 p-5 sm:basis-[calc(50%-0.5rem)]"
+					>
 						<label
-							class="flex min-h-[2.5rem] items-end text-sm font-medium text-stone-700"
+							class="text-sm font-medium leading-5 text-stone-700"
 							for="customerChangeCutoffMinutes"
 						>
 							Customer change cutoff
 						</label>
-						<p class="min-h-[3.75rem] text-xs leading-5 text-stone-500">
+						<p class="break-words text-xs leading-5 text-stone-500">
 							How long before the meeting a customer can still cancel or reschedule online. `0`
 							means changes stay open until the meeting starts.
 						</p>
-					<input
-							class="block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="customerChangeCutoffMinutes"
-						name="customerChangeCutoffMinutes"
-						type="number"
-						min="0"
-						step="1"
-						value={data.bookingRules.customerChangeCutoffMinutes}
-					/>
+						<input
+							class="mt-auto block w-full min-w-0 rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
+							id="customerChangeCutoffMinutes"
+							name="customerChangeCutoffMinutes"
+							type="number"
+							min="0"
+							step="1"
+							value={data.bookingRules.customerChangeCutoffMinutes}
+						/>
 					</div>
 
-					<div class="grid content-start gap-2 rounded-3xl border border-stone-200 bg-stone-50/60 p-4">
+					<div
+						class="flex min-w-0 flex-1 basis-full flex-col gap-3 rounded-3xl border border-stone-200 bg-stone-50/60 p-5 sm:basis-[calc(50%-0.5rem)]"
+					>
 						<label
-							class="flex min-h-[2.5rem] items-end text-sm font-medium text-stone-700"
+							class="text-sm font-medium leading-5 text-stone-700"
 							for="bookingWindowDays"
 						>
 							Booking window
 						</label>
-						<p class="min-h-[3.75rem] text-xs leading-5 text-stone-500">
+						<p class="break-words text-xs leading-5 text-stone-500">
 							How many days ahead people can book. Smaller values keep the calendar tighter and
 							prevent far-future bookings.
 						</p>
-					<input
-							class="block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="bookingWindowDays"
-						name="bookingWindowDays"
-						type="number"
-						min="1"
-						step="1"
-						value={data.bookingRules.bookingWindowDays}
-					/>
+						<input
+							class="mt-auto block w-full min-w-0 rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
+							id="bookingWindowDays"
+							name="bookingWindowDays"
+							type="number"
+							min="1"
+							step="1"
+							value={data.bookingRules.bookingWindowDays}
+						/>
 					</div>
 
-					<div class="grid content-start gap-2 rounded-3xl border border-stone-200 bg-stone-50/60 p-4">
+					<div
+						class="flex min-w-0 flex-1 basis-full flex-col gap-3 rounded-3xl border border-stone-200 bg-stone-50/60 p-5 sm:basis-[calc(50%-0.5rem)]"
+					>
 						<label
-							class="flex min-h-[2.5rem] items-end text-sm font-medium text-stone-700"
+							class="text-sm font-medium leading-5 text-stone-700"
 							for="maxBookingsPerDay"
 						>
 							Max bookings/day
 						</label>
-						<p class="min-h-[3.75rem] text-xs leading-5 text-stone-500">
+						<p class="break-words text-xs leading-5 text-stone-500">
 							Optional daily cap across all services. Leave blank if you do not want a limit.
 						</p>
-					<input
-							class="block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="maxBookingsPerDay"
-						name="maxBookingsPerDay"
-						type="number"
-						min="0"
-						step="1"
-						value={data.bookingRules.maxBookingsPerDay ?? ''}
-						placeholder="Optional"
-					/>
+						<input
+							class="mt-auto block w-full min-w-0 rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
+							id="maxBookingsPerDay"
+							name="maxBookingsPerDay"
+							type="number"
+							min="0"
+							step="1"
+							value={data.bookingRules.maxBookingsPerDay ?? ''}
+							placeholder="Optional"
+						/>
 					</div>
 				</div>
 
 				<div>
 					<button
-						class="rounded-full bg-stone-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-stone-800"
+						class="rounded-full bg-slate-900 px-5 py-3 text-sm font-medium text-white transition hover:bg-slate-800"
 						type="submit"
 					>
 						Save rules
@@ -130,11 +138,11 @@
 
 		<section class="rounded-[1.5rem] border border-stone-200 p-6">
 			<h2 class="text-xl font-semibold tracking-tight">Add weekly availability</h2>
-			<form method="POST" action="?/createWeeklyWindow" use:enhance class="mt-6 grid gap-4 md:grid-cols-3">
+			<form method="POST" action="?/createWeeklyWindow" use:enhance class="mt-6 flex flex-col gap-4">
 				<div>
 					<label class="text-sm font-medium text-stone-700" for="dayOfWeek">Day</label>
 					<select
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
 						id="dayOfWeek"
 						name="dayOfWeek"
 					>
@@ -147,7 +155,7 @@
 				<div>
 					<label class="text-sm font-medium text-stone-700" for="startTime">Start</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
 						id="startTime"
 						name="startTime"
 						type="time"
@@ -159,7 +167,7 @@
 				<div>
 					<label class="text-sm font-medium text-stone-700" for="endTime">End</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
 						id="endTime"
 						name="endTime"
 						type="time"
@@ -170,7 +178,7 @@
 
 				<div class="md:col-span-3">
 					<button
-						class="rounded-full bg-stone-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-stone-800"
+						class="rounded-full bg-slate-900 px-5 py-3 text-sm font-medium text-white transition hover:bg-slate-800"
 						type="submit"
 					>
 						Add weekly window
@@ -199,7 +207,7 @@
 							<form method="POST" action="?/deleteWeeklyWindow" use:enhance>
 								<input name="availabilityId" type="hidden" value={item.id} />
 								<button
-									class="rounded-full border border-stone-300 px-4 py-2 text-sm transition hover:bg-stone-100"
+									class="rounded-full border border-stone-300 px-4 py-2 text-sm text-slate-900 transition hover:bg-stone-100"
 									type="submit"
 								>
 									Remove
@@ -213,7 +221,7 @@
 							<div>
 								<label class="text-sm font-medium text-stone-700" for={`weekly-start-${item.id}`}>Start</label>
 								<input
-									class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+									class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
 									id={`weekly-start-${item.id}`}
 									name="startTime"
 									type="time"
@@ -225,7 +233,7 @@
 							<div>
 								<label class="text-sm font-medium text-stone-700" for={`weekly-end-${item.id}`}>End</label>
 								<input
-									class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+									class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
 									id={`weekly-end-${item.id}`}
 									name="endTime"
 									type="time"
@@ -236,7 +244,7 @@
 
 							<div class="flex items-end">
 								<button
-									class="rounded-full bg-stone-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-stone-800"
+									class="rounded-full bg-slate-900 px-5 py-3 text-sm font-medium text-white transition hover:bg-slate-800"
 									type="submit"
 								>
 									Save
@@ -257,7 +265,7 @@
 						<div>
 							<label class="text-sm font-medium text-stone-700" for="overrideDate">Date</label>
 							<input
-								class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+								class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
 								id="overrideDate"
 								name="overrideDate"
 								type="date"
@@ -268,7 +276,7 @@
 						<div>
 							<label class="text-sm font-medium text-stone-700" for="mode">Mode</label>
 							<select
-								class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+								class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
 								id="mode"
 								name="mode"
 							>
@@ -282,7 +290,7 @@
 						<div>
 							<label class="text-sm font-medium text-stone-700" for="overrideStartTime">Start time</label>
 							<input
-								class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+								class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
 								id="overrideStartTime"
 								name="startTime"
 								type="time"
@@ -293,7 +301,7 @@
 						<div>
 							<label class="text-sm font-medium text-stone-700" for="overrideEndTime">End time</label>
 							<input
-								class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+								class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm text-slate-900"
 								id="overrideEndTime"
 								name="endTime"
 								type="time"
@@ -303,7 +311,7 @@
 					</div>
 
 					<button
-						class="rounded-full bg-stone-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-stone-800"
+						class="rounded-full bg-slate-900 px-5 py-3 text-sm font-medium text-white transition hover:bg-slate-800"
 						type="submit"
 					>
 						Save override
@@ -335,7 +343,7 @@
 							<form method="POST" action="?/deleteOverride" use:enhance>
 								<input name="overrideId" type="hidden" value={override.id} />
 								<button
-									class="rounded-full border border-stone-300 px-4 py-2 text-sm transition hover:bg-stone-100"
+									class="rounded-full border border-stone-300 px-4 py-2 text-sm text-slate-900 transition hover:bg-stone-100"
 									type="submit"
 								>
 									Remove
