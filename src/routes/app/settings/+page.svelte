@@ -23,261 +23,192 @@
 	<title>Settings | Pride N Purpose Conversations</title>
 </svelte:head>
 
-<section class="space-y-8">
-	<div>
-		<p class="text-sm uppercase tracking-[0.3em] text-stone-500">Settings</p>
-		<h1 class="mt-3 text-4xl font-semibold tracking-tight">Workspace profile and Zoho Meeting setup.</h1>
-		<p class="mt-3 max-w-2xl text-sm leading-6 text-stone-600">
-			Use this page to control the public booking page and prepare the workspace for automatic
-			Zoho Meeting creation.
+<section class="space-y-7">
+	<div class="border-b border-[#d5e2e9] pb-6">
+		<p class="text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">Settings</p>
+		<h1 class="mt-3 text-3xl font-semibold tracking-tight text-[#384959] md:text-4xl">
+			Workspace profile and Zoho Meeting setup.
+		</h1>
+		<p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
+			Settings are grouped into expandable rows so the page stays condensed while still keeping every field available.
 		</p>
 	</div>
 
 	{#if form?.settingsMessage}
-		<p class="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-700">
+		<p class="border border-[#d5e2e9] bg-[#f7fafb] px-4 py-3 text-sm text-slate-700">
 			{form.settingsMessage}
 		</p>
 	{/if}
 
-	<form method="POST" action="?/saveSettings" use:enhance class="space-y-8">
-		<section class="rounded-[1.5rem] border border-stone-200 p-6">
-			<h2 class="text-xl font-semibold tracking-tight">Workspace profile</h2>
-			<div class="mt-6 grid gap-4 md:grid-cols-2">
+	<form method="POST" action="?/saveSettings" use:enhance class="space-y-4">
+		<details class="border border-[#d5e2e9]" open>
+			<summary class="grid cursor-pointer list-none gap-3 bg-[#f7fafb] px-5 py-4 md:grid-cols-[1fr_auto] md:items-center">
 				<div>
-					<label class="text-sm font-medium text-stone-700" for="name">Business name</label>
-					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="name"
-						name="name"
-						required
-						value={data.workspace.name}
-					/>
+					<h2 class="text-xl font-semibold tracking-tight text-[#384959]">Workspace profile</h2>
+					<p class="mt-1 text-sm text-slate-600">
+						{data.workspace.name} · /book/{data.workspace.slug} · {data.workspace.timezone}
+					</p>
+				</div>
+				<p class="text-sm font-semibold text-[#384959]">Edit profile</p>
+			</summary>
+
+			<div class="grid gap-4 border-t border-[#d5e2e9] p-5 md:grid-cols-2">
+				<div>
+					<label class="text-sm font-medium text-slate-700" for="name">Business name</label>
+					<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="name" name="name" required value={data.workspace.name} />
 				</div>
 				<div>
-					<label class="text-sm font-medium text-stone-700" for="slug">Booking slug</label>
-					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="slug"
-						name="slug"
-						required
-						value={data.workspace.slug}
-					/>
+					<label class="text-sm font-medium text-slate-700" for="slug">Booking slug</label>
+					<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="slug" name="slug" required value={data.workspace.slug} />
 				</div>
 				<div>
-					<label class="text-sm font-medium text-stone-700" for="timezone">Timezone</label>
-					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="timezone"
-						name="timezone"
-						required
-						value={data.workspace.timezone}
-					/>
+					<label class="text-sm font-medium text-slate-700" for="timezone">Timezone</label>
+					<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="timezone" name="timezone" required value={data.workspace.timezone} />
 				</div>
 				<div>
-					<label class="text-sm font-medium text-stone-700" for="contactEmail">Contact email</label>
-					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="contactEmail"
-						name="contactEmail"
-						type="email"
-						value={data.workspace.contactEmail ?? ''}
-					/>
+					<label class="text-sm font-medium text-slate-700" for="contactEmail">Contact email</label>
+					<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="contactEmail" name="contactEmail" type="email" value={data.workspace.contactEmail ?? ''} />
 				</div>
 				<div class="md:col-span-2">
-					<label class="text-sm font-medium text-stone-700" for="locationLabel">Location label</label>
-					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="locationLabel"
-						name="locationLabel"
-						placeholder="Zoom, Phone call, Chicago office, etc."
-						value={data.workspace.locationLabel ?? ''}
-					/>
+					<label class="text-sm font-medium text-slate-700" for="locationLabel">Location label</label>
+					<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="locationLabel" name="locationLabel" placeholder="Zoom, Phone call, Chicago office, etc." value={data.workspace.locationLabel ?? ''} />
 				</div>
 				<div class="md:col-span-2">
-					<label class="text-sm font-medium text-stone-700" for="description">Public description</label>
-					<textarea
-						class="mt-2 block min-h-28 w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="description"
-						name="description"
-						placeholder="Tell customers what this booking page is for."
-					>{data.workspace.description ?? ''}</textarea>
+					<label class="text-sm font-medium text-slate-700" for="description">Public description</label>
+					<textarea class="mt-2 block min-h-28 w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="description" name="description" placeholder="Tell customers what this booking page is for.">{data.workspace.description ?? ''}</textarea>
 				</div>
 				<div class="md:col-span-2">
-					<label class="text-sm font-medium text-stone-700" for="defaultConfirmationMessage">
-						Default confirmation email message
-					</label>
-					<textarea
-						class="mt-2 block min-h-32 w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="defaultConfirmationMessage"
-						name="defaultConfirmationMessage"
-						placeholder={'Use placeholders like {customer}, {date}, {time}, {duration}, {location}, {meeting_link}.'}
-					>{data.workspace.defaultConfirmationMessage ?? ''}</textarea>
+					<label class="text-sm font-medium text-slate-700" for="defaultConfirmationMessage">Default confirmation email message</label>
+					<textarea class="mt-2 block min-h-32 w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="defaultConfirmationMessage" name="defaultConfirmationMessage" placeholder={'Use placeholders like {customer}, {date}, {time}, {duration}, {location}, {meeting_link}.'}>{data.workspace.defaultConfirmationMessage ?? ''}</textarea>
 				</div>
 			</div>
-		</section>
+		</details>
 
-		<section class="rounded-[1.5rem] border border-stone-200 p-6">
-			<h2 class="text-xl font-semibold tracking-tight">Zoho Meeting connection</h2>
-			<p class="mt-2 max-w-2xl text-sm leading-6 text-stone-600">
-				This stores the non-secret Zoho Meeting identifiers and defaults we need before wiring in
-				meeting creation. OAuth credentials and refresh tokens should stay in server env vars.
-			</p>
-			<div class="mt-6 grid gap-4 md:grid-cols-2">
+		<details class="border border-[#d5e2e9]">
+			<summary class="grid cursor-pointer list-none gap-3 bg-[#f7fafb] px-5 py-4 md:grid-cols-[1fr_auto] md:items-center">
 				<div>
-					<label class="text-sm font-medium text-stone-700" for="zohoDataCenter">Zoho data center</label>
-					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="zohoDataCenter"
-						name="zohoDataCenter"
-						placeholder="com, eu, in, com.au"
-						value={data.workspace.zohoDataCenter ?? ''}
-					/>
+					<h2 class="text-xl font-semibold tracking-tight text-[#384959]">Zoho Meeting connection</h2>
+					<p class="mt-1 text-sm text-slate-600">
+						Non-secret Zoho identifiers, env readiness, and connection tests.
+					</p>
 				</div>
-				<div>
-					<label class="text-sm font-medium text-stone-700" for="zohoZsoid">Zoho zsoid</label>
-					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="zohoZsoid"
-						name="zohoZsoid"
-						value={data.workspace.zohoZsoid ?? ''}
-					/>
-				</div>
-				<div>
-					<label class="text-sm font-medium text-stone-700" for="zohoPresenterUserId">Presenter user ID</label>
-					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="zohoPresenterUserId"
-						name="zohoPresenterUserId"
-						value={data.workspace.zohoPresenterUserId ?? ''}
-					/>
-				</div>
-				<div>
-					<label class="text-sm font-medium text-stone-700" for="zohoXZsource">X-ZSOURCE</label>
-					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="zohoXZsource"
-						name="zohoXZsource"
-						value={data.workspace.zohoXZsource ?? ''}
-					/>
-				</div>
-			</div>
+				<p class="text-sm font-semibold text-[#384959]">Open setup</p>
+			</summary>
 
-			<div class="mt-6 grid gap-3 md:grid-cols-2">
-				{#each getReadinessItems() as item}
-					<div class="rounded-2xl border border-stone-200 px-4 py-3 text-sm">
-						<p class="text-stone-500">{item.label}</p>
-						<p class={`mt-1 font-medium ${item.ready ? 'text-emerald-700' : 'text-amber-700'}`}>
-							{item.ready ? 'Ready' : 'Missing'}
-						</p>
+			<div class="space-y-5 border-t border-[#d5e2e9] p-5">
+				<div class="grid gap-4 md:grid-cols-2">
+					<div>
+						<label class="text-sm font-medium text-slate-700" for="zohoDataCenter">Zoho data center</label>
+						<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="zohoDataCenter" name="zohoDataCenter" placeholder="com, eu, in, com.au" value={data.workspace.zohoDataCenter ?? ''} />
 					</div>
-				{/each}
-			</div>
+					<div>
+						<label class="text-sm font-medium text-slate-700" for="zohoZsoid">Zoho zsoid</label>
+						<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="zohoZsoid" name="zohoZsoid" value={data.workspace.zohoZsoid ?? ''} />
+					</div>
+					<div>
+						<label class="text-sm font-medium text-slate-700" for="zohoPresenterUserId">Presenter user ID</label>
+						<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="zohoPresenterUserId" name="zohoPresenterUserId" value={data.workspace.zohoPresenterUserId ?? ''} />
+					</div>
+					<div>
+						<label class="text-sm font-medium text-slate-700" for="zohoXZsource">X-ZSOURCE</label>
+						<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="zohoXZsource" name="zohoXZsource" value={data.workspace.zohoXZsource ?? ''} />
+					</div>
+				</div>
 
-			<div class="mt-4 rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-700">
-				<p class="font-medium text-stone-900">Custom confirmation email sender</p>
-				<p class="mt-1 break-all">{data.emailStatus.emailFrom || 'Not set'}</p>
-				<p class="mt-2 text-stone-600">
-					Use the format Business Name &lt;name@yourdomain.com&gt;. The domain also needs to be
-					verified in Resend.
-				</p>
-			</div>
+				<div class="border border-[#d5e2e9]">
+					<div class="bg-[#f7fafb] px-4 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">
+						Readiness
+					</div>
+					<div class="divide-y divide-[#d5e2e9]">
+						{#each getReadinessItems() as item}
+							<div class="grid gap-2 px-4 py-3 text-sm md:grid-cols-[1fr_8rem] md:items-center">
+								<p class="text-slate-600">{item.label}</p>
+								<p class={`font-semibold ${item.ready ? 'text-emerald-700' : 'text-amber-700'}`}>
+									{item.ready ? 'Ready' : 'Missing'}
+								</p>
+							</div>
+						{/each}
+					</div>
+				</div>
 
-			<div class="mt-6 flex flex-wrap items-center gap-3">
-				<button
-					class="rounded-full border border-stone-300 px-4 py-2 text-sm transition hover:bg-stone-100"
-					formaction="?/testZohoAuth"
-					formmethod="POST"
-					type="submit"
-				>
-					Test Zoho OAuth
-				</button>
-
-				{#if form?.zohoTestResult}
-					<p class="text-sm text-stone-600">
-						OAuth works. API domain: {form.zohoTestResult.apiDomain}. Access token TTL:
-						{form.zohoTestResult.expiresIn ?? 'unknown'} seconds.
+				<div class="border border-[#d5e2e9] bg-[#f7fafb] px-4 py-3 text-sm text-slate-700">
+					<p class="font-semibold text-slate-950">Custom confirmation email sender</p>
+					<p class="mt-1 break-all">{data.emailStatus.emailFrom || 'Not set'}</p>
+					<p class="mt-2 text-slate-600">
+						Use the format Business Name &lt;name@yourdomain.com&gt;. The domain also needs to be verified in Resend.
 					</p>
-				{/if}
-			</div>
+				</div>
 
-			<div class="mt-3 flex flex-wrap items-center gap-3">
-				<button
-					class="rounded-full border border-stone-300 px-4 py-2 text-sm transition hover:bg-stone-100"
-					formaction="?/testZohoMeeting"
-					formmethod="POST"
-					type="submit"
-				>
-					Test Zoho Meeting Create
-				</button>
-
-				{#if form?.zohoMeetingResult}
-					<p class="text-sm text-stone-600">
-						Meeting created. Key: {form.zohoMeetingResult.meetingKey ?? 'unknown'}.
-					</p>
-				{/if}
-			</div>
-
-			{#if form?.zohoMeetingResult?.joinLink}
-				<div class="mt-4 rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-700">
-					<p>Join link: {form.zohoMeetingResult.joinLink}</p>
-					{#if form.zohoMeetingResult.startLink}
-						<p class="mt-1">Start link: {form.zohoMeetingResult.startLink}</p>
+				<div class="flex flex-wrap items-center gap-3">
+					<button class="border border-[#cfdce4] bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-[#eef4f7]" formaction="?/testZohoAuth" formmethod="POST" type="submit">
+						Test Zoho OAuth
+					</button>
+					{#if form?.zohoTestResult}
+						<p class="text-sm text-slate-600">
+							OAuth works. API domain: {form.zohoTestResult.apiDomain}. Access token TTL:
+							{form.zohoTestResult.expiresIn ?? 'unknown'} seconds.
+						</p>
 					{/if}
 				</div>
-			{/if}
-		</section>
 
-		<section class="rounded-[1.5rem] border border-stone-200 p-6">
-			<h2 class="text-xl font-semibold tracking-tight">Meeting defaults</h2>
-			<div class="mt-6 space-y-4">
+				<div class="flex flex-wrap items-center gap-3">
+					<button class="border border-[#cfdce4] bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-[#eef4f7]" formaction="?/testZohoMeeting" formmethod="POST" type="submit">
+						Test Zoho Meeting Create
+					</button>
+					{#if form?.zohoMeetingResult}
+						<p class="text-sm text-slate-600">
+							Meeting created. Key: {form.zohoMeetingResult.meetingKey ?? 'unknown'}.
+						</p>
+					{/if}
+				</div>
+
+				{#if form?.zohoMeetingResult?.joinLink}
+					<div class="border border-[#d5e2e9] bg-[#f7fafb] px-4 py-3 text-sm text-slate-700">
+						<p class="break-all">Join link: {form.zohoMeetingResult.joinLink}</p>
+						{#if form.zohoMeetingResult.startLink}
+							<p class="mt-1 break-all">Start link: {form.zohoMeetingResult.startLink}</p>
+						{/if}
+					</div>
+				{/if}
+			</div>
+		</details>
+
+		<details class="border border-[#d5e2e9]">
+			<summary class="grid cursor-pointer list-none gap-3 bg-[#f7fafb] px-5 py-4 md:grid-cols-[1fr_auto] md:items-center">
 				<div>
-					<label class="text-sm font-medium text-stone-700" for="zohoDefaultMeetingTopic">Default meeting title</label>
-					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="zohoDefaultMeetingTopic"
-						name="zohoDefaultMeetingTopic"
-						placeholder={'Discuss Plans - {customer_name}'}
-						value={data.workspace.zohoDefaultMeetingTopic ?? ''}
-					/>
+					<h2 class="text-xl font-semibold tracking-tight text-[#384959]">Meeting defaults</h2>
+					<p class="mt-1 text-sm text-slate-600">
+						Default Zoho title, agenda, attendee behavior, and auto-create setting.
+					</p>
+				</div>
+				<p class="text-sm font-semibold text-[#384959]">Edit defaults</p>
+			</summary>
+
+			<div class="space-y-4 border-t border-[#d5e2e9] p-5">
+				<div>
+					<label class="text-sm font-medium text-slate-700" for="zohoDefaultMeetingTopic">Default meeting title</label>
+					<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="zohoDefaultMeetingTopic" name="zohoDefaultMeetingTopic" placeholder={'Discuss Plans - {customer_name}'} value={data.workspace.zohoDefaultMeetingTopic ?? ''} />
 				</div>
 
 				<div>
-					<label class="text-sm font-medium text-stone-700" for="zohoDefaultAgenda">Default agenda</label>
-					<textarea
-						class="mt-2 block min-h-32 w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
-						id="zohoDefaultAgenda"
-						name="zohoDefaultAgenda"
-						placeholder="Add the default context that should go into each Zoho Meeting."
-					>{data.workspace.zohoDefaultAgenda ?? ''}</textarea>
+					<label class="text-sm font-medium text-slate-700" for="zohoDefaultAgenda">Default agenda</label>
+					<textarea class="mt-2 block min-h-32 w-full border-[#cfdce4] bg-white px-4 py-3 text-sm" id="zohoDefaultAgenda" name="zohoDefaultAgenda" placeholder="Add the default context that should go into each Zoho Meeting.">{data.workspace.zohoDefaultAgenda ?? ''}</textarea>
 				</div>
 
-				<label class="flex items-center gap-3 rounded-2xl border border-stone-200 px-4 py-3 text-sm text-stone-700">
-					<input
-						checked={data.workspace.zohoAddAttendeeEmails}
-						class="rounded border-stone-300"
-						name="zohoAddAttendeeEmails"
-						type="checkbox"
-					/>
+				<label class="flex items-center gap-3 border border-[#d5e2e9] bg-[#f7fafb] px-4 py-3 text-sm text-slate-700">
+					<input checked={data.workspace.zohoAddAttendeeEmails} class="rounded border-[#cfdce4]" name="zohoAddAttendeeEmails" type="checkbox" />
 					Add attendee emails to the Zoho meeting when possible.
 				</label>
 
-				<label class="flex items-center gap-3 rounded-2xl border border-stone-200 px-4 py-3 text-sm text-stone-700">
-					<input
-						checked={data.workspace.zohoAutoCreateMeetings}
-						class="rounded border-stone-300"
-						name="zohoAutoCreateMeetings"
-						type="checkbox"
-					/>
+				<label class="flex items-center gap-3 border border-[#d5e2e9] bg-[#f7fafb] px-4 py-3 text-sm text-slate-700">
+					<input checked={data.workspace.zohoAutoCreateMeetings} class="rounded border-[#cfdce4]" name="zohoAutoCreateMeetings" type="checkbox" />
 					Automatically create a Zoho Meeting as soon as a booking is confirmed.
 				</label>
 			</div>
-		</section>
+		</details>
 
-		<div class="flex justify-end">
-			<button
-				class="rounded-full bg-stone-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-stone-800"
-				type="submit"
-			>
+		<div class="flex justify-end pt-2">
+			<button class="bg-[#384959] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#24313d]" type="submit">
 				Save settings
 			</button>
 		</div>

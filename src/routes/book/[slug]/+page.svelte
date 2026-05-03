@@ -31,6 +31,10 @@
 		}
 	});
 
+	function stopModalClick(event: MouseEvent) {
+		event.stopPropagation();
+	}
+
 	function getBookingValues(): BookingValues {
 		if (form && typeof form === 'object' && 'bookingValues' in form) {
 			return form.bookingValues as BookingValues;
@@ -184,17 +188,19 @@
 </svelte:head>
 
 {#if showLimitModal}
-	<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
 	<div
 		class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-5 backdrop-blur-sm"
+		role="presentation"
 		onclick={() => { showLimitModal = false; }}
 	>
 		<div
 			class="w-full max-w-md rounded-[2.5rem] border border-[#d5e2e9] bg-white p-8 shadow-[0_40px_100px_rgba(93,122,139,0.22)]"
-			onclick={(e) => e.stopPropagation()}
+			onclick={stopModalClick}
+			onkeydown={(event) => event.stopPropagation()}
 			role="dialog"
 			aria-modal="true"
 			aria-labelledby="limit-modal-title"
+			tabindex="-1"
 		>
 			<div class="flex items-start justify-between gap-4">
 				<div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-100">
@@ -246,7 +252,14 @@
 <div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-4 py-8 text-slate-900 sm:px-5 md:px-8 md:py-14">
 	<div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.82fr_1.18fr]">
 		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/92 p-6 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-9">
-			<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Conversations</p>
+			<div>
+				<p class="text-base font-bold uppercase tracking-[0.18em] text-[#384959]">
+					Pride N Purpose
+				</p>
+				<p class="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+					Conversations
+				</p>
+			</div>
 			<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-6xl">
 				Book your next conversation with intention.
 			</h1>
@@ -368,20 +381,19 @@
 					This provider has not published any active services yet.
 				</div>
 			{:else}
-				<form method="GET" bind:this={serviceFilterForm} class="mt-8 space-y-8">
+				<form method="GET" bind:this={serviceFilterForm} class="mt-8 space-y-4">
 					<input type="hidden" name="date" value={data.selectedDate} />
 
-					<div>
-						<div class="flex flex-wrap items-center justify-between gap-3">
-							<h3 class="text-lg font-semibold tracking-tight text-[#384959]">1. Choose a service</h3>
-							<p class="text-sm text-slate-500">Start with Intro Conversation</p>
-						</div>
+					<details class="border border-[#d5e2e9] bg-white" open>
+						<summary class="grid cursor-pointer list-none gap-2 bg-[#f8fbfc] px-5 py-4 md:grid-cols-[1fr_auto] md:items-center">
+							<div>
+								<h3 class="text-lg font-semibold tracking-tight text-[#384959]">1. Choose a service</h3>
+								<p class="mt-1 text-sm text-slate-600">Selected: {getSelectedServiceName()}</p>
+							</div>
+							<p class="text-sm font-semibold text-[#384959]">Open services</p>
+						</summary>
 
-						<p class="mt-3 text-sm leading-6 text-slate-600">
-							Intro Conversation is the first step for new customers. Website Creation is for returning customers who are ready to move forward.
-						</p>
-
-						<div class="mt-4 grid gap-3 md:grid-cols-2">
+						<div class="divide-y divide-[#d5e2e9] border-t border-[#d5e2e9]">
 							{#each data.services as service}
 								<label class="block cursor-pointer">
 									<input
@@ -392,9 +404,11 @@
 										checked={service.id === data.selectedServiceId}
 										onchange={submitServiceSelection}
 									/>
-									<span class="block rounded-[1.75rem] border border-[#d5e2e9] bg-[#f8fbfc] px-5 py-4 transition peer-checked:border-[#96C2DB] peer-checked:bg-[#edf5f9] peer-checked:shadow-[0_12px_32px_rgba(93,122,139,0.12)] hover:border-[#b8ccd8]">
-										<span class="block text-base font-semibold text-slate-900">{service.name}</span>
-										<span class="mt-2 block text-sm text-slate-600">
+									<span class="grid gap-3 px-5 py-4 transition peer-checked:bg-[#edf5f9] hover:bg-[#f8fbfc] md:grid-cols-[minmax(12rem,1fr)_9rem_auto] md:items-center">
+										<span>
+											<span class="block text-base font-semibold text-slate-900">{service.name}</span>
+										</span>
+										<span class="text-sm font-semibold text-slate-700">
 											{service.durationMinutes} min
 											{#if service.priceCents}
 												· ${(service.priceCents / 100).toFixed(2)}
@@ -413,26 +427,30 @@
 								</label>
 							{/each}
 						</div>
-					</div>
+					</details>
 
-					<div class="grid gap-6 xl:grid-cols-[1fr_220px]">
-						<div>
-							<div class="flex flex-wrap items-center justify-between gap-3">
-							<h3 class="text-lg font-semibold tracking-tight text-[#384959]">2. Choose a day</h3>
-								<p class="text-sm text-slate-500">Selected: {formatFriendlyDate(data.selectedDate)}</p>
+					<details class="border border-[#d5e2e9] bg-white" open>
+						<summary class="grid cursor-pointer list-none gap-2 bg-[#f8fbfc] px-5 py-4 md:grid-cols-[1fr_auto] md:items-center">
+							<div>
+								<h3 class="text-lg font-semibold tracking-tight text-[#384959]">2. Choose a day</h3>
+								<p class="mt-1 text-sm text-slate-600">Selected: {formatFriendlyDate(data.selectedDate)}</p>
 							</div>
+							<p class="text-sm font-semibold text-[#384959]">Open calendar</p>
+						</summary>
 
-							<div class="mt-4 rounded-[2rem] border border-[#d5e2e9] bg-[#f8fbfc] p-4 sm:p-5">
+						<div class="grid gap-6 border-t border-[#d5e2e9] p-5 xl:grid-cols-[1fr_220px]">
+							<div>
+								<div class="border border-[#d5e2e9] bg-[#f8fbfc] p-4 sm:p-5">
 								<div class="flex flex-wrap items-center justify-between gap-3">
 									<a
-										class="rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-[#b8ccd8] hover:bg-[#f8fbfc]"
+										class="border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-[#b8ccd8] hover:bg-[#f8fbfc]"
 										href={`?service=${data.selectedServiceId}&date=${getPreviousMonth()}`}
 									>
 										Previous
 									</a>
 								<p class="text-base font-semibold tracking-tight text-[#384959] sm:text-lg">{getMonthLabel(data.selectedDate)}</p>
 									<a
-										class="rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-[#b8ccd8] hover:bg-[#f8fbfc]"
+										class="border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-[#b8ccd8] hover:bg-[#f8fbfc]"
 										href={`?service=${data.selectedServiceId}&date=${getNextMonth()}`}
 									>
 										Next
@@ -448,7 +466,7 @@
 								<div class="mt-2 grid grid-cols-7 gap-1 sm:gap-2">
 									{#each getCalendarDays() as day}
 										<a
-											class={`flex h-10 items-center justify-center rounded-xl text-xs font-semibold transition sm:h-12 sm:rounded-2xl sm:text-sm ${
+											class={`flex h-10 items-center justify-center text-xs font-semibold transition sm:h-12 sm:text-sm ${
 												day.isSelected
 												? 'bg-[#96C2DB] text-slate-900 shadow-[0_12px_30px_rgba(93,122,139,0.16)]'
 												: day.inMonth
@@ -467,139 +485,146 @@
 						<div>
 							<label class="text-sm font-medium text-slate-700" for="date-select">Direct date pick</label>
 							<input
-								class="mt-2 block w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm"
+								class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm"
 								id="date-select"
 								name="date"
 								type="date"
 								value={data.selectedDate}
 							/>
 							<button
-								class="mt-3 w-full rounded-full bg-[#96C2DB] px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1]"
+								class="mt-3 w-full bg-[#96C2DB] px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1]"
 								type="submit"
 							>
 								Update calendar
 							</button>
 						</div>
-					</div>
+						</div>
+					</details>
 				</form>
 
-				<div class="mt-8 rounded-[2rem] border border-[#d5e2e9] bg-[#f8fbfc] p-6">
-					<div class="flex flex-wrap items-center justify-between gap-3">
+				<details class="mt-4 border border-[#d5e2e9] bg-white" open>
+					<summary class="grid cursor-pointer list-none gap-2 bg-[#f8fbfc] px-5 py-4 md:grid-cols-[1fr_auto] md:items-center">
 						<div>
 							<h3 class="text-lg font-semibold tracking-tight text-[#384959]">3. Choose an available time</h3>
-							<p class="mt-1 text-sm text-slate-500">
-								{getSelectedServiceName()} in {data.timezone}
-							</p>
+							<p class="mt-1 text-sm text-slate-600">{getSelectedServiceName()} in {data.timezone}</p>
 						</div>
-						<p class="rounded-full bg-[#e5edf1] px-4 py-2 text-sm font-semibold text-slate-700">
-							{formatFriendlyDate(data.selectedDate)}
-						</p>
-					</div>
+						<p class="text-sm font-semibold text-[#384959]">{formatFriendlyDate(data.selectedDate)}</p>
+					</summary>
 
 					{#if data.slots.length === 0}
-						<div class="mt-4 rounded-[1.5rem] border border-dashed border-[#cfdce4] bg-white p-6 text-sm text-slate-600">
+						<div class="border-t border-[#d5e2e9] p-6 text-sm text-slate-600">
 							No available times for this service and date.
 						</div>
 					{:else}
-						<div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+						<div class="divide-y divide-[#d5e2e9] border-t border-[#d5e2e9]">
 							{#each data.slots as slot}
 								<button
 									type="button"
 									onclick={() => { selectedSlot = slot.startAt.toISOString(); }}
-									class={`rounded-[1.5rem] border px-4 py-4 text-left text-sm transition ${
+									class={`grid w-full gap-2 px-5 py-4 text-left text-sm transition md:grid-cols-[1fr_auto] md:items-center ${
 										isSelectedSlot(slot.startAt.toISOString())
-											? 'border-[#96C2DB] bg-[#edf5f9] text-slate-900 shadow-[0_8px_24px_rgba(93,122,139,0.14)]'
-											: 'border-[#d5e2e9] bg-white hover:border-[#b8ccd8] hover:bg-[#f4f9fb]'
+											? 'bg-[#edf5f9] text-slate-900'
+											: 'bg-white hover:bg-[#f4f9fb]'
 									}`}
 								>
 									<span class="block text-base font-semibold">{slot.label}</span>
-									<span class="mt-1 block text-xs uppercase tracking-[0.2em] text-slate-500">
+									<span class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
 										{isSelectedSlot(slot.startAt.toISOString()) ? 'Selected' : 'Available'}
 									</span>
 								</button>
 							{/each}
 						</div>
 					{/if}
-				</div>
+				</details>
 
-				<form method="POST" action="?/createBooking" use:enhance class="mt-8 space-y-5 rounded-[2rem] border border-[#d5e2e9] bg-white p-5 sm:p-6">
-					<input name="serviceId" type="hidden" value={data.selectedServiceId} />
-					<input name="selectedDate" type="hidden" value={data.selectedDate} />
+				<details class="mt-4 border border-[#d5e2e9] bg-white" open>
+					<summary class="grid cursor-pointer list-none gap-2 bg-[#f8fbfc] px-5 py-4 md:grid-cols-[1fr_auto] md:items-center">
+						<div>
+							<h3 class="text-lg font-semibold tracking-tight text-[#384959]">4. Confirm booking details</h3>
+							<p class="mt-1 text-sm text-slate-600">Service: {getSelectedServiceName()}</p>
+						</div>
+						<p class="text-sm font-semibold text-[#384959]">Open details</p>
+					</summary>
 
-					<div class="rounded-[1.5rem] border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-3 text-sm text-slate-700">
-						Booking service: <span class="font-semibold text-slate-900">{getSelectedServiceName()}</span>
-					</div>
+					<form method="POST" action="?/createBooking" use:enhance class="space-y-5 border-t border-[#d5e2e9] p-5 sm:p-6">
+						<input name="serviceId" type="hidden" value={data.selectedServiceId} />
+						<input name="selectedDate" type="hidden" value={data.selectedDate} />
 
-					<div>
-						<label class="text-sm font-medium text-slate-700" for="slotStartAt">4. Confirm your time</label>
-						<select
-							class="mt-2 block w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm"
-							id="slotStartAt"
-							name="slotStartAt"
-							required
-							bind:value={selectedSlot}
+						<div class="border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-3 text-sm text-slate-700">
+							Booking service: <span class="font-semibold text-slate-900">{getSelectedServiceName()}</span>
+						</div>
+
+						<div>
+							<label class="text-sm font-medium text-slate-700" for="slotStartAt">Confirm your time</label>
+							<select
+								class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm"
+								id="slotStartAt"
+								name="slotStartAt"
+								required
+								bind:value={selectedSlot}
+							>
+								<option value="">Choose a time</option>
+								{#each data.slots as slot}
+									<option value={slot.startAt.toISOString()}>
+										{slot.label}
+									</option>
+								{/each}
+							</select>
+						</div>
+
+						<div class="grid gap-4 md:grid-cols-2">
+							<div>
+								<label class="text-sm font-medium text-slate-700" for="name">Your name</label>
+								<input
+									class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm"
+									id="name"
+									name="name"
+									required
+									value={getBookingValues().name}
+								/>
+							</div>
+
+							<div>
+								<label class="text-sm font-medium text-slate-700" for="email">Email</label>
+								<input
+									class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm"
+									id="email"
+									name="email"
+									type="email"
+									required
+									value={getBookingValues().email}
+								/>
+							</div>
+						</div>
+
+						<div>
+							<label class="text-sm font-medium text-slate-700" for="notes">Notes</label>
+							<textarea
+								class="mt-2 block min-h-28 w-full border-[#cfdce4] bg-white px-4 py-3 text-sm"
+								id="notes"
+								name="notes"
+							>{getBookingValues().notes}</textarea>
+						</div>
+
+						<button
+							class="w-full bg-[#96C2DB] px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1]"
+							type="submit"
 						>
-							<option value="">Choose a time</option>
-							{#each data.slots as slot}
-								<option value={slot.startAt.toISOString()}>
-									{slot.label}
-								</option>
-							{/each}
-						</select>
-					</div>
+							Confirm booking
+						</button>
 
-					<div class="grid gap-4 md:grid-cols-2">
-						<div>
-							<label class="text-sm font-medium text-slate-700" for="name">Your name</label>
-							<input
-								class="mt-2 block w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm"
-								id="name"
-								name="name"
-								required
-								value={getBookingValues().name}
-							/>
-						</div>
-
-						<div>
-							<label class="text-sm font-medium text-slate-700" for="email">Email</label>
-							<input
-								class="mt-2 block w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm"
-								id="email"
-								name="email"
-								type="email"
-								required
-								value={getBookingValues().email}
-							/>
-						</div>
-					</div>
-
-					<div>
-						<label class="text-sm font-medium text-slate-700" for="notes">Notes</label>
-						<textarea
-							class="mt-2 block min-h-28 w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm"
-							id="notes"
-							name="notes"
-						>{getBookingValues().notes}</textarea>
-					</div>
-
-					<button
-						class="w-full rounded-full bg-[#96C2DB] px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1]"
-						type="submit"
-					>
-						Confirm booking
-					</button>
-
-					<p class="text-center text-xs leading-6 text-slate-500">
-						By confirming this booking, you agree to the
-						<a class="font-semibold text-slate-700 underline underline-offset-4" href={`/book/${page.params.slug}/terms`}>
-							Terms and Conditions
-						</a>
-						and acknowledge the
-						<a class="font-semibold text-slate-700 underline underline-offset-4" href={`/book/${page.params.slug}/privacy`}>
-							Privacy Policy
-						</a>.
-					</p>
-				</form>
+						<p class="text-center text-xs leading-6 text-slate-500">
+							By confirming this booking, you agree to the
+							<a class="font-semibold text-slate-700 underline underline-offset-4" href={`/book/${page.params.slug}/terms`}>
+								Terms and Conditions
+							</a>
+							and acknowledge the
+							<a class="font-semibold text-slate-700 underline underline-offset-4" href={`/book/${page.params.slug}/privacy`}>
+								Privacy Policy
+							</a>.
+						</p>
+					</form>
+				</details>
 			{/if}
 		</section>
 	</div>
