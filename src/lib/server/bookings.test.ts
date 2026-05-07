@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 type MockBooking = {
 	id: string;
@@ -25,6 +25,9 @@ type MockService = {
 	durationMinutes: number;
 	bufferBeforeMinutes: number;
 	bufferAfterMinutes: number;
+	allowGuestBooking: boolean;
+	requiresCustomerAccount: boolean;
+	maxBookingsPerCustomer: number | null;
 };
 
 type MockCustomer = {
@@ -202,6 +205,9 @@ function createService(overrides: Record<string, unknown> = {}) {
 		durationMinutes: 60,
 		bufferBeforeMinutes: 0,
 		bufferAfterMinutes: 0,
+		allowGuestBooking: true,
+		requiresCustomerAccount: false,
+		maxBookingsPerCustomer: null,
 		...overrides
 	} as Parameters<typeof generateSlotsForService>[0]['service'];
 }
@@ -383,6 +389,8 @@ describe('generateSlotsForService', () => {
 
 describe('createBookingForPublicPage', () => {
 	beforeEach(() => {
+		vi.useFakeTimers();
+		vi.setSystemTime(new Date('2026-04-10T08:00:00.000Z'));
 		mockState.override = null;
 		mockState.overrideWindows = [];
 		mockState.weeklyWindows = [{ startTime: '09:00', endTime: '12:00' }];
@@ -405,6 +413,10 @@ describe('createBookingForPublicPage', () => {
 		dbMocks.returning.mockClear();
 		zohoMocks.createZohoMeeting.mockReset();
 		zohoMocks.formatZohoStartTime.mockClear();
+	});
+
+	afterEach(() => {
+		vi.useRealTimers();
 	});
 
 	it('returns null when the requested start time is no longer available', async () => {
@@ -563,6 +575,8 @@ describe('createBookingForPublicPage', () => {
 
 describe('booking state changes', () => {
 	beforeEach(() => {
+		vi.useFakeTimers();
+		vi.setSystemTime(new Date('2026-04-10T08:00:00.000Z'));
 		mockState.findFirstCustomer = null;
 		mockState.findFirstBooking = null;
 		mockState.findFirstService = null;
@@ -587,6 +601,10 @@ describe('booking state changes', () => {
 		zohoMocks.updateZohoMeeting.mockReset();
 		zohoMocks.createZohoMeeting.mockReset();
 		zohoMocks.formatZohoStartTime.mockClear();
+	});
+
+	afterEach(() => {
+		vi.useRealTimers();
 	});
 
 	it('marks a scheduled booking as completed', async () => {
@@ -681,6 +699,38 @@ describe('booking state changes', () => {
 		});
 	});
 
+	it('cancels locally and clears Zoho links when the stored meeting key is stale', async () => {
+		const workspace = createWorkspace({
+			zohoDataCenter: 'com',
+			zohoZsoid: 'zsoid-1',
+			zohoPresenterUserId: 'presenter-1',
+			zohoXZsource: 'Pride N Purpose'
+		});
+		mockState.findFirstBooking = createBooking({
+			zohoMeetingKey: 'meeting-stale',
+			zohoJoinLink: 'https://meet.zoho.com/join/stale',
+			zohoStartLink: 'https://meet.zoho.com/start/stale',
+			zohoMeetingPayload: '{"session":{"meetingKey":"meeting-stale"}}'
+		});
+		zohoMocks.deleteZohoMeeting.mockRejectedValue(
+			new Error(
+				'{"error":{"errorCode":4000,"message":"The meeting key is invalid.","key":"INVALID_MEETING_KEY"}} (status 400)'
+			)
+		);
+
+		const updatedBooking = await cancelBookingForWorkspace(workspace, 'booking-1');
+
+		expect(updatedBooking?.status).toBe('cancelled');
+		expect(zohoMocks.deleteZohoMeeting).toHaveBeenCalledOnce();
+		expect(mockState.lastUpdateValues).toMatchObject({
+			status: 'cancelled',
+			zohoMeetingKey: null,
+			zohoJoinLink: null,
+			zohoStartLink: null,
+			zohoMeetingPayload: null
+		});
+	});
+
 	it('reschedules a booking and pushes the new time to Zoho', async () => {
 		const workspace = createWorkspace({
 			zohoDataCenter: 'com',
@@ -745,6 +795,65 @@ describe('booking state changes', () => {
 			})
 		});
 		expect(updatedBooking?.startAt.toISOString()).toBe('2026-04-11T11:00:00.000Z');
+	});
+
+	it('creates a replacement Zoho meeting when reschedule finds a stale meeting key', async () => {
+		const workspace = createWorkspace({
+			zohoDataCenter: 'com',
+			zohoZsoid: 'zsoid-1',
+			zohoPresenterUserId: 'presenter-1',
+			zohoXZsource: 'Pride N Purpose',
+			zohoDefaultMeetingTopic: 'Session with {customer_name}',
+			zohoDefaultAgenda: 'Purpose conversation'
+		});
+		const service = createService();
+
+		mockState.findFirstBooking = createBooking({
+			zohoMeetingKey: 'meeting-stale',
+			zohoJoinLink: 'https://meet.zoho.com/join/stale',
+			zohoStartLink: 'https://meet.zoho.com/start/stale',
+			zohoMeetingPayload: '{"session":{"meetingKey":"meeting-stale"}}'
+		});
+		mockState.findFirstService = service;
+		mockState.services = [service];
+		zohoMocks.updateZohoMeeting.mockRejectedValue(
+			new Error(
+				'{"error":{"errorCode":4000,"message":"The meeting key is invalid.","key":"INVALID_MEETING_KEY"}} (status 400)'
+			)
+		);
+		zohoMocks.createZohoMeeting.mockResolvedValue({
+			payload: {
+				session: {
+					meetingKey: 'meeting-replacement',
+					joinLink: 'https://meet.zoho.com/join/replacement',
+					startLink: 'https://meet.zoho.com/start/replacement'
+				}
+			}
+		});
+
+		await rescheduleBookingForWorkspace({
+			workspace,
+			bookingId: 'booking-1',
+			dateKey: '2026-04-11',
+			time: '11:00'
+		});
+
+		expect(zohoMocks.updateZohoMeeting).toHaveBeenCalledOnce();
+		expect(zohoMocks.createZohoMeeting).toHaveBeenCalledOnce();
+		expect(zohoMocks.createZohoMeeting.mock.calls[0]?.[0]).toMatchObject({
+			dataCenter: 'com',
+			zsoid: 'zsoid-1',
+			presenter: 'presenter-1',
+			topic: 'Session with Jane Example',
+			agenda: 'Purpose conversation'
+		});
+		expect(mockState.lastUpdateValues).toMatchObject({
+			startAt: new Date('2026-04-11T11:00:00.000Z'),
+			endAt: new Date('2026-04-11T12:00:00.000Z'),
+			zohoMeetingKey: 'meeting-replacement',
+			zohoJoinLink: 'https://meet.zoho.com/join/replacement',
+			zohoStartLink: 'https://meet.zoho.com/start/replacement'
+		});
 	});
 
 	it('throws when a reschedule target is no longer available', async () => {

@@ -7,7 +7,7 @@
 		<div class="rounded-[2.5rem] border border-[#d5e2e9] bg-white p-8 shadow-[0_28px_80px_rgba(93,122,139,0.1)] md:p-10">
 			<div class="flex items-start justify-between gap-4">
 				<div>
-					<p class="brand-script text-2xl text-slate-600 md:text-3xl">Pride N Purpose Conversations</p>
+					<p class="brand-wordmark text-slate-600">Pride N Purpose Conversations</p>
 					<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-5xl">
 						Choose the right sign in.
 					</h1>

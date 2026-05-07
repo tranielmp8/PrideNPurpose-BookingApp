@@ -43,6 +43,15 @@ function isBookingOverlapConstraintError(error: unknown) {
 	);
 }
 
+function isInvalidZohoMeetingKeyError(error: unknown) {
+	if (!(error instanceof Error)) {
+		return false;
+	}
+
+	const message = error.message.toLowerCase();
+	return message.includes('invalid_meeting_key') || message.includes('meeting key is invalid');
+}
+
 export function parseTimeToMinutes(value: string) {
 	const [hours, minutes] = value.split(':').map(Number);
 	return hours * 60 + minutes;
@@ -675,12 +684,18 @@ export async function cancelBookingForWorkspace(
 	const shouldRemoveZohoMeeting = shouldDeleteZohoMeeting(workspaceRecord, existingBooking);
 
 	if (shouldRemoveZohoMeeting) {
-		await deleteZohoMeeting({
-			dataCenter: workspaceRecord.zohoDataCenter,
-			zsoid: workspaceRecord.zohoZsoid!,
-			meetingKey: zohoMeetingKey!,
-			xZsource: workspaceRecord.zohoXZsource || workspaceRecord.name
-		});
+		try {
+			await deleteZohoMeeting({
+				dataCenter: workspaceRecord.zohoDataCenter,
+				zsoid: workspaceRecord.zohoZsoid!,
+				meetingKey: zohoMeetingKey!,
+				xZsource: workspaceRecord.zohoXZsource || workspaceRecord.name
+			});
+		} catch (error) {
+			if (!isInvalidZohoMeetingKeyError(error)) {
+				throw error;
+			}
+		}
 	}
 
 	const [updatedBooking] = await db
@@ -753,16 +768,26 @@ export async function rescheduleBookingForWorkspace(input: {
 		| undefined;
 
 	if (shouldSyncZohoMeeting(input.workspace, existingBooking)) {
-		zohoUpdate = await updateZohoMeeting({
-			...buildZohoMeetingInput({
-				workspace: input.workspace,
-				service: bookedService,
-				bookingRecord: existingBooking,
-				startAt: matchingSlot.startAt,
-				endAt: matchingSlot.endAt
-			}),
-			meetingKey: existingBooking.zohoMeetingKey!
+		const zohoMeetingInput = buildZohoMeetingInput({
+			workspace: input.workspace,
+			service: bookedService,
+			bookingRecord: existingBooking,
+			startAt: matchingSlot.startAt,
+			endAt: matchingSlot.endAt
 		});
+
+		try {
+			zohoUpdate = await updateZohoMeeting({
+				...zohoMeetingInput,
+				meetingKey: existingBooking.zohoMeetingKey!
+			});
+		} catch (error) {
+			if (!isInvalidZohoMeetingKeyError(error)) {
+				throw error;
+			}
+
+			zohoUpdate = await createZohoMeeting(zohoMeetingInput);
+		}
 	}
 
 	let updatedBooking: typeof booking.$inferSelect;
