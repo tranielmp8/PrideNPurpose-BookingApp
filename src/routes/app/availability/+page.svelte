@@ -3,13 +3,24 @@
 
 	let { data, form } = $props();
 
+	const bookingRuleHelp = {
+		minNotice:
+			'How much lead time you require before a new booking can be made. Example: 1440 minutes means customers must book at least 24 hours ahead.',
+		customerChangeCutoff:
+			'How close to the meeting a customer can cancel or reschedule online. Example: 720 minutes means changes stop 12 hours before the meeting.',
+		bookingWindow:
+			'How far into the future customers can see and book available times. Example: 30 days means they can book up to 30 days from today.',
+		maxBookingsPerDay:
+			'The maximum number of bookings allowed in one day across all services. Leave it blank if there is no daily limit.'
+	};
+
 	function dayLabel(dayOfWeek: number) {
 		return data.days.find((day) => day.value === dayOfWeek)?.label ?? `Day ${dayOfWeek}`;
 	}
 </script>
 
 <svelte:head>
-	<title>Availability | Pride N Purpose Conversations</title>
+	<title>Availability | PNP Connect</title>
 </svelte:head>
 
 <section class="space-y-7 text-slate-900">
@@ -43,25 +54,49 @@
 		<form method="POST" action="?/updateBookingRules" use:enhance class="border-t border-[#d5e2e9] p-5">
 			<div class="grid gap-4 md:grid-cols-2">
 				<div>
-					<label class="text-sm font-medium text-slate-700" for="minNoticeMinutes">Minimum notice</label>
+					<div class="flex items-center gap-2">
+						<label class="text-sm font-medium text-slate-700" for="minNoticeMinutes">Minimum notice</label>
+						<span class="help-popover">
+							<button class="help-trigger" type="button" aria-label="Minimum notice explanation" aria-describedby="min-notice-help">?</button>
+							<span class="help-bubble" id="min-notice-help" role="tooltip">{bookingRuleHelp.minNotice}</span>
+						</span>
+					</div>
 					<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm text-slate-900" id="minNoticeMinutes" name="minNoticeMinutes" type="number" min="0" step="1" value={data.bookingRules.minNoticeMinutes} />
 					<p class="mt-2 text-xs leading-5 text-slate-500">Use minutes. 1440 means at least 24 hours.</p>
 				</div>
 
 				<div>
-					<label class="text-sm font-medium text-slate-700" for="customerChangeCutoffMinutes">Customer change cutoff</label>
+					<div class="flex items-center gap-2">
+						<label class="text-sm font-medium text-slate-700" for="customerChangeCutoffMinutes">Customer change cutoff</label>
+						<span class="help-popover">
+							<button class="help-trigger" type="button" aria-label="Customer change cutoff explanation" aria-describedby="customer-change-cutoff-help">?</button>
+							<span class="help-bubble" id="customer-change-cutoff-help" role="tooltip">{bookingRuleHelp.customerChangeCutoff}</span>
+						</span>
+					</div>
 					<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm text-slate-900" id="customerChangeCutoffMinutes" name="customerChangeCutoffMinutes" type="number" min="0" step="1" value={data.bookingRules.customerChangeCutoffMinutes} />
 					<p class="mt-2 text-xs leading-5 text-slate-500">How long before the meeting customers can cancel or reschedule online.</p>
 				</div>
 
 				<div>
-					<label class="text-sm font-medium text-slate-700" for="bookingWindowDays">Booking window</label>
+					<div class="flex items-center gap-2">
+						<label class="text-sm font-medium text-slate-700" for="bookingWindowDays">Booking window</label>
+						<span class="help-popover">
+							<button class="help-trigger" type="button" aria-label="Booking window explanation" aria-describedby="booking-window-help">?</button>
+							<span class="help-bubble" id="booking-window-help" role="tooltip">{bookingRuleHelp.bookingWindow}</span>
+						</span>
+					</div>
 					<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm text-slate-900" id="bookingWindowDays" name="bookingWindowDays" type="number" min="1" step="1" value={data.bookingRules.bookingWindowDays} />
 					<p class="mt-2 text-xs leading-5 text-slate-500">How many days ahead people can book.</p>
 				</div>
 
 				<div>
-					<label class="text-sm font-medium text-slate-700" for="maxBookingsPerDay">Max bookings/day</label>
+					<div class="flex items-center gap-2">
+						<label class="text-sm font-medium text-slate-700" for="maxBookingsPerDay">Max bookings/day</label>
+						<span class="help-popover">
+							<button class="help-trigger" type="button" aria-label="Max bookings per day explanation" aria-describedby="max-bookings-help">?</button>
+							<span class="help-bubble" id="max-bookings-help" role="tooltip">{bookingRuleHelp.maxBookingsPerDay}</span>
+						</span>
+					</div>
 					<input class="mt-2 block w-full border-[#cfdce4] bg-white px-4 py-3 text-sm text-slate-900" id="maxBookingsPerDay" name="maxBookingsPerDay" type="number" min="0" step="1" value={data.bookingRules.maxBookingsPerDay ?? ''} placeholder="Optional" />
 					<p class="mt-2 text-xs leading-5 text-slate-500">Optional daily cap across all services.</p>
 				</div>
@@ -210,3 +245,100 @@
 		{/if}
 	</section>
 </section>
+
+<style>
+	.help-popover {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+	}
+
+	.help-trigger {
+		display: inline-flex;
+		height: 1.25rem;
+		width: 1.25rem;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid #9fb4c0;
+		border-radius: 9999px;
+		background: #ffffff;
+		color: #384959;
+		font-size: 0.75rem;
+		font-weight: 700;
+		line-height: 1;
+		transition:
+			background-color 150ms ease,
+			border-color 150ms ease,
+			color 150ms ease;
+	}
+
+	.help-trigger:hover,
+	.help-trigger:focus-visible {
+		border-color: #384959;
+		background: #384959;
+		color: #ffffff;
+		outline: none;
+	}
+
+	.help-bubble {
+		position: absolute;
+		z-index: 20;
+		bottom: calc(100% + 0.6rem);
+		left: 50%;
+		width: min(18rem, calc(100vw - 2rem));
+		transform: translateX(-50%) translateY(0.25rem);
+		border: 1px solid #d5e2e9;
+		background: #ffffff;
+		box-shadow: 0 12px 30px rgb(15 23 42 / 0.16);
+		color: #334155;
+		font-size: 0.75rem;
+		font-weight: 500;
+		line-height: 1.45;
+		opacity: 0;
+		padding: 0.75rem;
+		pointer-events: none;
+		transition:
+			opacity 150ms ease,
+			transform 150ms ease;
+		visibility: hidden;
+	}
+
+	.help-bubble::after {
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		height: 0.65rem;
+		width: 0.65rem;
+		border-right: 1px solid #d5e2e9;
+		border-bottom: 1px solid #d5e2e9;
+		background: #ffffff;
+		content: '';
+		transform: translate(-50%, -50%) rotate(45deg);
+	}
+
+	.help-popover:hover .help-bubble,
+	.help-trigger:focus-visible + .help-bubble {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+		visibility: visible;
+	}
+
+	@media (max-width: 640px) {
+		.help-bubble {
+			left: auto;
+			right: -0.75rem;
+			transform: translateY(0.25rem);
+		}
+
+		.help-bubble::after {
+			left: auto;
+			right: 1rem;
+			transform: translateY(-50%) rotate(45deg);
+		}
+
+		.help-popover:hover .help-bubble,
+		.help-trigger:focus-visible + .help-bubble {
+			transform: translateY(0);
+		}
+	}
+</style>

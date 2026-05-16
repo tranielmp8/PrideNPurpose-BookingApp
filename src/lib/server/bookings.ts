@@ -462,20 +462,12 @@ export async function createBookingForPublicPage(input: {
 		existingCustomer = updatedCustomer;
 	}
 
-	if (!input.service.allowGuestBooking && !input.customerAccountId) {
-		throw new Error('This service requires a customer account before booking.');
-	}
-
-	if (input.service.requiresCustomerAccount && !input.customerAccountId) {
-		throw new Error('Please sign in to book this service.');
-	}
-
 	if (input.service.maxBookingsPerCustomer !== null) {
 		const existingBookingsForService = await getBookingCountForService({
 			workspaceId: input.workspace.id,
 			serviceId: input.service.id,
 			customerId: existingCustomer.id,
-			customerAccountId: input.customerAccountId ?? null
+			customerAccountId: null
 		});
 
 		if (existingBookingsForService >= input.service.maxBookingsPerCustomer) {

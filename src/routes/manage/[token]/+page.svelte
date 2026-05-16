@@ -24,12 +24,12 @@
 </script>
 
 <svelte:head>
-	<title>Manage Conversation | Pride N Purpose Conversations</title>
+	<title>Manage Conversation | PNP Connect</title>
 </svelte:head>
 
 <section class="mx-auto max-w-3xl space-y-8 px-4 py-12 sm:px-6">
 	<div>
-		<p class="text-sm uppercase tracking-[0.3em] text-stone-500">Manage booking</p>
+		<p class="text-sm uppercase tracking-[0.3em] text-stone-500">Manage connection</p>
 		<h1 class="mt-3 text-4xl font-semibold tracking-tight">Update your appointment details.</h1>
 		<p class="mt-3 max-w-2xl text-sm leading-6 text-stone-600">
 			Review your scheduled time, join link, and online change options for this booking.

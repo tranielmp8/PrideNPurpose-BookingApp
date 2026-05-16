@@ -38,9 +38,7 @@ function serviceFormValues(formData: FormData) {
 		bufferBeforeMinutes: formData.get('bufferBeforeMinutes')?.toString().trim() ?? '0',
 		bufferAfterMinutes: formData.get('bufferAfterMinutes')?.toString().trim() ?? '0',
 		maxBookingsPerCustomer: formData.get('maxBookingsPerCustomer')?.toString().trim() ?? '',
-		isIntroOffer: formData.get('isIntroOffer') === 'on',
-		allowGuestBooking: formData.get('allowGuestBooking') === 'on',
-		requiresCustomerAccount: formData.get('requiresCustomerAccount') === 'on'
+		isIntroOffer: formData.get('isIntroOffer') === 'on'
 	};
 }
 
@@ -111,8 +109,8 @@ export const actions: Actions = {
 			bufferBeforeMinutes,
 			bufferAfterMinutes,
 			isIntroOffer: values.isIntroOffer,
-			allowGuestBooking: values.allowGuestBooking,
-			requiresCustomerAccount: values.requiresCustomerAccount,
+			allowGuestBooking: true,
+			requiresCustomerAccount: false,
 			maxBookingsPerCustomer
 		});
 
@@ -177,8 +175,8 @@ export const actions: Actions = {
 				bufferBeforeMinutes,
 				bufferAfterMinutes,
 				isIntroOffer: values.isIntroOffer,
-				allowGuestBooking: values.allowGuestBooking,
-				requiresCustomerAccount: values.requiresCustomerAccount,
+				allowGuestBooking: true,
+				requiresCustomerAccount: false,
 				maxBookingsPerCustomer,
 				updatedAt: new Date()
 			})

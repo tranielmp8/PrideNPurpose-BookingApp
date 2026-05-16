@@ -103,18 +103,18 @@ function formatMessageAsHtml(message: string) {
 function buildPlainTextEmail(context: BookingEmailContext) {
 	const customMessage = resolveConfirmationEmailMessage(context);
 	const lines = [
-		`Pride N Purpose Booking confirmed for ${context.service.name}.`,
+		`PNP Connect confirmed for ${context.service.name}.`,
 		'',
 		`Name: ${context.customerName}`,
 		`Email: ${context.customerEmail}`,
 		`Date: ${context.dateLabel}`,
 		`Time: ${context.timeLabel}`,
 		context.meetingLink ? `Meeting link: ${context.meetingLink}` : null,
-		context.manageUrl ? `Manage booking: ${context.manageUrl}` : null,
+		context.manageUrl ? `Manage connection: ${context.manageUrl}` : null,
 		'',
 		customMessage,
 		'',
-		'Sent via Pride N Purpose Booking'
+		'Sent via PNP Connect'
 	].filter(Boolean);
 
 	return lines.join('\n');
@@ -127,20 +127,20 @@ function buildStatusPlainTextEmail(context: BookingEmailContext, variant: Bookin
 
 	const actionLabel = variant === 'rescheduled' ? 'rescheduled' : 'cancelled';
 	const lines = [
-		`Your ${context.service.name} booking has been ${actionLabel}.`,
+		`Your ${context.service.name} connection has been ${actionLabel}.`,
 		'',
 		`Name: ${context.customerName}`,
 		`Email: ${context.customerEmail}`,
 		`Date: ${context.dateLabel}`,
 		`Time: ${context.timeLabel}`,
 		variant === 'rescheduled' && context.meetingLink ? `Meeting link: ${context.meetingLink}` : null,
-		variant === 'rescheduled' && context.manageUrl ? `Manage booking: ${context.manageUrl}` : null,
+		variant === 'rescheduled' && context.manageUrl ? `Manage connection: ${context.manageUrl}` : null,
 		'',
 		variant === 'rescheduled'
 			? 'Your meeting details have been updated successfully.'
-			: 'This booking has been cancelled successfully.',
+			: 'This connection has been cancelled successfully.',
 		'',
-		'Sent via Pride N Purpose Booking'
+		'Sent via PNP Connect'
 	].filter(Boolean);
 
 	return lines.join('\n');
@@ -179,7 +179,7 @@ function buildHtmlEmail(context: BookingEmailContext) {
 			<head>
 				<meta charset="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-				<title>${escapeHtml(context.workspace.name)} booking confirmation</title>
+				<title>PNP Connect confirmation</title>
 			</head>
 			<body style="margin:0; padding:0; background-color:#edf4f7; font-family:Georgia, 'Times New Roman', serif; color:#0f172a;">
 				<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:linear-gradient(180deg,#f8fbfc 0%,#edf4f7 100%); padding:32px 16px;">
@@ -188,7 +188,7 @@ function buildHtmlEmail(context: BookingEmailContext) {
 							<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px; background:#ffffff; border:1px solid #d5e2e9; border-radius:28px; overflow:hidden; box-shadow:0 24px 80px rgba(93,122,139,0.12);">
 								<tr>
 									<td style="padding:40px 40px 24px; background:linear-gradient(135deg,#ffffff 0%,#f3f8fa 100%);">
-										<div style="font-size:28px; line-height:1.2; color:#64748b; font-style:italic;">Pride N Purpose Booking</div>
+										<div style="font-size:28px; line-height:1.2; color:#64748b; font-style:italic;">PNP Connect</div>
 										<h1 style="margin:18px 0 0; font-size:34px; line-height:1.2; font-weight:700; color:#384959;">Your meeting is confirmed.</h1>
 										<p style="margin:14px 0 0; font-size:16px; line-height:1.7; color:#475569;">
 											${escapeHtml(context.service.name)} has been scheduled successfully for ${escapeHtml(context.customerName)}.
@@ -218,11 +218,11 @@ function buildHtmlEmail(context: BookingEmailContext) {
 										}
 										${
 											context.manageUrl
-												? `<a href="${escapeHtml(context.manageUrl)}" style="display:inline-block; margin-left:12px; padding:14px 24px; border-radius:999px; border:1px solid #cbd5e1; color:#0f172a; font-size:15px; font-weight:700; text-decoration:none; background:#ffffff;">Manage booking</a>`
+												? `<a href="${escapeHtml(context.manageUrl)}" style="display:inline-block; margin-left:12px; padding:14px 24px; border-radius:999px; border:1px solid #cbd5e1; color:#0f172a; font-size:15px; font-weight:700; text-decoration:none; background:#ffffff;">Manage connection</a>`
 												: ''
 										}
 										<p style="margin:18px 0 0; font-size:13px; line-height:1.7; color:#64748b;">
-											Use the manage booking link to cancel or reschedule online while changes are still allowed. If the change window has passed, reply to this email or use the contact information provided by ${escapeHtml(context.workspace.name)}.
+											Use the manage connection link to cancel or reschedule online while changes are still allowed. If the change window has passed, reply to this email or use the contact information provided by ${escapeHtml(context.workspace.name)}.
 										</p>
 									</td>
 								</tr>
@@ -275,8 +275,8 @@ function buildStatusHtmlEmail(context: BookingEmailContext, variant: BookingStat
 			: `${escapeHtml(context.service.name)} has been cancelled for ${escapeHtml(context.customerName)}.`;
 	const footerCopy =
 		variant === 'rescheduled'
-			? 'If you need to make another change while the change window is still open, use the manage booking link below.'
-			: 'If you need to book another session, please use the booking page again or contact us directly.';
+			? 'If you need to make another change while the change window is still open, use the manage connection link below.'
+			: 'If you need to schedule another session, please use the connection page again or contact us directly.';
 
 	return `
 		<!doctype html>
@@ -284,7 +284,7 @@ function buildStatusHtmlEmail(context: BookingEmailContext, variant: BookingStat
 			<head>
 				<meta charset="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-				<title>${escapeHtml(context.workspace.name)} booking update</title>
+				<title>PNP Connect update</title>
 			</head>
 			<body style="margin:0; padding:0; background-color:#edf4f7; font-family:Georgia, 'Times New Roman', serif; color:#0f172a;">
 				<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:linear-gradient(180deg,#f8fbfc 0%,#edf4f7 100%); padding:32px 16px;">
@@ -293,7 +293,7 @@ function buildStatusHtmlEmail(context: BookingEmailContext, variant: BookingStat
 							<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px; background:#ffffff; border:1px solid #d5e2e9; border-radius:28px; overflow:hidden; box-shadow:0 24px 80px rgba(93,122,139,0.12);">
 								<tr>
 									<td style="padding:40px 40px 24px; background:linear-gradient(135deg,#ffffff 0%,#f3f8fa 100%);">
-										<div style="font-size:28px; line-height:1.2; color:#64748b; font-style:italic;">Pride N Purpose Booking</div>
+										<div style="font-size:28px; line-height:1.2; color:#64748b; font-style:italic;">PNP Connect</div>
 										<h1 style="margin:18px 0 0; font-size:34px; line-height:1.2; font-weight:700; color:#384959;">${headline}</h1>
 										<p style="margin:14px 0 0; font-size:16px; line-height:1.7; color:#475569;">
 											${bodyCopy}
@@ -313,7 +313,7 @@ function buildStatusHtmlEmail(context: BookingEmailContext, variant: BookingStat
 									<td style="padding:8px 40px 40px;">
 										${
 											variant === 'rescheduled' && context.manageUrl
-												? `<a href="${escapeHtml(context.manageUrl)}" style="display:inline-block; padding:14px 24px; border-radius:999px; border:1px solid #cbd5e1; color:#0f172a; font-size:15px; font-weight:700; text-decoration:none; background:#ffffff;">Manage booking</a>`
+												? `<a href="${escapeHtml(context.manageUrl)}" style="display:inline-block; padding:14px 24px; border-radius:999px; border:1px solid #cbd5e1; color:#0f172a; font-size:15px; font-weight:700; text-decoration:none; background:#ffffff;">Manage connection</a>`
 												: ''
 										}
 										<p style="margin:18px 0 0; font-size:13px; line-height:1.7; color:#64748b;">
@@ -361,7 +361,7 @@ function buildContactFormHtmlEmail(context: ContactFormContext) {
 							<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px; background:#ffffff; border:1px solid #d5e2e9; border-radius:28px; overflow:hidden; box-shadow:0 24px 80px rgba(93,122,139,0.12);">
 								<tr>
 									<td style="padding:40px 40px 24px; background:linear-gradient(135deg,#ffffff 0%,#f3f8fa 100%);">
-										<div style="font-size:28px; line-height:1.2; color:#64748b; font-style:italic;">Pride N Purpose Booking</div>
+										<div style="font-size:28px; line-height:1.2; color:#64748b; font-style:italic;">PNP Connect</div>
 										<h1 style="margin:18px 0 0; font-size:34px; line-height:1.2; font-weight:700; color:#384959;">New contact message</h1>
 										<p style="margin:14px 0 0; font-size:16px; line-height:1.7; color:#475569;">
 											A visitor submitted the contact form.
@@ -419,10 +419,10 @@ async function sendBookingStatusEmails(
 
 	const subject =
 		variant === 'confirmed'
-			? `Pride N Purpose Booking: ${context.service.name} confirmed`
+			? `PNP Connect: ${context.service.name} confirmed`
 			: variant === 'rescheduled'
-				? `Pride N Purpose Booking: ${context.service.name} rescheduled`
-				: `Pride N Purpose Booking: ${context.service.name} cancelled`;
+				? `PNP Connect: ${context.service.name} rescheduled`
+				: `PNP Connect: ${context.service.name} cancelled`;
 	const text = buildStatusPlainTextEmail(context, variant);
 	const html = buildStatusHtmlEmail(context, variant);
 	const recipients = [context.customerEmail];

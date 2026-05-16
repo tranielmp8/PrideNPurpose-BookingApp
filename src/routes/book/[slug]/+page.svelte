@@ -41,8 +41,8 @@
 		}
 
 		return {
-			name: data.customerAccount?.name ?? '',
-			email: data.customerAccount?.email ?? '',
+			name: '',
+			email: '',
 			notes: '',
 			serviceId: data.selectedServiceId,
 			selectedDate: data.selectedDate
@@ -145,12 +145,6 @@
 			badges.push('Intro session');
 		}
 
-		if (service.requiresCustomerAccount) {
-			badges.push('Account required');
-		} else if (!service.allowGuestBooking) {
-			badges.push('No guest booking');
-		}
-
 		if (service.maxBookingsPerCustomer !== null) {
 			badges.push(`Max ${service.maxBookingsPerCustomer} per customer`);
 		}
@@ -171,10 +165,6 @@
 			return 'Start here with Intro Conversation. This service is designed as the first-step conversation for new customers.';
 		}
 
-		if (service.requiresCustomerAccount) {
-			return 'Website Creation is for returning customers and requires a customer account before booking.';
-		}
-
 		if (service.maxBookingsPerCustomer !== null) {
 			return `This service is limited to ${service.maxBookingsPerCustomer} booking${service.maxBookingsPerCustomer === 1 ? '' : 's'} per customer.`;
 		}
@@ -184,7 +174,7 @@
 </script>
 
 <svelte:head>
-	<title>Book {data.workspace.name} | Pride N Purpose</title>
+	<title>Book {data.workspace.name} | PNP Connect</title>
 </svelte:head>
 
 {#if showLimitModal}
@@ -254,10 +244,10 @@
 		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/92 p-6 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-9">
 			<div>
 				<p class="text-base font-bold uppercase tracking-[0.18em] text-[#384959]">
-					Pride N Purpose
+					PNP Connect
 				</p>
 				<p class="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-					Conversations
+					Scheduling
 				</p>
 			</div>
 			<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-6xl">
@@ -303,39 +293,6 @@
 					</a>
 				</div>
 
-				<div class="rounded-[1.75rem] border border-[#d5e2e9] bg-[#f8fbfc] p-5">
-					<p class="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">Customer account</p>
-					<p class="mt-2 text-sm leading-6 text-slate-600">
-						{#if data.customerAccount}
-							You are signed in as {data.customerAccount.email}.
-						{:else}
-							Create an account to manage bookings from a customer dashboard.
-						{/if}
-					</p>
-					<div class="mt-4 flex flex-wrap gap-3">
-						{#if data.customerAccount}
-							<a
-								class="inline-flex rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#eef4f7]"
-								href="/customer/dashboard"
-							>
-								Open dashboard
-							</a>
-						{:else}
-							<a
-								class="inline-flex rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#eef4f7]"
-								href={`/customer/sign-in?workspace=${page.params.slug}`}
-							>
-								Sign in
-							</a>
-							<a
-								class="inline-flex rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#eef4f7]"
-								href={`/customer/sign-up?workspace=${page.params.slug}`}
-							>
-								Create account
-							</a>
-						{/if}
-					</div>
-				</div>
 			</div>
 		</section>
 
@@ -343,7 +300,7 @@
 			<div class="flex flex-wrap items-start justify-between gap-4">
 				<div>
 					<p class="text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">
-						Public booking page
+						PNP Connect page
 					</p>
 					<h2 class="mt-3 text-3xl font-semibold tracking-tight text-[#384959] md:text-4xl">Reserve a session</h2>
 						<p class="mt-3 text-sm leading-6 text-slate-600">
@@ -358,7 +315,7 @@
 
 				{#if form?.bookingSuccess}
 					<p class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
-						Booking confirmed
+						Connection confirmed
 					</p>
 				{/if}
 			</div>
@@ -540,7 +497,7 @@
 				<details class="mt-4 border border-[#d5e2e9] bg-white" open>
 					<summary class="grid cursor-pointer list-none gap-2 bg-[#f8fbfc] px-5 py-4 md:grid-cols-[1fr_auto] md:items-center">
 						<div>
-							<h3 class="text-lg font-semibold tracking-tight text-[#384959]">4. Confirm booking details</h3>
+							<h3 class="text-lg font-semibold tracking-tight text-[#384959]">4. Confirm connection details</h3>
 							<p class="mt-1 text-sm text-slate-600">Service: {getSelectedServiceName()}</p>
 						</div>
 						<p class="text-sm font-semibold text-[#384959]">Open details</p>
@@ -610,11 +567,11 @@
 							class="w-full bg-[#96C2DB] px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1]"
 							type="submit"
 						>
-							Confirm booking
+							Confirm connection
 						</button>
 
 						<p class="text-center text-xs leading-6 text-slate-500">
-							By confirming this booking, you agree to the
+							By confirming this connection, you agree to the
 							<a class="font-semibold text-slate-700 underline underline-offset-4" href={`/book/${page.params.slug}/terms`}>
 								Terms and Conditions
 							</a>

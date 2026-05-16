@@ -19,7 +19,7 @@
 	];
 
 	const highlights = [
-		'Public booking page with service and time selection',
+		'PNP Connect page with service and time selection',
 		'Provider dashboard for services, availability, and bookings',
 		'Zoho Meeting create, update, and cancel sync',
 		'Customer and provider email confirmations'
@@ -27,10 +27,10 @@
 </script>
 
 <svelte:head>
-	<title>Pride N Purpose Conversations</title>
+	<title>PNP Connect</title>
 	<meta
 		name="description"
-		content="Bright, modern scheduling for Pride N Purpose with public booking, provider management, and Zoho Meeting sync."
+		content="Bright, modern scheduling with PNP Connect, provider management, and meeting sync."
 	/>
 </svelte:head>
 
@@ -38,7 +38,7 @@
 	<div class="mx-auto flex max-w-7xl flex-col px-5 py-7 sm:px-6 lg:px-10">
 		<header class="flex flex-col gap-5 border-b border-[#d5e2e9] pb-6 md:flex-row md:items-center md:justify-between">
 			<a class="brand-script text-2xl text-slate-700 md:text-3xl" href="/">
-				Pride N Purpose Conversations
+				PNP Connect
 			</a>
 
 			<nav
@@ -60,7 +60,7 @@
 					Book meaningful conversations with clarity and purpose.
 				</h1>
 				<p class="mt-6 max-w-2xl text-base leading-7 text-slate-600 md:text-lg">
-					Pride N Purpose Conversations keeps the public booking flow easy for clients while
+					PNP Connect keeps the public booking flow easy for clients while
 					giving the owner one place to manage services, availability, bookings, and meeting
 					details.
 				</p>
@@ -82,11 +82,11 @@
 							class="mt-6 inline-flex w-full items-center justify-center bg-[#96C2DB] px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1] sm:w-auto"
 							href={`/book/${data.workspace.slug}`}
 						>
-							Book with Pride N Purpose
+							Connect with PNP
 						</a>
 					{:else}
 						<p class="mt-6 bg-[#eef4f7] px-5 py-3 text-sm font-semibold text-slate-700">
-							Public booking page appears after provider onboarding.
+							PNP Connect page appears after provider onboarding.
 						</p>
 					{/if}
 				</div>
@@ -112,19 +112,11 @@
 						Provider access is for the owner.
 					</h2>
 					<p class="mt-3 text-sm leading-6 text-slate-600">
-						A provider account is the admin account for Pride N Purpose. It creates or opens
-						the workspace behind the booking link, where services, availability, bookings,
-						email settings, and Zoho Meeting details are managed.
+						Provider access opens the admin workspace behind the booking link, where services,
+						availability, bookings, email settings, and meeting details are managed.
 					</p>
 
 					<div class="mt-6 divide-y divide-[#d5e2e9] border-y border-[#d5e2e9]">
-						<a
-							class="flex items-center justify-between gap-4 py-4 text-sm font-semibold text-slate-800 transition hover:text-[#384959]"
-							href="/auth/sign-up"
-						>
-							<span>Create owner account</span>
-							<span aria-hidden="true">-&gt;</span>
-						</a>
 						<a
 							class="flex items-center justify-between gap-4 py-4 text-sm font-semibold text-slate-800 transition hover:text-[#384959]"
 							href="/app/dashboard"
@@ -174,7 +166,7 @@
 					<p class="mt-4 text-2xl font-bold tracking-tight text-[#384959]">Free</p>
 					<p class="mt-1 text-sm text-slate-500">during early access</p>
 					<p class="mt-3 text-sm leading-6 text-slate-600">
-						Pricing plans are coming soon. For now, Pride N Purpose Conversations is free
+						Pricing plans are coming soon. For now, PNP Connect is free
 						while the experience is being refined.
 					</p>
 				</section>

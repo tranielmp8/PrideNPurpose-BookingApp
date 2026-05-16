@@ -7,7 +7,7 @@
 </script>
 
 <svelte:head>
-	<title>Onboarding | Pride N Purpose Conversations</title>
+	<title>Onboarding | PNP Connect</title>
 </svelte:head>
 
 <div class="min-h-screen bg-stone-950 px-6 py-16 text-stone-100">

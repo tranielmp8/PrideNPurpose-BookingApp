@@ -5,7 +5,7 @@ function createWorkspace(overrides: Record<string, unknown> = {}) {
 	return {
 		id: 'workspace-1',
 		ownerUserId: 'user-1',
-		name: 'Pride N Purpose',
+		name: 'PNP Connect',
 		slug: 'lets-meet',
 		timezone: 'UTC',
 		description: null,

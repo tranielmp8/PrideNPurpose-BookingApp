@@ -179,7 +179,7 @@ import {
 function createWorkspace(overrides: Record<string, unknown> = {}) {
 	return {
 		id: 'workspace-1',
-		name: 'Pride N Purpose',
+		name: 'PNP Connect',
 		slug: 'lets-meet',
 		timezone: 'UTC',
 		minNoticeMinutes: 120,
@@ -490,7 +490,7 @@ describe('createBookingForPublicPage', () => {
 			zohoDataCenter: 'com',
 			zohoZsoid: 'zsoid-1',
 			zohoPresenterUserId: 'presenter-1',
-			zohoXZsource: 'Pride N Purpose',
+			zohoXZsource: 'PNP Connect',
 			zohoDefaultMeetingTopic: 'Session with {customer_name}',
 			zohoDefaultAgenda: 'Purpose conversation',
 			zohoAddAttendeeEmails: true
@@ -540,7 +540,7 @@ describe('createBookingForPublicPage', () => {
 			topic: 'Session with Jane Example',
 			agenda: 'Purpose conversation',
 			timezone: 'UTC',
-			xZsource: 'Pride N Purpose',
+			xZsource: 'PNP Connect',
 			participants: [{ email: 'jane@example.com' }]
 		});
 		expect(result).toEqual(syncedBooking);
@@ -644,7 +644,7 @@ describe('booking state changes', () => {
 			zohoDataCenter: 'com',
 			zohoZsoid: 'zsoid-1',
 			zohoPresenterUserId: 'presenter-1',
-			zohoXZsource: 'Pride N Purpose'
+			zohoXZsource: 'PNP Connect'
 		});
 		mockState.findFirstBooking = createBooking({
 			zohoMeetingKey: 'meeting-123',
@@ -658,7 +658,7 @@ describe('booking state changes', () => {
 			dataCenter: 'com',
 			zsoid: 'zsoid-1',
 			meetingKey: 'meeting-123',
-			xZsource: 'Pride N Purpose'
+			xZsource: 'PNP Connect'
 		});
 		expect(mockState.lastUpdateValues).toMatchObject({
 			status: 'cancelled',
@@ -673,7 +673,7 @@ describe('booking state changes', () => {
 		const workspace = createWorkspace({
 			zohoDataCenter: 'com',
 			zohoZsoid: 'zsoid-1',
-			zohoXZsource: 'Pride N Purpose'
+			zohoXZsource: 'PNP Connect'
 		});
 		mockState.findFirstBooking = createBooking({
 			zohoMeetingKey: null,
@@ -688,7 +688,7 @@ describe('booking state changes', () => {
 			dataCenter: 'com',
 			zsoid: 'zsoid-1',
 			meetingKey: 'meeting-123',
-			xZsource: 'Pride N Purpose'
+			xZsource: 'PNP Connect'
 		});
 		expect(mockState.lastUpdateValues).toMatchObject({
 			status: 'cancelled',
@@ -704,7 +704,7 @@ describe('booking state changes', () => {
 			zohoDataCenter: 'com',
 			zohoZsoid: 'zsoid-1',
 			zohoPresenterUserId: 'presenter-1',
-			zohoXZsource: 'Pride N Purpose'
+			zohoXZsource: 'PNP Connect'
 		});
 		mockState.findFirstBooking = createBooking({
 			zohoMeetingKey: 'meeting-stale',
@@ -736,7 +736,7 @@ describe('booking state changes', () => {
 			zohoDataCenter: 'com',
 			zohoZsoid: 'zsoid-1',
 			zohoPresenterUserId: 'presenter-1',
-			zohoXZsource: 'Pride N Purpose',
+			zohoXZsource: 'PNP Connect',
 			zohoDefaultMeetingTopic: 'Session with {customer_name}',
 			zohoDefaultAgenda: 'Purpose conversation',
 			zohoAddAttendeeEmails: true
@@ -777,7 +777,7 @@ describe('booking state changes', () => {
 			topic: 'Session with Jane Example',
 			agenda: 'Purpose conversation',
 			timezone: 'UTC',
-			xZsource: 'Pride N Purpose',
+			xZsource: 'PNP Connect',
 			participants: [{ email: 'jane@example.com' }]
 		});
 		expect(mockState.lastUpdateValues).toMatchObject({
@@ -802,7 +802,7 @@ describe('booking state changes', () => {
 			zohoDataCenter: 'com',
 			zohoZsoid: 'zsoid-1',
 			zohoPresenterUserId: 'presenter-1',
-			zohoXZsource: 'Pride N Purpose',
+			zohoXZsource: 'PNP Connect',
 			zohoDefaultMeetingTopic: 'Session with {customer_name}',
 			zohoDefaultAgenda: 'Purpose conversation'
 		});

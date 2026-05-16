@@ -22,11 +22,8 @@
 	<div class="mx-auto grid min-h-screen max-w-7xl gap-5 px-4 py-4 lg:grid-cols-[272px_1fr]">
 		<aside class="border border-[#d5e2e9] bg-white p-5 shadow-[0_18px_50px_rgba(93,122,139,0.08)]">
 			<a class="block text-base font-bold uppercase tracking-[0.18em] text-[#384959]" href="/">
-				Pride N Purpose
+				PNP Connect
 			</a>
-			<p class="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-				Conversations
-			</p>
 
 			<div class="mt-7 border-t border-[#d5e2e9] pt-5">
 				<h2 class="text-xl font-semibold tracking-tight text-slate-950">{data.workspace.name}</h2>

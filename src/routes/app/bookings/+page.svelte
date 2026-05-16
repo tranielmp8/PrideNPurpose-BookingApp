@@ -121,7 +121,7 @@
 </script>
 
 <svelte:head>
-	<title>Conversations | Pride N Purpose Conversations</title>
+	<title>Conversations | PNP Connect</title>
 </svelte:head>
 
 <section class="space-y-7">
@@ -189,8 +189,8 @@
 										<div class="grid gap-4 md:grid-cols-2">
 											<div class="space-y-3 text-sm text-slate-600">
 												<p>
-													<span class="font-semibold text-slate-950">Customer type:</span>
-													{item.customerAccountId ? 'Account customer' : 'Guest customer'}
+													<span class="font-semibold text-slate-950">Tracking:</span>
+													Email captured with booking record
 												</p>
 												{#if item.customerNotes}
 													<p>

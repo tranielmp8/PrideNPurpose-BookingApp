@@ -20,7 +20,7 @@
 </script>
 
 <svelte:head>
-	<title>Dashboard | Pride N Purpose Conversations</title>
+	<title>Dashboard | PNP Connect</title>
 </svelte:head>
 
 <section class="space-y-7">

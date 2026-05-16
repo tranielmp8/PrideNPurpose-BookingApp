@@ -14,8 +14,6 @@
 		bufferAfterMinutes: string;
 		maxBookingsPerCustomer: string;
 		isIntroOffer: boolean;
-		allowGuestBooking: boolean;
-		requiresCustomerAccount: boolean;
 	};
 
 	type ServiceItem = (typeof data.services)[number];
@@ -30,9 +28,7 @@
 		bufferBeforeMinutes: '0',
 		bufferAfterMinutes: '0',
 		maxBookingsPerCustomer: '',
-		isIntroOffer: false,
-		allowGuestBooking: true,
-		requiresCustomerAccount: false
+		isIntroOffer: false
 	};
 
 	let modalMode = $state<'create' | 'edit' | null>(null);
@@ -86,7 +82,7 @@
 		return getCreateValues()[field]?.toString() ?? '';
 	}
 
-	function getChecked(field: 'isIntroOffer' | 'allowGuestBooking' | 'requiresCustomerAccount') {
+	function getChecked(field: 'isIntroOffer') {
 		if (modalMode === 'edit' && selectedService) {
 			return selectedService[field];
 		}
@@ -115,7 +111,7 @@
 </script>
 
 <svelte:head>
-	<title>Services | Pride N Purpose Conversations</title>
+	<title>Services | PNP Connect</title>
 </svelte:head>
 
 <section class="space-y-7">
@@ -177,12 +173,6 @@
 							<span class="mt-2 flex flex-wrap gap-2 text-xs font-semibold text-slate-500">
 								{#if item.isIntroOffer}
 									<span class="bg-[#e7f0f4] px-2 py-1 text-[#384959]">Intro</span>
-								{/if}
-								{#if !item.allowGuestBooking}
-									<span class="bg-[#f1f5f7] px-2 py-1">Guests off</span>
-								{/if}
-								{#if item.requiresCustomerAccount}
-									<span class="bg-[#f1f5f7] px-2 py-1">Account required</span>
 								{/if}
 								{#if item.maxBookingsPerCustomer !== null}
 									<span class="bg-[#f1f5f7] px-2 py-1">Max {item.maxBookingsPerCustomer}/customer</span>
@@ -395,26 +385,6 @@
 							checked={getChecked('isIntroOffer')}
 						/>
 						<span>Intro session or first-step offer</span>
-					</label>
-
-					<label class="flex items-start gap-3 border border-[#d5e2e9] bg-[#f7fafb] px-4 py-3 text-sm text-slate-700">
-						<input
-							class="mt-1 rounded border-[#cfdce4]"
-							name="allowGuestBooking"
-							type="checkbox"
-							checked={getChecked('allowGuestBooking')}
-						/>
-						<span>Allow guest booking</span>
-					</label>
-
-					<label class="flex items-start gap-3 border border-[#d5e2e9] bg-[#f7fafb] px-4 py-3 text-sm text-slate-700">
-						<input
-							class="mt-1 rounded border-[#cfdce4]"
-							name="requiresCustomerAccount"
-							type="checkbox"
-							checked={getChecked('requiresCustomerAccount')}
-						/>
-						<span>Require customer account</span>
 					</label>
 				</div>
 

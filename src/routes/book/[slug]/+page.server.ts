@@ -5,7 +5,6 @@ import {
 	generateSlotsForService,
 	getPublicBookingContext
 } from '$lib/server/bookings';
-import { getCustomerAccountForUserAndWorkspace } from '$lib/server/customer-accounts';
 import { sendBookingConfirmationEmails } from '$lib/server/email';
 import { getDateKeyInTimeZone } from '$lib/timezone';
 
@@ -13,7 +12,7 @@ function normalizeEmail(value: string) {
 	return value.trim().toLowerCase();
 }
 
-export const load = (async ({ params, url, locals }) => {
+export const load = (async ({ params, url }) => {
 	const slug = params.slug;
 	if (!slug) {
 		throw error(404, 'Booking page not found');
@@ -37,23 +36,18 @@ export const load = (async ({ params, url, locals }) => {
 			})
 		: [];
 
-	const customerAccount = locals.user
-		? await getCustomerAccountForUserAndWorkspace(locals.user.id, context.workspace.id)
-		: null;
-
 	return {
 		workspace: context.workspace,
 		services: context.services,
 		selectedServiceId: selectedService?.id ?? '',
 		selectedDate,
 		slots,
-		timezone: context.workspace.timezone,
-		customerAccount
+		timezone: context.workspace.timezone
 	};
 }) satisfies ServerLoad;
 
 export const actions: Actions = {
-	createBooking: async ({ params, request, url, locals }) => {
+	createBooking: async ({ params, request, url }) => {
 		const slug = params.slug;
 		if (!slug) {
 			throw error(404, 'Booking page not found');
@@ -92,10 +86,6 @@ export const actions: Actions = {
 			});
 		}
 
-		const customerAccount = locals.user
-			? await getCustomerAccountForUserAndWorkspace(locals.user.id, context.workspace.id)
-			: null;
-
 		let createdBooking;
 
 		try {
@@ -105,8 +95,7 @@ export const actions: Actions = {
 				startAt: bookingStart,
 				name,
 				email,
-				notes,
-				customerAccountId: customerAccount?.id ?? null
+				notes
 			});
 		} catch (bookingError) {
 			const message =
@@ -157,7 +146,7 @@ export const actions: Actions = {
 		}
 
 		return {
-			bookingMessage: 'Booking confirmed.',
+			bookingMessage: 'Connection confirmed.',
 			bookingSuccess: true,
 			confirmedBooking: {
 				startAt: createdBooking.startAt.toISOString(),

@@ -25,7 +25,7 @@
 </script>
 
 <svelte:head>
-	<title>Archive | Pride N Purpose Conversations</title>
+	<title>Archive | PNP Connect</title>
 </svelte:head>
 
 <section class="space-y-7">
