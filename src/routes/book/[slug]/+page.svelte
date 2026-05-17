@@ -152,6 +152,27 @@
 		return badges;
 	}
 
+	function getServiceDescription(service: (typeof data.services)[number]) {
+		return (
+			service.description?.trim() ||
+			'More details for this service will be shared during your connection.'
+		);
+	}
+
+	function getServicePreview(service: (typeof data.services)[number]) {
+		const description = service.description?.trim();
+
+		if (!description) {
+			return 'Open the details below to learn what to expect from this service.';
+		}
+
+		if (description.length <= 118) {
+			return description;
+		}
+
+		return `${description.slice(0, 118).trim()}...`;
+	}
+
 	function getSelectedServiceMessage(service: (typeof data.services)[number] | null) {
 		if (!service) {
 			return null;
@@ -247,15 +268,15 @@
 					PNP Connect
 				</p>
 				<p class="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-					Scheduling
+					Vision sessions
 				</p>
 			</div>
 			<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-6xl">
-				Book your next conversation with intention.
+				Connect with me about your vision.
 			</h1>
 			<p class="mt-5 text-base leading-7 text-slate-600">
 				{data.workspace.description ||
-					'Choose a service, pick a day from the calendar, and reserve a time that works for you.'}
+					'Choose the service that fits where you are right now, then reserve time for a focused conversation about your next step.'}
 			</p>
 
 			<div class="mt-8 grid gap-4">
@@ -302,9 +323,9 @@
 					<p class="text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">
 						PNP Connect page
 					</p>
-					<h2 class="mt-3 text-3xl font-semibold tracking-tight text-[#384959] md:text-4xl">Reserve a session</h2>
+					<h2 class="mt-3 text-3xl font-semibold tracking-tight text-[#384959] md:text-4xl">Choose how we connect</h2>
 						<p class="mt-3 text-sm leading-6 text-slate-600">
-							Start with Intro Conversation. Website Creation is for returning customers. Choose your service, select a day from the calendar, then confirm your details.
+							Start with the service that matches your vision, your questions, or the support you need next. Read each description, choose a time, then confirm your details.
 						</p>
 						{#if getSelectedServiceMessage(getSelectedService())}
 							<p class="mt-3 rounded-2xl border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-3 text-sm text-slate-700">
@@ -350,38 +371,66 @@
 							<p class="text-sm font-semibold text-[#384959]">Open services</p>
 						</summary>
 
-						<div class="divide-y divide-[#d5e2e9] border-t border-[#d5e2e9]">
+						<div class="grid gap-4 border-t border-[#d5e2e9] bg-[#f8fbfc] p-4 sm:p-5">
 							{#each data.services as service}
-								<label class="block cursor-pointer">
-									<input
-										class="peer sr-only"
-										type="radio"
-										name="service"
-										value={service.id}
-										checked={service.id === data.selectedServiceId}
-										onchange={submitServiceSelection}
-									/>
-									<span class="grid gap-3 px-5 py-4 transition peer-checked:bg-[#edf5f9] hover:bg-[#f8fbfc] md:grid-cols-[minmax(12rem,1fr)_9rem_auto] md:items-center">
-										<span>
-											<span class="block text-base font-semibold text-slate-900">{service.name}</span>
-										</span>
-										<span class="text-sm font-semibold text-slate-700">
-											{service.durationMinutes} min
-											{#if service.priceCents}
-												· ${(service.priceCents / 100).toFixed(2)}
+								<div
+									class={`overflow-hidden rounded-[1.35rem] border-2 bg-white shadow-[0_14px_36px_rgba(93,122,139,0.08)] transition ${
+										service.id === data.selectedServiceId
+											? 'border-[#6fa9c9] ring-4 ring-[#96C2DB]/25'
+											: 'border-[#cfdce4] hover:border-[#96C2DB]'
+									}`}
+								>
+									<label class="grid cursor-pointer gap-4 p-4 sm:p-5 md:grid-cols-[auto_1fr_auto] md:items-start">
+										<input
+											class="mt-1 h-5 w-5 border-[#96C2DB] text-[#384959] focus:ring-[#96C2DB]"
+											type="radio"
+											name="service"
+											value={service.id}
+											checked={service.id === data.selectedServiceId}
+											onchange={submitServiceSelection}
+										/>
+										<span class="min-w-0">
+											<span class="flex flex-wrap items-center gap-2">
+												<span class="text-lg font-semibold tracking-tight text-[#384959]">
+													{service.name}
+												</span>
+												{#if service.id === data.selectedServiceId}
+													<span class="rounded-full bg-[#96C2DB] px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-slate-900">
+														Selected
+													</span>
+												{/if}
+											</span>
+											<span class="mt-2 block text-sm leading-6 text-slate-600">
+												{getServicePreview(service)}
+											</span>
+											{#if getServiceRuleBadges(service).length > 0}
+												<span class="mt-3 flex flex-wrap gap-2">
+													{#each getServiceRuleBadges(service) as badge}
+														<span class="rounded-full border border-[#cfdce4] bg-[#f8fbfc] px-3 py-1 text-xs font-semibold text-slate-700">
+															{badge}
+														</span>
+													{/each}
+												</span>
 											{/if}
 										</span>
-										{#if getServiceRuleBadges(service).length > 0}
-											<div class="mt-3 flex flex-wrap gap-2">
-												{#each getServiceRuleBadges(service) as badge}
-													<span class="rounded-full border border-[#cfdce4] bg-white px-3 py-1 text-xs font-semibold text-slate-700">
-														{badge}
-													</span>
-												{/each}
-											</div>
-										{/if}
-									</span>
-								</label>
+										<span class="rounded-full border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-2 text-sm font-semibold text-slate-700">
+											{service.durationMinutes} min
+											{#if service.priceCents}
+												- ${(service.priceCents / 100).toFixed(2)}
+											{/if}
+										</span>
+									</label>
+
+									<details class="border-t border-[#e1ebf0] bg-[#fbfdfe]">
+										<summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-[#384959] sm:px-5">
+											<span>Read more about this service</span>
+											<span class="text-xs uppercase tracking-[0.18em] text-slate-500">Details</span>
+										</summary>
+										<div class="border-t border-[#e1ebf0] px-4 py-4 text-sm leading-7 text-slate-700 sm:px-5">
+											<p>{getServiceDescription(service)}</p>
+										</div>
+									</details>
+								</div>
 							{/each}
 						</div>
 					</details>
