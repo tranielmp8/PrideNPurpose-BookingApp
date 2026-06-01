@@ -8,6 +8,18 @@ if (!databaseUrl) {
 
 const sql = postgres(databaseUrl, { max: 1 });
 
+async function tableExists(tableName) {
+	const [row] = await sql`
+		select exists (
+			select 1
+			from information_schema.tables
+			where table_schema = 'public'
+				and table_name = ${tableName}
+		) as exists
+	`;
+	return Boolean(row?.exists);
+}
+
 async function columnExists(tableName, columnName) {
 	const [row] = await sql`
 		select exists (
@@ -41,6 +53,14 @@ async function addColumnIfMissing(tableName, columnName, definition) {
 }
 
 try {
+	const hasWorkspaceTable = await tableExists('workspace');
+	const hasBookingTable = await tableExists('booking');
+
+	if (!hasWorkspaceTable || !hasBookingTable) {
+		console.log('Base schema is not initialized yet; skipping meeting schema compatibility check.');
+		process.exit(0);
+	}
+
 	await renameColumnIfNeeded('workspace', 'zoho_presenter_user_id', 'meeting_host_user_id');
 	await renameColumnIfNeeded('workspace', 'zoho_default_meeting_topic', 'meeting_default_topic');
 	await renameColumnIfNeeded('workspace', 'zoho_default_agenda', 'meeting_default_agenda');
