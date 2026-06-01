@@ -6,36 +6,39 @@
 	let { data } = $props();
 </script>
 
-<div class="min-h-screen bg-[linear-gradient(180deg,#f8fbfc_0%,#edf4f7_100%)] px-5 py-10 text-slate-900 md:px-8 md:py-14">
-	<div class="mx-auto max-w-4xl rounded-[2.5rem] border border-[#d5e2e9] bg-white/95 p-7 shadow-[0_30px_90px_rgba(93,122,139,0.12)] md:p-10">
+<div class="pnp-page px-5 py-10 md:px-8 md:py-14">
+	<div class="mx-auto max-w-4xl rounded-[2.5rem] border p-7 md:p-10 shadow-[var(--shadow-lg)] pnp-surface"
+		style="border-color: var(--c-border)">
 		<div class="flex flex-wrap gap-3">
 			<a
-				class="inline-flex w-full justify-center rounded-full border border-[#d5e2e9] bg-[#96C2DB] px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1] sm:w-auto"
+				class="inline-flex w-full justify-center rounded-full px-4 py-2 text-sm font-semibold text-white pnp-btn-primary sm:w-auto shadow-[0_4px_16px_rgba(232,85,33,0.3)]"
 				href={`/book/${data.workspace.slug}`}
 			>
 				Back to booking page
 			</a>
 			<a
-				class="inline-flex w-full justify-center rounded-full border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-white sm:w-auto"
+				class="inline-flex w-full justify-center rounded-full border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521] sm:w-auto"
+				style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)"
 				href={`/book/${data.workspace.slug}/contact`}
 			>
 				Contact
 			</a>
 			<a
-				class="inline-flex w-full justify-center rounded-full border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-white sm:w-auto"
+				class="inline-flex w-full justify-center rounded-full border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521] sm:w-auto"
+				style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)"
 				href={`/book/${data.workspace.slug}/privacy`}
 			>
 				Privacy Policy
 			</a>
 		</div>
 
-		<p class="brand-script text-2xl text-slate-600 md:text-3xl">PNP Connect</p>
-		<h1 class="mt-5 font-serif text-4xl tracking-tight text-[#384959] md:text-5xl">Terms and Conditions</h1>
-		<p class="mt-4 text-sm leading-7 text-slate-600">
+		<p class="brand-script mt-8 text-2xl md:text-3xl" style="color: var(--c-text2)">PNP Connect</p>
+		<h1 class="mt-4 font-serif text-4xl tracking-tight md:text-5xl" style="color: var(--c-text)">Terms and Conditions</h1>
+		<p class="mt-4 text-sm leading-7" style="color: var(--c-text2)">
 			Last updated: April 12, 2026
 		</p>
 
-		<div class="prose prose-slate mt-8 max-w-none">
+		<div class="prose prose-slate dark:prose-invert mt-8 max-w-none">
 			<p>
 				These Terms and Conditions govern your use of PNP Connect and your scheduling of
 				meetings, consultations, or related services through this site.
@@ -43,17 +46,16 @@
 
 			<h2>Use of the Booking Service</h2>
 			<p>
-				By using PNP Connect, you agree to provide accurate information and to use the service
-				only for lawful and legitimate scheduling purposes.
+				By using PNP Connect, you agree to provide accurate information and to use the service only
+				for lawful and legitimate scheduling purposes.
 			</p>
 
 			<h2>Service Fees and Charges</h2>
 			<p>
-				PNP Connect is a platform that enables service providers to offer their own
-				services, consultations, and sessions. Any fees, charges, or rates associated with a
-				booking are set entirely at the discretion of the individual service provider. Pride N
-				Purpose Bookings does not set, control, or guarantee the pricing of any service offered
-				through this platform.
+				PNP Connect is a platform that enables service providers to offer their own services,
+				consultations, and sessions. Any fees, charges, or rates associated with a booking are set
+				entirely at the discretion of the individual service provider. Pride N Purpose Bookings does
+				not set, control, or guarantee the pricing of any service offered through this platform.
 			</p>
 			<p>
 				Customers are responsible for reviewing the fees associated with any service before
@@ -111,8 +113,8 @@
 
 			<h2>Intellectual Property</h2>
 			<p>
-				All content, branding, design, and materials on PNP Connect remain the property of
-				their respective owner unless otherwise stated.
+				All content, branding, design, and materials on PNP Connect remain the property of their
+				respective owner unless otherwise stated.
 			</p>
 
 			<h2>Changes to These Terms</h2>

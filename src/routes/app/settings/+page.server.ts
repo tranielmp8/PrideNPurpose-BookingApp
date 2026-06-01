@@ -3,6 +3,11 @@ import { getEmailConfigurationStatus } from '$lib/server/email';
 import { slugify } from '$lib/server/slug';
 import { getZonedParts } from '$lib/timezone';
 import { getWorkspaceForUser, slugExists, updateWorkspaceSettings } from '$lib/server/workspace';
+import {
+	createGoogleCalendarMeeting,
+	getGoogleCalendarSecretStatus,
+	refreshGoogleAccessToken
+} from '$lib/server/google-calendar';
 import { createZohoMeeting, getZohoWorkspaceStatus, refreshZohoAccessToken } from '$lib/server/zoho';
 
 export const load = (async ({ parent }) => {
@@ -11,6 +16,7 @@ export const load = (async ({ parent }) => {
 	return {
 		workspace,
 		zohoStatus: getZohoWorkspaceStatus(workspace),
+		googleStatus: getGoogleCalendarSecretStatus(),
 		emailStatus: getEmailConfigurationStatus()
 	};
 }) satisfies ServerLoad;
@@ -173,6 +179,68 @@ export const actions: Actions = {
 					error instanceof Error
 						? `Zoho meeting test failed: ${error.message}`
 						: 'Zoho meeting test failed.'
+			});
+		}
+	},
+	testGoogleAuth: async ({ locals }) => {
+		if (!locals.user) {
+			return fail(401, { settingsMessage: 'You must be signed in.' });
+		}
+
+		try {
+			const token = await refreshGoogleAccessToken();
+			return {
+				settingsMessage: 'Google OAuth refresh succeeded.',
+				googleTestResult: {
+					expiresIn: token.expires_in ?? null
+				}
+			};
+		} catch (error) {
+			return fail(400, {
+				settingsMessage:
+					error instanceof Error
+						? `Google auth test failed: ${error.message}`
+						: 'Google auth test failed.'
+			});
+		}
+	},
+	testGoogleMeeting: async ({ locals }) => {
+		if (!locals.user) {
+			return fail(401, { settingsMessage: 'You must be signed in.' });
+		}
+		const workspace = await getWorkspaceForUser(locals.user.id);
+		if (!workspace) {
+			return fail(404, { settingsMessage: 'Workspace not found.' });
+		}
+
+		try {
+			const futureStart = new Date(Date.now() + 2 * 60 * 60 * 1000);
+			const futureEnd = new Date(futureStart.getTime() + 30 * 60 * 1000);
+			const result = await createGoogleCalendarMeeting({
+				summary: workspace.zohoDefaultMeetingTopic || 'Discuss Plans - Test',
+				description: workspace.zohoDefaultAgenda || 'Booking app integration test meeting.',
+				startAt: futureStart,
+				endAt: futureEnd,
+				timeZone: workspace.timezone,
+				attendees: workspace.zohoAddAttendeeEmails
+					? [{ email: workspace.contactEmail || locals.user.email || 'test@example.com' }]
+					: []
+			});
+
+			return {
+				settingsMessage: 'Google Calendar meeting creation succeeded.',
+				googleMeetingResult: {
+					eventId: result.eventId,
+					joinLink: result.joinLink,
+					hostLink: result.hostLink
+				}
+			};
+		} catch (error) {
+			return fail(400, {
+				settingsMessage:
+					error instanceof Error
+						? `Google meeting test failed: ${error.message}`
+						: 'Google meeting test failed.'
 			});
 		}
 	}

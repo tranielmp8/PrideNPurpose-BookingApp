@@ -14,13 +14,7 @@
 		if (form && typeof form === 'object' && 'contactValues' in form) {
 			return form.contactValues as ContactValues;
 		}
-
-		return {
-			firstName: '',
-			lastName: '',
-			email: '',
-			message: ''
-		};
+		return { firstName: '', lastName: '', email: '', message: '' };
 	}
 </script>
 
@@ -32,39 +26,44 @@
 	/>
 </svelte:head>
 
-<div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-4 py-8 text-slate-900 sm:px-5 md:px-8 md:py-14">
+<div class="pnp-page px-4 py-8 sm:px-5 md:px-8 md:py-14">
 	<div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white/92 p-6 shadow-[0_30px_90px_rgba(93,122,139,0.12)] backdrop-blur md:p-9">
-			<p class="brand-script text-2xl text-slate-600 md:text-3xl">PNP Connect</p>
-			<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-6xl">
+
+		<!-- Left info panel -->
+		<section class="rounded-[2.5rem] border p-6 md:p-9 shadow-[var(--shadow-lg)] pnp-surface"
+			style="border-color: var(--c-border)">
+			<p class="brand-script text-2xl md:text-3xl" style="color: var(--c-text2)">PNP Connect</p>
+			<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight md:text-6xl" style="color: var(--c-text)">
 				Get help before you book.
 			</h1>
-			<p class="mt-5 text-base leading-7 text-slate-600">
+			<p class="mt-5 text-base leading-7" style="color: var(--c-text2)">
 				Ask a question about services, availability, or anything else related to booking with {data.workspace.name}.
 			</p>
 
 			<div class="mt-8 grid gap-4">
-				<div class="rounded-[1.75rem] border border-[#d5e2e9] bg-[#f8fbfc] p-5">
-					<p class="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">Booking page</p>
+				<div class="rounded-[1.75rem] border p-5 pnp-muted" style="border-color: var(--c-border)">
+					<p class="text-xs font-semibold uppercase tracking-[0.25em]" style="color: var(--c-text3)">Booking page</p>
 					<a
-						class="mt-3 inline-flex rounded-full border border-[#d5e2e9] bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-[#b8ccd8] hover:bg-[#eef4f7]"
+						class="mt-3 inline-flex rounded-full border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+						style="border-color: var(--c-border); color: var(--c-text2)"
 						href={`/book/${data.workspace.slug}`}
 					>
 						Back to booking page
 					</a>
 				</div>
 
-				<div class="rounded-[1.75rem] border border-[#d5e2e9] bg-[#96C2DB] p-5 text-slate-900">
-					<p class="text-xs font-semibold uppercase tracking-[0.25em] text-slate-700">Also available</p>
+				<div class="rounded-[1.75rem] p-5 shadow-[var(--shadow-sm)]"
+					style="background: linear-gradient(135deg, #e85521 0%, #c94818 100%); color: white;">
+					<p class="text-xs font-semibold uppercase tracking-[0.25em] text-white/70">Also available</p>
 					<div class="mt-3 flex flex-wrap gap-3">
 						<a
-							class="rounded-full border border-white/60 bg-white/65 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-white"
+							class="rounded-full border border-white/30 bg-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/25"
 							href={`/book/${data.workspace.slug}/privacy`}
 						>
 							Privacy Policy
 						</a>
 						<a
-							class="rounded-full border border-white/60 bg-white/65 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-white"
+							class="rounded-full border border-white/30 bg-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/25"
 							href={`/book/${data.workspace.slug}/terms`}
 						>
 							Terms and Conditions
@@ -74,25 +73,27 @@
 			</div>
 		</section>
 
-		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white p-6 shadow-[0_35px_100px_rgba(93,122,139,0.1)] md:p-9">
+		<!-- Right form panel -->
+		<section class="rounded-[2.5rem] border p-6 md:p-9 shadow-[var(--shadow-md)] pnp-surface"
+			style="border-color: var(--c-border)">
 			<div class="flex flex-wrap items-start justify-between gap-4">
 				<div>
-					<p class="text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">Customer contact</p>
-					<h2 class="mt-3 text-3xl font-semibold tracking-tight text-[#384959] md:text-4xl">Send a message</h2>
-					<p class="mt-3 text-sm leading-6 text-slate-600">
+					<p class="text-sm font-semibold uppercase tracking-[0.28em]" style="color: var(--c-text3)">Customer contact</p>
+					<h2 class="mt-3 text-3xl font-semibold tracking-tight md:text-4xl" style="color: var(--c-text)">Send a message</h2>
+					<p class="mt-3 text-sm leading-6" style="color: var(--c-text2)">
 						Fill out the form below and your message will be sent to {data.workspace.name}.
 					</p>
 				</div>
 
 				{#if form?.contactSuccess}
-					<p class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-800">
+					<p class="rounded-full bg-emerald-500/15 px-4 py-2 text-sm font-semibold text-emerald-500">
 						Message sent
 					</p>
 				{/if}
 			</div>
 
 			{#if form?.contactMessage}
-				<p class="mt-6 rounded-[1.5rem] border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-3 text-sm text-slate-700">
+				<p class="mt-6 rounded-[1.5rem] border px-4 py-3 text-sm pnp-muted" style="border-color: var(--c-border); color: var(--c-text2)">
 					{form.contactMessage}
 				</p>
 			{/if}
@@ -100,56 +101,48 @@
 			<form
 				method="POST"
 				use:enhance
-				class="mt-8 space-y-6 rounded-[2rem] border border-[#d5e2e9] bg-[#f8fbfc] p-5 md:p-6"
+				class="mt-8 space-y-6 rounded-[2rem] border p-5 md:p-6 pnp-muted"
+				style="border-color: var(--c-border)"
 			>
 				<div class="grid gap-5 md:grid-cols-2">
 					<div>
-						<label class="text-sm font-medium text-slate-700" for="firstName">First name</label>
+						<label class="text-sm font-medium" for="firstName" style="color: var(--c-text2)">First name</label>
 						<input
-							class="mt-2 block w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm"
-							id="firstName"
-							name="firstName"
-							required
-							value={getContactValues().firstName}
+							class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+							style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
+							id="firstName" name="firstName" required value={getContactValues().firstName}
 						/>
 					</div>
-
 					<div>
-						<label class="text-sm font-medium text-slate-700" for="lastName">Last name</label>
+						<label class="text-sm font-medium" for="lastName" style="color: var(--c-text2)">Last name</label>
 						<input
-							class="mt-2 block w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm"
-							id="lastName"
-							name="lastName"
-							required
-							value={getContactValues().lastName}
+							class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+							style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
+							id="lastName" name="lastName" required value={getContactValues().lastName}
 						/>
 					</div>
 				</div>
 
 				<div>
-					<label class="text-sm font-medium text-slate-700" for="email">Email address</label>
+					<label class="text-sm font-medium" for="email" style="color: var(--c-text2)">Email address</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm"
-						id="email"
-						name="email"
-						type="email"
-						required
-						value={getContactValues().email}
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
+						id="email" name="email" type="email" required value={getContactValues().email}
 					/>
 				</div>
 
 				<div>
-					<label class="text-sm font-medium text-slate-700" for="message">Message</label>
+					<label class="text-sm font-medium" for="message" style="color: var(--c-text2)">Message</label>
 					<textarea
-						class="mt-2 block min-h-40 w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm"
-						id="message"
-						name="message"
-						required
+						class="mt-2 block min-h-40 w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
+						id="message" name="message" required
 					>{getContactValues().message}</textarea>
 				</div>
 
 				<button
-					class="w-full rounded-full bg-[#96C2DB] px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1]"
+					class="w-full rounded-full px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_20px_rgba(232,85,33,0.35)]"
 					type="submit"
 				>
 					Send message

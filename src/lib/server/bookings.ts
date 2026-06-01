@@ -19,6 +19,12 @@ import {
 } from '$lib/server/db/schema';
 import { getWorkspaceBySlug } from '$lib/server/workspace';
 import {
+	createGoogleCalendarMeeting,
+	deleteGoogleCalendarMeeting,
+	isGoogleCalendarConfigured,
+	updateGoogleCalendarMeeting
+} from '$lib/server/google-calendar';
+import {
 	createZohoMeeting,
 	deleteZohoMeeting,
 	formatZohoStartTime,
@@ -50,6 +56,14 @@ function isInvalidZohoMeetingKeyError(error: unknown) {
 
 	const message = error.message.toLowerCase();
 	return message.includes('invalid_meeting_key') || message.includes('meeting key is invalid');
+}
+
+function isGoogleMissingEventError(error: unknown) {
+	if (!(error instanceof Error)) {
+		return false;
+	}
+
+	return error.message.includes('(status 404)') || error.message.toLowerCase().includes('not found');
 }
 
 export function parseTimeToMinutes(value: string) {
@@ -328,16 +342,51 @@ function buildZohoMeetingInput(input: {
 	};
 }
 
+function buildGoogleMeetingInput(input: {
+	workspace: PublicWorkspace;
+	service: PublicService;
+	bookingRecord: Pick<
+		typeof booking.$inferSelect,
+		'customerNameSnapshot' | 'customerEmailSnapshot' | 'customerNotes'
+	>;
+	startAt: Date;
+	endAt: Date;
+}) {
+	const topicTemplate = input.workspace.zohoDefaultMeetingTopic || input.service.name;
+	const summary = topicTemplate.replaceAll('{customer_name}', input.bookingRecord.customerNameSnapshot);
+	const description =
+		input.workspace.zohoDefaultAgenda ||
+		input.bookingRecord.customerNotes ||
+		`Booking for ${input.service.name}`;
+	const attendees = input.workspace.zohoAddAttendeeEmails
+		? [{ email: input.bookingRecord.customerEmailSnapshot }]
+		: [];
+
+	return {
+		summary,
+		description,
+		startAt: input.startAt,
+		endAt: input.endAt,
+		timeZone: input.workspace.timezone,
+		attendees
+	};
+}
+
 function shouldSyncZohoMeeting(
 	workspace: PublicWorkspace,
 	bookingRecord: typeof booking.$inferSelect
 ) {
 	return Boolean(
-		bookingRecord.zohoMeetingKey &&
+		bookingRecord.meetingProvider !== 'google' &&
+			bookingRecord.zohoMeetingKey &&
 			workspace.zohoDataCenter &&
 			workspace.zohoZsoid &&
 			workspace.zohoPresenterUserId
 	);
+}
+
+function shouldSyncGoogleMeeting(bookingRecord: typeof booking.$inferSelect) {
+	return Boolean(bookingRecord.meetingProvider === 'google' && bookingRecord.zohoMeetingKey);
 }
 
 function getZohoMeetingKeyFromPayload(payload: string | null) {
@@ -347,11 +396,19 @@ function getZohoMeetingKeyFromPayload(payload: string | null) {
 
 	try {
 		const parsed = JSON.parse(payload) as {
+			event?: {
+				id?: string | null;
+			};
+			payload?: {
+				session?: {
+					meetingKey?: string | number | null;
+				};
+			};
 			session?: {
 				meetingKey?: string | number | null;
 			};
 		};
-		const meetingKey = parsed.session?.meetingKey;
+		const meetingKey = parsed.event?.id ?? parsed.session?.meetingKey ?? parsed.payload?.session?.meetingKey;
 		return meetingKey == null ? null : meetingKey.toString();
 	} catch {
 		return null;
@@ -413,7 +470,16 @@ function shouldDeleteZohoMeeting(
 	workspace: PublicWorkspace,
 	bookingRecord: typeof booking.$inferSelect
 ) {
-	return Boolean(getStoredZohoMeetingKey(bookingRecord) && workspace.zohoDataCenter && workspace.zohoZsoid);
+	return Boolean(
+		bookingRecord.meetingProvider !== 'google' &&
+			getStoredZohoMeetingKey(bookingRecord) &&
+			workspace.zohoDataCenter &&
+			workspace.zohoZsoid
+	);
+}
+
+function shouldDeleteGoogleMeeting(bookingRecord: typeof booking.$inferSelect) {
+	return Boolean(bookingRecord.meetingProvider === 'google' && getStoredZohoMeetingKey(bookingRecord));
 }
 
 export async function createBookingForPublicPage(input: {
@@ -503,7 +569,56 @@ export async function createBookingForPublicPage(input: {
 		throw error;
 	}
 
-	if (
+	if (input.workspace.zohoAutoCreateMeetings && isGoogleCalendarConfigured()) {
+		try {
+			const googleMeeting = await createGoogleCalendarMeeting({
+				...buildGoogleMeetingInput({
+					workspace: input.workspace,
+					service: input.service,
+					bookingRecord: {
+						customerNameSnapshot: input.name,
+						customerEmailSnapshot: input.email,
+						customerNotes: input.notes || null
+					},
+					startAt: matchingSlot.startAt,
+					endAt: matchingSlot.endAt
+				})
+			});
+
+			const [updatedBooking] = await db
+				.update(booking)
+				.set({
+					meetingProvider: 'google',
+					zohoMeetingKey: googleMeeting.eventId,
+					zohoJoinLink: googleMeeting.joinLink,
+					zohoStartLink: googleMeeting.hostLink,
+					zohoMeetingPayload: JSON.stringify({
+						provider: 'google',
+						event: googleMeeting.payload
+					}),
+					updatedAt: new Date()
+				})
+				.where(eq(booking.id, createdBooking.id))
+				.returning();
+
+			return updatedBooking;
+		} catch (error) {
+			const [updatedBooking] = await db
+				.update(booking)
+				.set({
+					meetingProvider: 'google',
+					zohoMeetingPayload: JSON.stringify({
+						provider: 'google',
+						error: error instanceof Error ? error.message : 'Google meeting creation failed.'
+					}),
+					updatedAt: new Date()
+				})
+				.where(eq(booking.id, createdBooking.id))
+				.returning();
+
+			return updatedBooking;
+		}
+	} else if (
 		input.workspace.zohoAutoCreateMeetings &&
 		input.workspace.zohoDataCenter &&
 		input.workspace.zohoZsoid &&
@@ -531,10 +646,15 @@ export async function createBookingForPublicPage(input: {
 			const [updatedBooking] = await db
 				.update(booking)
 				.set({
+					meetingProvider: 'zoho',
 					zohoMeetingKey: session?.meetingKey?.toString() ?? null,
 					zohoJoinLink: session?.joinLink ?? null,
 					zohoStartLink: session?.startLink ?? null,
-					zohoMeetingPayload: JSON.stringify(zohoMeeting.payload),
+					zohoMeetingPayload: JSON.stringify({
+						provider: 'zoho',
+						session: zohoMeeting.payload?.session,
+						payload: zohoMeeting.payload
+					}),
 					updatedAt: new Date()
 				})
 				.where(eq(booking.id, createdBooking.id))
@@ -545,7 +665,9 @@ export async function createBookingForPublicPage(input: {
 			const [updatedBooking] = await db
 				.update(booking)
 				.set({
+					meetingProvider: 'zoho',
 					zohoMeetingPayload: JSON.stringify({
+						provider: 'zoho',
 						error: error instanceof Error ? error.message : 'Zoho meeting creation failed.'
 					}),
 					updatedAt: new Date()
@@ -673,9 +795,18 @@ export async function cancelBookingForWorkspace(
 	}
 
 	const zohoMeetingKey = getStoredZohoMeetingKey(existingBooking);
+	const shouldRemoveGoogleMeeting = shouldDeleteGoogleMeeting(existingBooking);
 	const shouldRemoveZohoMeeting = shouldDeleteZohoMeeting(workspaceRecord, existingBooking);
 
-	if (shouldRemoveZohoMeeting) {
+	if (shouldRemoveGoogleMeeting) {
+		try {
+			await deleteGoogleCalendarMeeting(zohoMeetingKey!);
+		} catch (error) {
+			if (!isGoogleMissingEventError(error)) {
+				throw error;
+			}
+		}
+	} else if (shouldRemoveZohoMeeting) {
 		try {
 			await deleteZohoMeeting({
 				dataCenter: workspaceRecord.zohoDataCenter,
@@ -696,10 +827,18 @@ export async function cancelBookingForWorkspace(
 			status: 'cancelled',
 			cancelledAt: new Date(),
 			archivedAt: null,
-			zohoMeetingKey: shouldRemoveZohoMeeting ? null : existingBooking.zohoMeetingKey,
-			zohoJoinLink: shouldRemoveZohoMeeting ? null : existingBooking.zohoJoinLink,
-			zohoStartLink: shouldRemoveZohoMeeting ? null : existingBooking.zohoStartLink,
-			zohoMeetingPayload: shouldRemoveZohoMeeting ? null : existingBooking.zohoMeetingPayload,
+			meetingProvider:
+				shouldRemoveGoogleMeeting || shouldRemoveZohoMeeting ? null : existingBooking.meetingProvider,
+			zohoMeetingKey:
+				shouldRemoveGoogleMeeting || shouldRemoveZohoMeeting ? null : existingBooking.zohoMeetingKey,
+			zohoJoinLink:
+				shouldRemoveGoogleMeeting || shouldRemoveZohoMeeting ? null : existingBooking.zohoJoinLink,
+			zohoStartLink:
+				shouldRemoveGoogleMeeting || shouldRemoveZohoMeeting ? null : existingBooking.zohoStartLink,
+			zohoMeetingPayload:
+				shouldRemoveGoogleMeeting || shouldRemoveZohoMeeting
+					? null
+					: existingBooking.zohoMeetingPayload,
 			updatedAt: new Date()
 		})
 		.where(and(eq(booking.id, bookingId), eq(booking.workspaceId, workspaceRecord.id)))
@@ -747,7 +886,7 @@ export async function rescheduleBookingForWorkspace(input: {
 		throw new Error('That new time is not available under the current booking rules.');
 	}
 
-	let zohoUpdate:
+	let meetingUpdate:
 		| {
 				payload: {
 					session?: {
@@ -755,11 +894,45 @@ export async function rescheduleBookingForWorkspace(input: {
 						joinLink?: string;
 						startLink?: string;
 					};
+					id?: string;
+					hangoutLink?: string;
+					htmlLink?: string;
 				} | null;
+				eventId?: string | null;
+				joinLink?: string | null;
+				hostLink?: string | null;
+				provider?: 'google' | 'zoho';
 		  }
 		| undefined;
 
-	if (shouldSyncZohoMeeting(input.workspace, existingBooking)) {
+	if (shouldSyncGoogleMeeting(existingBooking)) {
+		const googleMeetingInput = buildGoogleMeetingInput({
+			workspace: input.workspace,
+			service: bookedService,
+			bookingRecord: existingBooking,
+			startAt: matchingSlot.startAt,
+			endAt: matchingSlot.endAt
+		});
+
+		try {
+			meetingUpdate = {
+				...(await updateGoogleCalendarMeeting({
+					...googleMeetingInput,
+					eventId: existingBooking.zohoMeetingKey!
+				})),
+				provider: 'google'
+			};
+		} catch (error) {
+			if (!isGoogleMissingEventError(error)) {
+				throw error;
+			}
+
+			meetingUpdate = {
+				...(await createGoogleCalendarMeeting(googleMeetingInput)),
+				provider: 'google'
+			};
+		}
+	} else if (shouldSyncZohoMeeting(input.workspace, existingBooking)) {
 		const zohoMeetingInput = buildZohoMeetingInput({
 			workspace: input.workspace,
 			service: bookedService,
@@ -769,16 +942,22 @@ export async function rescheduleBookingForWorkspace(input: {
 		});
 
 		try {
-			zohoUpdate = await updateZohoMeeting({
-				...zohoMeetingInput,
-				meetingKey: existingBooking.zohoMeetingKey!
-			});
+			meetingUpdate = {
+				...(await updateZohoMeeting({
+					...zohoMeetingInput,
+					meetingKey: existingBooking.zohoMeetingKey!
+				})),
+				provider: 'zoho'
+			};
 		} catch (error) {
 			if (!isInvalidZohoMeetingKeyError(error)) {
 				throw error;
 			}
 
-			zohoUpdate = await createZohoMeeting(zohoMeetingInput);
+			meetingUpdate = {
+				...(await createZohoMeeting(zohoMeetingInput)),
+				provider: 'zoho'
+			};
 		}
 	}
 
@@ -791,12 +970,29 @@ export async function rescheduleBookingForWorkspace(input: {
 				startAt: matchingSlot.startAt,
 				endAt: matchingSlot.endAt,
 				archivedAt: null,
+				meetingProvider: meetingUpdate?.provider ?? existingBooking.meetingProvider,
 				zohoMeetingKey:
-					zohoUpdate?.payload?.session?.meetingKey?.toString() ?? existingBooking.zohoMeetingKey,
-				zohoJoinLink: zohoUpdate?.payload?.session?.joinLink ?? existingBooking.zohoJoinLink,
-				zohoStartLink: zohoUpdate?.payload?.session?.startLink ?? existingBooking.zohoStartLink,
-				zohoMeetingPayload: zohoUpdate?.payload
-					? JSON.stringify(zohoUpdate.payload)
+					meetingUpdate?.eventId ??
+					meetingUpdate?.payload?.session?.meetingKey?.toString() ??
+					existingBooking.zohoMeetingKey,
+				zohoJoinLink:
+					meetingUpdate?.joinLink ??
+					meetingUpdate?.payload?.session?.joinLink ??
+					existingBooking.zohoJoinLink,
+				zohoStartLink:
+					meetingUpdate?.hostLink ??
+					meetingUpdate?.payload?.session?.startLink ??
+					existingBooking.zohoStartLink,
+				zohoMeetingPayload: meetingUpdate?.payload
+					? JSON.stringify(
+							meetingUpdate.provider === 'google'
+								? { provider: 'google', event: meetingUpdate.payload }
+								: {
+										provider: 'zoho',
+										session: meetingUpdate.payload.session,
+										payload: meetingUpdate.payload
+									}
+						)
 					: existingBooking.zohoMeetingPayload,
 				updatedAt: new Date()
 			})

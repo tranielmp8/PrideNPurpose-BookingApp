@@ -9,35 +9,44 @@
 	<title>Customer Sign In | PNP Connect</title>
 </svelte:head>
 
-<div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] px-6 py-16 text-slate-900">
+<div class="pnp-page px-6 py-16">
 	<div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-[#96C2DB] p-8 text-slate-900 shadow-[0_28px_80px_rgba(93,122,139,0.14)] md:p-10">
+
+		<!-- Left brand panel -->
+		<section class="rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between shadow-[var(--shadow-lg)]"
+			style="background: linear-gradient(145deg, #e85521 0%, #c94818 100%); color: white;">
 			<div class="flex items-start justify-between gap-4">
-				<p class="brand-wordmark text-slate-700">PNP Connect</p>
+				<p class="brand-wordmark text-white/80">PNP Connect</p>
 				<a
-					class="rounded-full border border-white/60 bg-white/30 px-4 py-2 text-sm text-slate-900 transition hover:bg-white/55"
+					class="rounded-full border border-white/30 bg-white/15 px-4 py-2 text-sm text-white/90 transition hover:bg-white/25 hover:text-white"
 					href={data.workspace ? `/book/${data.workspace.slug}` : '/'}
 				>
 					Back
 				</a>
 			</div>
-			<h1 class="mt-6 font-serif text-4xl leading-tight tracking-tight text-[#384959] md:text-5xl">
-				Sign in to manage your bookings.
-			</h1>
-			<p class="mt-5 max-w-xl text-base leading-7 text-slate-700">
-				View upcoming sessions, manage booking changes, and keep your appointment history in one place.
-			</p>
+			<div class="mt-auto pt-12">
+				<h1 class="font-serif text-4xl leading-tight tracking-tight text-white md:text-5xl">
+					Sign in to manage your bookings.
+				</h1>
+				<p class="mt-5 max-w-xl text-base leading-7 text-white/80">
+					View upcoming sessions, manage booking changes, and keep your appointment history in one
+					place.
+				</p>
+			</div>
 		</section>
 
-		<section class="rounded-[2.5rem] border border-[#d5e2e9] bg-white p-8 shadow-[0_28px_80px_rgba(93,122,139,0.1)] md:p-10">
-			<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Customer access</p>
-			<h2 class="mt-4 text-3xl font-semibold tracking-tight text-[#384959]">Customer sign in</h2>
-			<p class="mt-3 text-sm leading-6 text-slate-600">
+		<!-- Right form panel -->
+		<section class="rounded-[2.5rem] border p-8 md:p-10 shadow-[var(--shadow-md)] pnp-surface"
+			style="border-color: var(--c-border)">
+			<p class="text-sm font-semibold uppercase tracking-[0.3em]" style="color: var(--c-text3)">Customer access</p>
+			<h2 class="mt-4 text-3xl font-semibold tracking-tight" style="color: var(--c-text)">Customer sign in</h2>
+			<p class="mt-3 text-sm leading-6" style="color: var(--c-text2)">
 				Use your customer account to manage bookings for {data.workspace?.name ?? 'this workspace'}.
 			</p>
 			{#if !data.workspace}
-				<p class="mt-3 rounded-2xl border border-[#d5e2e9] bg-[#f8fbfc] px-4 py-3 text-sm text-slate-700">
-					If you are creating a new customer account, start from a booking page so your account connects to the correct workspace.
+				<p class="mt-3 rounded-2xl border px-4 py-3 text-sm pnp-muted" style="border-color: var(--c-border); color: var(--c-text2)">
+					If you are creating a new customer account, start from a booking page so your account
+					connects to the correct workspace.
 				</p>
 			{/if}
 
@@ -45,9 +54,10 @@
 				<input type="hidden" name="workspaceSlug" value={data.workspaceSlug} />
 
 				<div>
-					<label class="text-sm font-medium text-slate-700" for="email">Email</label>
+					<label class="text-sm font-medium" for="email" style="color: var(--c-text2)">Email</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521] outline-none"
+						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="email"
 						name="email"
 						type="email"
@@ -57,9 +67,10 @@
 				</div>
 
 				<div>
-					<label class="text-sm font-medium text-slate-700" for="password">Password</label>
+					<label class="text-sm font-medium" for="password" style="color: var(--c-text2)">Password</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border-[#cfdce4] bg-white px-4 py-3 text-sm"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521] outline-none"
+						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="password"
 						name="password"
 						type="password"
@@ -68,30 +79,32 @@
 				</div>
 
 				{#if form?.message}
-					<p class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+					<p class="rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950/50 dark:text-red-400">
 						{form.message}
 					</p>
 				{/if}
 
 				<button
-					class="w-full rounded-full bg-[#96C2DB] px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-[#87b6d1]"
+					class="w-full rounded-full px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_20px_rgba(232,85,33,0.35)]"
 					type="submit"
 				>
 					Sign in
 				</button>
 			</form>
 
-			<p class="mt-6 text-sm text-slate-600">
+			<p class="mt-6 text-sm" style="color: var(--c-text2)">
 				Need an account?
 				<a
-					class="font-medium text-slate-900 underline"
+					class="font-medium underline hover:text-[#e85521] transition"
+					style="color: var(--c-text)"
 					href={`/customer/sign-up${data.workspaceSlug ? `?workspace=${data.workspaceSlug}` : ''}`}
 				>
 					Create one
 				</a>
 			</p>
-			<p class="mt-3 text-sm text-slate-600">
-				Provider account? <a class="font-medium text-slate-900 underline" href="/auth">Use provider sign in</a>
+			<p class="mt-3 text-sm" style="color: var(--c-text2)">
+				Provider account?
+				<a class="font-medium underline hover:text-[#e85521] transition" style="color: var(--c-text)" href="/auth">Use provider sign in</a>
 			</p>
 		</section>
 	</div>

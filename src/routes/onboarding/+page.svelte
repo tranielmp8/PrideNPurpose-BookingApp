@@ -10,23 +10,33 @@
 	<title>Onboarding | PNP Connect</title>
 </svelte:head>
 
-<div class="min-h-screen bg-stone-950 px-6 py-16 text-stone-100">
+<div class="pnp-page px-6 py-16">
 	<div class="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-		<section class="rounded-[2rem] border border-white/10 bg-white/5 p-8">
-			<p class="text-sm uppercase tracking-[0.3em] text-amber-300">Onboarding</p>
-			<h1 class="mt-4 text-4xl font-semibold tracking-tight">Create the workspace your customers will book.</h1>
-			<p class="mt-4 text-sm leading-6 text-stone-300">
-				This step creates your first booking page and business profile. You can refine services
-				and availability after this.
-			</p>
+
+		<!-- Left brand panel -->
+		<section class="rounded-[2rem] p-8 flex flex-col justify-between shadow-[var(--shadow-lg)]"
+			style="background: linear-gradient(145deg, #1e1e1e 0%, #171717 100%); border: 1px solid #333;">
+			<p class="text-xs uppercase tracking-[0.3em] text-[#e85521] font-semibold">Onboarding</p>
+			<div class="mt-auto pt-10">
+				<h1 class="text-4xl font-semibold tracking-tight text-white">
+					Create the workspace your customers will book.
+				</h1>
+				<p class="mt-4 text-sm leading-6 text-white/60">
+					This step creates your first booking page and business profile. You can refine services
+					and availability after this.
+				</p>
+			</div>
 		</section>
 
-		<section class="rounded-[2rem] bg-white p-8 text-stone-900 shadow-2xl shadow-black/20">
+		<!-- Right form panel -->
+		<section class="rounded-[2rem] border p-8 shadow-[var(--shadow-md)] pnp-surface"
+			style="border-color: var(--c-border)">
 			<form method="POST" use:enhance class="space-y-5">
 				<div>
-					<label class="text-sm font-medium text-stone-700" for="businessName">Business name</label>
+					<label class="text-sm font-medium" for="businessName" style="color: var(--c-text2)">Business name</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521] outline-none"
+						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="businessName"
 						name="businessName"
 						required
@@ -35,9 +45,10 @@
 				</div>
 
 				<div>
-					<label class="text-sm font-medium text-stone-700" for="timezone">Timezone</label>
+					<label class="text-sm font-medium" for="timezone" style="color: var(--c-text2)">Timezone</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521] outline-none"
+						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="timezone"
 						name="timezone"
 						required
@@ -46,9 +57,10 @@
 				</div>
 
 				<div>
-					<label class="text-sm font-medium text-stone-700" for="contactEmail">Contact email</label>
+					<label class="text-sm font-medium" for="contactEmail" style="color: var(--c-text2)">Contact email</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border-stone-300 bg-white px-4 py-3 text-sm"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521] outline-none"
+						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="contactEmail"
 						name="contactEmail"
 						type="email"
@@ -58,13 +70,13 @@
 				</div>
 
 				{#if form?.message}
-					<p class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+					<p class="rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950/50 dark:text-red-400">
 						{form.message}
 					</p>
 				{/if}
 
 				<button
-					class="w-full rounded-full bg-stone-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-stone-800"
+					class="w-full rounded-full px-5 py-3 text-sm font-medium text-white pnp-btn-primary shadow-[0_4px_20px_rgba(232,85,33,0.35)]"
 					type="submit"
 				>
 					Create workspace

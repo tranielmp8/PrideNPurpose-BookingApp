@@ -4,41 +4,50 @@
 	let { data, children }: { data: LayoutData; children: import('svelte').Snippet } = $props();
 </script>
 
-<div class="min-h-screen bg-[linear-gradient(165deg,#f9fbfc_0%,#eef4f7_42%,#e5edf1_100%)] text-slate-900">
+<div class="pnp-page">
 	{#if data.customerAccount && data.workspace}
-		<div class="mx-auto grid min-h-screen max-w-7xl gap-6 px-4 py-4 lg:grid-cols-[260px_1fr]">
-			<aside class="rounded-[2rem] border border-[#d5e2e9] bg-[#96C2DB] p-6 text-slate-900 shadow-[0_20px_60px_rgba(93,122,139,0.12)]">
-				<p class="brand-script text-2xl text-slate-700 md:text-3xl">PNP Connect</p>
-				<h2 class="mt-6 text-2xl font-semibold tracking-tight">{data.customerAccount.name}</h2>
-				<p class="mt-2 text-sm text-slate-700">{data.customerAccount.email}</p>
-				<p class="mt-4 text-sm leading-6 text-slate-700">Manage connections with {data.workspace.name}.</p>
+		<div class="mx-auto grid min-h-screen max-w-7xl gap-4 px-3 py-3 lg:grid-cols-[260px_1fr] lg:px-4 lg:py-4">
 
-				<nav class="mt-8 flex flex-col gap-2">
+			<!-- Sidebar -->
+			<aside class="rounded-2xl p-6 shadow-[var(--shadow-md)] flex flex-col"
+				style="background: linear-gradient(145deg, #e85521 0%, #c94818 100%); color: white;">
+				<p class="brand-script text-2xl md:text-3xl text-white/90">PNP Connect</p>
+				<div class="mt-6 border-t border-white/20 pt-5">
+					<h2 class="text-xl font-semibold tracking-tight text-white">{data.customerAccount.name}</h2>
+					<p class="mt-1 text-sm text-white/70">{data.customerAccount.email}</p>
+					<p class="mt-3 text-sm leading-6 text-white/70">Manage connections with {data.workspace.name}.</p>
+				</div>
+
+				<nav class="mt-8 flex flex-col gap-1.5">
 					<a
-						class="rounded-2xl px-4 py-3 text-sm text-slate-800 transition hover:bg-white/55 hover:text-slate-950"
+						class="rounded-xl px-4 py-2.5 text-sm font-medium text-white/80 transition hover:bg-white/20 hover:text-white"
 						href="/customer/dashboard"
 					>
 						Dashboard
 					</a>
 					<a
-						class="rounded-2xl px-4 py-3 text-sm text-slate-800 transition hover:bg-white/55 hover:text-slate-950"
+						class="rounded-xl px-4 py-2.5 text-sm font-medium text-white/80 transition hover:bg-white/20 hover:text-white"
 						href={`/book/${data.workspace.slug}`}
 					>
 						Booking page
 					</a>
 				</nav>
 
-				<form class="mt-8" method="POST" action="/customer/sign-out">
-					<button
-						class="w-full rounded-full border border-white/60 bg-white/30 px-4 py-3 text-sm text-slate-900 transition hover:bg-white/55"
-						type="submit"
-					>
-						Sign out
-					</button>
-				</form>
+				<div class="mt-auto pt-6">
+					<form method="POST" action="/customer/sign-out">
+						<button
+							class="w-full rounded-xl border border-white/30 bg-white/15 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/25"
+							type="submit"
+						>
+							Sign out
+						</button>
+					</form>
+				</div>
 			</aside>
 
-			<main class="rounded-[2rem] border border-[#d5e2e9] bg-white p-6 shadow-[0_20px_60px_rgba(93,122,139,0.08)] lg:p-8">
+			<!-- Main content -->
+			<main class="rounded-2xl border p-6 shadow-[var(--shadow-sm)] lg:p-8 pnp-surface"
+				style="border-color: var(--c-border)">
 				{@render children()}
 			</main>
 		</div>

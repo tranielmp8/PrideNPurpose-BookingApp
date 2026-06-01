@@ -16,6 +16,7 @@ type MockBooking = {
 	zohoJoinLink: string | null;
 	zohoStartLink: string | null;
 	zohoMeetingPayload: string | null;
+	meetingProvider: string | null;
 };
 
 type MockService = {
@@ -58,6 +59,13 @@ const zohoMocks = vi.hoisted(() => ({
 	deleteZohoMeeting: vi.fn(),
 	formatZohoStartTime: vi.fn((date: Date) => date.toISOString()),
 	updateZohoMeeting: vi.fn()
+}));
+
+const googleMocks = vi.hoisted(() => ({
+	createGoogleCalendarMeeting: vi.fn(),
+	deleteGoogleCalendarMeeting: vi.fn(),
+	isGoogleCalendarConfigured: vi.fn(() => false),
+	updateGoogleCalendarMeeting: vi.fn()
 }));
 
 const dbMocks = vi.hoisted(() => {
@@ -166,6 +174,7 @@ vi.mock('$lib/server/workspace', () => ({
 }));
 
 vi.mock('$lib/server/zoho', () => zohoMocks);
+vi.mock('$lib/server/google-calendar', () => googleMocks);
 
 import {
 	createBookingForPublicPage,
@@ -229,6 +238,7 @@ function createBooking(overrides: Partial<MockBooking> = {}) {
 		zohoJoinLink: null,
 		zohoStartLink: null,
 		zohoMeetingPayload: null,
+		meetingProvider: null,
 		...overrides
 	} satisfies MockBooking;
 }
@@ -413,6 +423,9 @@ describe('createBookingForPublicPage', () => {
 		dbMocks.returning.mockClear();
 		zohoMocks.createZohoMeeting.mockReset();
 		zohoMocks.formatZohoStartTime.mockClear();
+		googleMocks.createGoogleCalendarMeeting.mockReset();
+		googleMocks.isGoogleCalendarConfigured.mockReset();
+		googleMocks.isGoogleCalendarConfigured.mockReturnValue(false);
 	});
 
 	afterEach(() => {
@@ -546,6 +559,69 @@ describe('createBookingForPublicPage', () => {
 		expect(result).toEqual(syncedBooking);
 	});
 
+	it('stores Google meeting data when Google is configured', async () => {
+		const workspace = createWorkspace({
+			zohoAutoCreateMeetings: true,
+			zohoDefaultMeetingTopic: 'Session with {customer_name}',
+			zohoDefaultAgenda: 'Purpose conversation',
+			zohoAddAttendeeEmails: true
+		});
+		const service = createService();
+		const createdCustomer = createCustomer();
+		const createdBooking = createBooking();
+		const syncedBooking = createBooking({
+			meetingProvider: 'google',
+			zohoMeetingKey: 'event-123',
+			zohoJoinLink: 'https://meet.google.com/abc-defg-hij',
+			zohoStartLink: 'https://calendar.google.com/event?eid=event-123',
+			zohoMeetingPayload: JSON.stringify({
+				provider: 'google',
+				event: {
+					id: 'event-123',
+					hangoutLink: 'https://meet.google.com/abc-defg-hij'
+				}
+			})
+		});
+
+		mockState.nextInsertResults = [[createdCustomer], [createdBooking]];
+		mockState.nextUpdateResults = [[syncedBooking]];
+		googleMocks.isGoogleCalendarConfigured.mockReturnValue(true);
+		googleMocks.createGoogleCalendarMeeting.mockResolvedValue({
+			eventId: 'event-123',
+			joinLink: 'https://meet.google.com/abc-defg-hij',
+			hostLink: 'https://calendar.google.com/event?eid=event-123',
+			payload: {
+				id: 'event-123',
+				hangoutLink: 'https://meet.google.com/abc-defg-hij'
+			}
+		});
+
+		const result = await createBookingForPublicPage({
+			workspace,
+			service,
+			startAt: new Date('2026-04-11T09:00:00.000Z'),
+			name: 'Jane Example',
+			email: 'jane@example.com',
+			notes: 'First conversation'
+		});
+
+		expect(googleMocks.createGoogleCalendarMeeting).toHaveBeenCalledWith({
+			summary: 'Session with Jane Example',
+			description: 'Purpose conversation',
+			startAt: new Date('2026-04-11T09:00:00.000Z'),
+			endAt: new Date('2026-04-11T10:00:00.000Z'),
+			timeZone: 'UTC',
+			attendees: [{ email: 'jane@example.com' }]
+		});
+		expect(mockState.lastUpdateValues).toMatchObject({
+			meetingProvider: 'google',
+			zohoMeetingKey: 'event-123',
+			zohoJoinLink: 'https://meet.google.com/abc-defg-hij',
+			zohoStartLink: 'https://calendar.google.com/event?eid=event-123'
+		});
+		expect(result).toEqual(syncedBooking);
+	});
+
 	it('returns null when the database overlap constraint rejects a race-condition insert', async () => {
 		const workspace = createWorkspace();
 		const service = createService();
@@ -601,6 +677,11 @@ describe('booking state changes', () => {
 		zohoMocks.updateZohoMeeting.mockReset();
 		zohoMocks.createZohoMeeting.mockReset();
 		zohoMocks.formatZohoStartTime.mockClear();
+		googleMocks.deleteGoogleCalendarMeeting.mockReset();
+		googleMocks.updateGoogleCalendarMeeting.mockReset();
+		googleMocks.createGoogleCalendarMeeting.mockReset();
+		googleMocks.isGoogleCalendarConfigured.mockReset();
+		googleMocks.isGoogleCalendarConfigured.mockReturnValue(false);
 	});
 
 	afterEach(() => {
@@ -787,10 +868,18 @@ describe('booking state changes', () => {
 			zohoJoinLink: 'https://meet.zoho.com/join/456',
 			zohoStartLink: 'https://meet.zoho.com/start/456',
 			zohoMeetingPayload: JSON.stringify({
+				provider: 'zoho',
 				session: {
 					meetingKey: 'meeting-456',
 					joinLink: 'https://meet.zoho.com/join/456',
 					startLink: 'https://meet.zoho.com/start/456'
+				},
+				payload: {
+					session: {
+						meetingKey: 'meeting-456',
+						joinLink: 'https://meet.zoho.com/join/456',
+						startLink: 'https://meet.zoho.com/start/456'
+					}
 				}
 			})
 		});

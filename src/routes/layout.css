@@ -2,6 +2,39 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
+@variant dark (&:where(.dark, .dark *));
+
+:root {
+	--c-bg: #f7fafb;
+	--c-surface: #ffffff;
+	--c-muted: #eef4f7;
+	--c-border: #d5e2e9;
+	--c-text: #1e2a34;
+	--c-text2: #5a7080;
+	--c-text3: #8090a0;
+	--c-accent: #e85521;
+	--c-accent-h: #c94818;
+	--c-accent-dark-h: #f07238;
+	--shadow-sm: 0 18px 50px rgba(93, 122, 139, 0.08);
+	--shadow-md: 0 28px 80px rgba(93, 122, 139, 0.12);
+	--shadow-lg: 0 30px 90px rgba(93, 122, 139, 0.14);
+}
+
+.dark {
+	--c-bg: #171717;
+	--c-surface: #222222;
+	--c-muted: #2a2a2a;
+	--c-border: #383838;
+	--c-text: #e0e0e0;
+	--c-text2: #8a8a8a;
+	--c-text3: #5a5a5a;
+	--c-accent: #e85521;
+	--c-accent-h: #f07238;
+	--shadow-sm: 0 18px 50px rgba(0, 0, 0, 0.45);
+	--shadow-md: 0 28px 80px rgba(0, 0, 0, 0.5);
+	--shadow-lg: 0 30px 90px rgba(232, 85, 33, 0.1);
+}
+
 .brand-script {
 	font-family: 'Petit Formal Script', cursive;
 	font-weight: 400;
@@ -15,4 +48,80 @@
 	letter-spacing: 0.24em;
 	line-height: 1.6;
 	text-transform: uppercase;
+}
+
+/* Theme-aware base classes */
+.pnp-page {
+	background-color: var(--c-bg);
+	color: var(--c-text);
+	min-height: 100vh;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.pnp-surface {
+	background-color: var(--c-surface);
+	border-color: var(--c-border);
+	transition: background-color 0.2s ease;
+}
+
+.pnp-muted {
+	background-color: var(--c-muted);
+}
+
+.pnp-btn-primary {
+	background-color: var(--c-accent);
+	color: #ffffff;
+	transition: background-color 0.15s ease;
+}
+
+.pnp-btn-primary:hover {
+	background-color: var(--c-accent-h);
+}
+
+/* Nav link — color + hover that works alongside inline style */
+.pnp-nav-link {
+	color: var(--c-text2);
+	transition: color 0.15s ease;
+}
+
+.pnp-nav-link:hover {
+	color: var(--c-accent);
+}
+
+.pnp-nav-link-heading {
+	color: var(--c-text);
+	transition: color 0.15s ease;
+}
+
+.pnp-nav-link-heading:hover {
+	color: var(--c-accent);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+	position: fixed;
+	bottom: 1.25rem;
+	right: 1.25rem;
+	z-index: 50;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	border-radius: 9999px;
+	background-color: var(--c-surface);
+	border: 1px solid var(--c-border);
+	color: var(--c-text2);
+	box-shadow: var(--shadow-sm);
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+	background-color: var(--c-muted);
+	color: var(--c-accent);
+	border-color: var(--c-accent);
+	box-shadow: 0 4px 20px rgba(232, 85, 33, 0.25);
 }
