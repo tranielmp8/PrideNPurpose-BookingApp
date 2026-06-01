@@ -26,6 +26,7 @@
 		"db:enable-customer-accounts": "node scripts/enable-customer-accounts.mjs",
 		"db:enable-service-booking-rules": "node scripts/enable-service-booking-rules.mjs",
 		"db:enable-intro-service-flag": "node scripts/enable-intro-service-flag.mjs",
+		"db:ensure-meeting-schema": "node scripts/ensure-meeting-schema.mjs",
 		"auth:schema": "better-auth generate --config src/lib/server/auth.ts --output src/lib/server/db/auth.schema.ts --yes"
 	},
 	"devDependencies": {
