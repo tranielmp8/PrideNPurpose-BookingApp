@@ -19,7 +19,8 @@ ENV PORT=3000
 COPY --from=build /app/package.json /app/package-lock.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/build ./build
+COPY --from=build /app/scripts ./scripts
 
 EXPOSE 3000
 
-CMD ["node", "build/index.js"]
+CMD ["sh", "-c", "node scripts/ensure-meeting-schema.mjs && node build/index.js"]
