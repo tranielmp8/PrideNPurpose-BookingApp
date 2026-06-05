@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: booking_app
+      POSTGRES_USER: booking_app
+      POSTGRES_PASSWORD: booking_app
+    ports:
+      - "5432:5432"
+    volumes:
+      - booking_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U booking_app -d booking_app"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  seed:
+    build:
+      context: .
+      target: seed
+    profiles:
+      - seed
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://booking_app:booking_app@postgres:5432/booking_app
+      ORIGIN: http://localhost:5173
+      BETTER_AUTH_SECRET: local-docker-development-secret-change-me
+    command: sh -c "npm run db:push:force && npm run db:seed"
+
+volumes:
+  booking_postgres_data:

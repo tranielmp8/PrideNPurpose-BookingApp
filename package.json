@@ -21,6 +21,7 @@
 		"db:push:force": "drizzle-kit push --config drizzle.config.ts --force",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
+		"db:seed": "node scripts/seed-local.mjs",
 		"db:studio": "drizzle-kit studio",
 		"db:harden-bookings": "node scripts/apply-booking-overlap-constraint.mjs",
 		"db:enable-customer-manage": "node scripts/enable-customer-booking-management.mjs",

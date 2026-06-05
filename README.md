@@ -40,6 +40,28 @@ npm run db:push
 npm run dev
 ```
 
+## Local Postgres with Docker Compose
+
+Start Postgres with a persistent named Docker volume:
+
+```sh
+docker compose up -d postgres
+```
+
+Seed a fresh or existing local database:
+
+```sh
+docker compose --profile seed run --rm seed
+```
+
+Use this database URL when running the app from your host machine:
+
+```sh
+DATABASE_URL="postgres://booking_app:booking_app@localhost:5432/booking_app"
+```
+
+The seed creates a sample public workspace at `/book/pride-purpose`.
+
 ## Required environment variables
 
 - `DATABASE_URL`
