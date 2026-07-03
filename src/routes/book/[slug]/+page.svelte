@@ -235,7 +235,7 @@
 				</p>
 			</div>
 			<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight md:text-6xl" style="color: var(--c-text)">
-				Connect with me about your vision.
+				Connect with me, <span class="text-[#e85521]">Traniel Pride</span>, about your Vision!
 			</h1>
 			<p class="mt-5 text-base leading-7" style="color: var(--c-text2)">
 				{data.workspace.description ||
