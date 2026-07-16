@@ -1,10 +1,11 @@
 import { fail, redirect, type Actions, type RequestEvent, type ServerLoad } from '@sveltejs/kit';
 import { APIError } from 'better-auth/api';
 import { auth } from '$lib/server/auth';
+import { isBackendOwner, isBackendOwnerConfigured } from '$lib/server/backend-access';
 import { getWorkspaceForUser } from '$lib/server/workspace';
 
 export const load = (async ({ locals }: RequestEvent) => {
-	if (!locals.user) {
+	if (!locals.user || !isBackendOwner(locals.user.email)) {
 		return {};
 	}
 
@@ -21,6 +22,20 @@ export const actions: Actions = {
 		if (!email || !password) {
 			return fail(400, {
 				message: 'Email and password are required.',
+				email
+			});
+		}
+
+		if (!isBackendOwnerConfigured()) {
+			return fail(503, {
+				message: 'Backend access has not been configured.',
+				email
+			});
+		}
+
+		if (!isBackendOwner(email)) {
+			return fail(403, {
+				message: 'This account is not authorized for backend access.',
 				email
 			});
 		}

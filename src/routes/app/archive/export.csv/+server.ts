@@ -1,6 +1,7 @@
 import { format } from 'node:util';
 import { error, type RequestHandler } from '@sveltejs/kit';
 import { utils } from 'xlsx';
+import { isBackendOwner } from '$lib/server/backend-access';
 import { getBookingsForWorkspace, shouldArchiveBooking } from '$lib/server/bookings';
 import {
 	ARCHIVE_AFTER_DAYS,
@@ -12,7 +13,10 @@ import {
 import { getWorkspaceForUser } from '$lib/server/workspace';
 
 export const GET: RequestHandler = async ({ locals, url }) => {
-	const workspace = locals.user ? await getWorkspaceForUser(locals.user.id) : null;
+	const workspace =
+		locals.user && isBackendOwner(locals.user.email)
+			? await getWorkspaceForUser(locals.user.id)
+			: null;
 	if (!workspace) {
 		throw error(401, 'Workspace not found.');
 	}

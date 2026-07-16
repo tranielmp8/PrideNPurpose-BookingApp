@@ -1,8 +1,9 @@
 import { redirect, type RequestEvent, type ServerLoad } from '@sveltejs/kit';
+import { isBackendOwner } from '$lib/server/backend-access';
 import { getWorkspaceForUser } from '$lib/server/workspace';
 
 export const load = (async ({ locals }: RequestEvent) => {
-	if (!locals.user) {
+	if (!locals.user || !isBackendOwner(locals.user.email)) {
 		throw redirect(302, '/auth/sign-in');
 	}
 

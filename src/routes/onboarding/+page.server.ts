@@ -1,8 +1,9 @@
 import { fail, redirect, type Actions, type RequestEvent, type ServerLoad } from '@sveltejs/kit';
+import { isBackendOwner } from '$lib/server/backend-access';
 import { createWorkspaceForUser, generateWorkspaceSlug, getWorkspaceForUser } from '$lib/server/workspace';
 
 export const load = (async ({ locals, url }: RequestEvent) => {
-	if (!locals.user) {
+	if (!locals.user || !isBackendOwner(locals.user.email)) {
 		throw redirect(302, '/auth/sign-in');
 	}
 
@@ -21,7 +22,7 @@ export const load = (async ({ locals, url }: RequestEvent) => {
 
 export const actions: Actions = {
 	default: async ({ locals, request }) => {
-		if (!locals.user) {
+		if (!locals.user || !isBackendOwner(locals.user.email)) {
 			throw redirect(302, '/auth/sign-in');
 		}
 

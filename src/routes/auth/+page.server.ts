@@ -1,4 +1,5 @@
 import { redirect, type RequestEvent, type ServerLoad } from '@sveltejs/kit';
+import { isBackendOwner } from '$lib/server/backend-access';
 import { getCustomerAccountForUser } from '$lib/server/customer-accounts';
 import { getWorkspaceForUser } from '$lib/server/workspace';
 
@@ -7,7 +8,9 @@ export const load = (async ({ locals }: RequestEvent) => {
 		return {};
 	}
 
-	const providerWorkspace = await getWorkspaceForUser(locals.user.id);
+	const providerWorkspace = isBackendOwner(locals.user.email)
+		? await getWorkspaceForUser(locals.user.id)
+		: null;
 	if (providerWorkspace) {
 		throw redirect(302, '/app/dashboard');
 	}
