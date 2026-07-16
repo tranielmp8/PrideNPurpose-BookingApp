@@ -49,7 +49,7 @@
 			</div>
 			<div class="mt-2 flex flex-wrap gap-2">
 				{#each exportOptions as option}
-					<a class="rounded-lg border px-3 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+					<a class="rounded-lg border px-3 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text2)"
 						href={`/app/archive/export.csv?status=${option.query}`}>
 						{option.label} .csv
@@ -90,7 +90,7 @@
 									{item.status}
 								</span>
 							</div>
-							<p class="text-sm font-semibold text-[#e85521] md:text-right">
+							<p class="text-sm font-semibold text-[#c2410c] md:text-right">
 								<span class="group-open:hidden">Open</span>
 								<span class="hidden group-open:inline">Close</span>
 							</p>

@@ -66,7 +66,7 @@
 					to manage services, availability, bookings, and meeting details.
 				</p>
 
-				<div class="mt-9 border-l-4 border-[#e85521] px-6 py-6 pnp-surface border rounded-none shadow-[var(--shadow-sm)]">
+				<div class="mt-9 border-l-4 border-[#c2410c] px-6 py-6 pnp-surface border rounded-none shadow-[var(--shadow-sm)]">
 					<p class="text-sm font-semibold uppercase tracking-[0.22em]" style="color: var(--c-text3)">
 						For clients
 					</p>
@@ -123,7 +123,7 @@
 							href="/app/dashboard"
 						>
 							<span>Open dashboard</span>
-							<span aria-hidden="true" class="text-[#e85521]">-&gt;</span>
+							<span aria-hidden="true" class="text-[#c2410c]">-&gt;</span>
 						</a>
 					</div>
 				</section>
@@ -154,7 +154,7 @@
 					</p>
 					<ul class="mt-5 space-y-3 text-sm leading-6" style="color: var(--c-text2)">
 						{#each highlights as highlight}
-							<li class="border-l-2 border-[#e85521] pl-4">
+							<li class="border-l-2 border-[#c2410c] pl-4">
 								{highlight}
 							</li>
 						{/each}
@@ -165,7 +165,7 @@
 					<p class="text-sm font-semibold uppercase tracking-[0.22em]" style="color: var(--c-text3)">
 						Pricing
 					</p>
-					<p class="mt-4 text-2xl font-bold tracking-tight text-[#e85521]">Free</p>
+					<p class="mt-4 text-2xl font-bold tracking-tight text-[#c2410c]">Free</p>
 					<p class="mt-1 text-sm" style="color: var(--c-text3)">during early access</p>
 					<p class="mt-3 text-sm leading-6" style="color: var(--c-text2)">
 						Pricing plans are coming soon. For now, PNP Connect is free while the experience is

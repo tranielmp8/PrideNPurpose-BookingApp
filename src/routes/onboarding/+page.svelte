@@ -15,8 +15,8 @@
 
 		<!-- Left brand panel -->
 		<section class="rounded-[2rem] p-8 flex flex-col justify-between shadow-[var(--shadow-lg)]"
-			style="background: linear-gradient(145deg, #1e1e1e 0%, #171717 100%); border: 1px solid #333;">
-			<p class="text-xs uppercase tracking-[0.3em] text-[#e85521] font-semibold">Onboarding</p>
+			style="background: var(--gradient-brand); border: 1px solid var(--color-border);">
+			<p class="text-xs uppercase tracking-[0.3em] text-[#c2410c] font-semibold">Onboarding</p>
 			<div class="mt-auto pt-10">
 				<h1 class="text-4xl font-semibold tracking-tight text-white">
 					Create the workspace your customers will book.
@@ -35,7 +35,7 @@
 				<div>
 					<label class="text-sm font-medium" for="businessName" style="color: var(--c-text2)">Business name</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521] outline-none"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c] outline-none"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="businessName"
 						name="businessName"
@@ -47,7 +47,7 @@
 				<div>
 					<label class="text-sm font-medium" for="timezone" style="color: var(--c-text2)">Timezone</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521] outline-none"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c] outline-none"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="timezone"
 						name="timezone"
@@ -59,7 +59,7 @@
 				<div>
 					<label class="text-sm font-medium" for="contactEmail" style="color: var(--c-text2)">Contact email</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521] outline-none"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c] outline-none"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="contactEmail"
 						name="contactEmail"
@@ -76,7 +76,7 @@
 				{/if}
 
 				<button
-					class="w-full rounded-full px-5 py-3 text-sm font-medium text-white pnp-btn-primary shadow-[0_4px_20px_rgba(232,85,33,0.35)]"
+					class="w-full rounded-full px-5 py-3 text-sm font-medium text-white pnp-btn-primary shadow-[0_4px_20px_rgba(194,65,12,0.35)]"
 					type="submit"
 				>
 					Create workspace

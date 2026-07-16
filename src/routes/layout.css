@@ -5,41 +5,79 @@
 @variant dark (&:where(.dark, .dark *));
 
 :root {
-	--c-bg: #f7fafb;
-	--c-surface: #ffffff;
-	--c-muted: #eef4f7;
-	--c-border: #d5e2e9;
-	--c-text: #1e2a34;
-	--c-text2: #5a7080;
-	--c-text3: #8090a0;
-	--c-accent: #e85521;
-	--c-accent-h: #c94818;
-	--c-accent-dark-h: #f07238;
-	--shadow-sm: 0 18px 50px rgba(93, 122, 139, 0.08);
-	--shadow-md: 0 28px 80px rgba(93, 122, 139, 0.12);
-	--shadow-lg: 0 30px 90px rgba(93, 122, 139, 0.14);
+	color-scheme: light;
+	--color-text: #17151a;
+	--color-text-muted: #625e66;
+	--color-primary: #c2410c;
+	--color-primary-deep: #7c2608;
+	--color-accent: #ef4444;
+	--color-highlight: #ea580c;
+	--color-brand-soft: #fed7aa;
+	--color-background: #ffffff;
+	--color-surface: #ffffff;
+	--color-cream: #f7f7f8;
+	--color-border: #e4e2e6;
+	--color-nav: rgba(255, 255, 255, 0.9);
+	--color-on-dark: #ffffff;
+	--color-on-dark-muted: #d5c9e6;
+	--color-glow: rgba(239, 68, 68, 0.15);
+	--color-mark: rgba(194, 65, 12, 0.09);
+	--color-process-line: #dedbe1;
+	--gradient-brand: linear-gradient(135deg, #7c2508 0%, #d24d0c 52%, #ef4444 115%);
+	--gradient-contact: linear-gradient(135deg, #541707 0%, #b7350b 55%, #ef4444 130%);
+	--color-footer: #260b05;
+
+	/* Backwards-compatible aliases used throughout the booking UI. */
+	--c-bg: var(--color-background);
+	--c-surface: var(--color-surface);
+	--c-muted: var(--color-cream);
+	--c-border: var(--color-border);
+	--c-text: var(--color-text);
+	--c-text2: var(--color-text-muted);
+	--c-text3: var(--color-text-muted);
+	--c-accent: var(--color-primary);
+	--c-accent-h: var(--color-primary-deep);
+	--c-accent-dark-h: var(--color-highlight);
+	--shadow-sm: 0 18px 50px var(--color-mark);
+	--shadow-md: 0 28px 80px var(--color-glow);
+	--shadow-lg: 0 30px 90px var(--color-glow);
 }
 
 .dark {
-	--c-bg: #171717;
-	--c-surface: #222222;
-	--c-muted: #2a2a2a;
-	--c-border: #383838;
-	--c-text: #e0e0e0;
-	--c-text2: #8a8a8a;
-	--c-text3: #5a5a5a;
-	--c-accent: #e85521;
-	--c-accent-h: #f07238;
+	color-scheme: dark;
+	--color-text: #f6f2fc;
+	--color-text-muted: #aaa1b7;
+	--color-primary: #fb923c;
+	--color-primary-deep: #7c2d12;
+	--color-accent: #ef4444;
+	--color-highlight: #f97316;
+	--color-brand-soft: #e9b995;
+	--color-background: #050407;
+	--color-surface: #100d14;
+	--color-cream: #0d0a11;
+	--color-border: #292230;
+	--color-nav: rgba(5, 4, 7, 0.88);
+	--color-on-dark: #faf7ff;
+	--color-on-dark-muted: #bdb2ca;
+	--color-glow: rgba(249, 115, 22, 0.24);
+	--color-mark: rgba(251, 146, 60, 0.1);
+	--color-process-line: #30263a;
+	--gradient-background: radial-gradient(circle at 82% 8%, rgba(124, 45, 18, 0.3), transparent 34%),
+		linear-gradient(145deg, #050403 0%, #0c0806 52%, #160b07 100%);
+	--gradient-brand: linear-gradient(135deg, #030202 0%, #251007 48%, #7c2d12 120%);
+	--gradient-contact: linear-gradient(135deg, #020101 0%, #1d0b05 55%, #8b2518 145%);
+	--color-footer: #020103;
+	--c-accent-h: var(--color-highlight);
 	--shadow-sm: 0 18px 50px rgba(0, 0, 0, 0.45);
 	--shadow-md: 0 28px 80px rgba(0, 0, 0, 0.5);
-	--shadow-lg: 0 30px 90px rgba(232, 85, 33, 0.1);
+	--shadow-lg: 0 30px 90px var(--color-glow);
 }
 
 .brand-script {
-	font-family: 'Petit Formal Script', cursive;
-	font-weight: 400;
-	letter-spacing: 0;
-	text-transform: none;
+	font-family: inherit;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
 }
 
 .brand-wordmark {
@@ -52,7 +90,7 @@
 
 /* Theme-aware base classes */
 .pnp-page {
-	background-color: var(--c-bg);
+	background: var(--gradient-background, var(--c-bg));
 	color: var(--c-text);
 	min-height: 100vh;
 	transition:
@@ -123,5 +161,5 @@
 	background-color: var(--c-muted);
 	color: var(--c-accent);
 	border-color: var(--c-accent);
-	box-shadow: 0 4px 20px rgba(232, 85, 33, 0.25);
+	box-shadow: 0 4px 20px var(--color-glow);
 }

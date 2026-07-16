@@ -16,7 +16,7 @@
 		];
 	}
 
-	const inputClass = 'mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]';
+	const inputClass = 'mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]';
 	const inputStyle = 'border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);';
 	const labelStyle = 'color: var(--c-text2)';
 </script>
@@ -53,7 +53,7 @@
 						{data.workspace.name} · /book/{data.workspace.slug} · {data.workspace.timezone}
 					</p>
 				</div>
-				<p class="text-sm font-semibold text-[#e85521]">Edit profile</p>
+				<p class="text-sm font-semibold text-[#c2410c]">Edit profile</p>
 			</summary>
 
 			<div class="grid gap-4 border-t p-5 md:grid-cols-2" style="border-color: var(--c-border)">
@@ -95,7 +95,7 @@
 					<h2 class="text-xl font-semibold tracking-tight" style="color: var(--c-text)">Meeting connection</h2>
 					<p class="mt-1 text-sm" style="color: var(--c-text2)">Google Calendar and Meet connection status.</p>
 				</div>
-				<p class="text-sm font-semibold text-[#e85521]">Open setup</p>
+				<p class="text-sm font-semibold text-[#c2410c]">Open setup</p>
 			</summary>
 
 			<div class="space-y-5 border-t p-5" style="border-color: var(--c-border)">
@@ -124,7 +124,7 @@
 				</div>
 
 				<div class="flex flex-wrap items-center gap-3">
-					<button class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+					<button class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)"
 						formaction="?/testGoogleAuth" formmethod="POST" type="submit">
 						Test Google OAuth
@@ -137,7 +137,7 @@
 				</div>
 
 				<div class="flex flex-wrap items-center gap-3">
-					<button class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+					<button class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)"
 						formaction="?/testGoogleMeeting" formmethod="POST" type="submit">
 						Test Google Meet Create
@@ -167,7 +167,7 @@
 								Only needed if Google Calendar is not configured or you intentionally switch back.
 							</p>
 						</div>
-						<p class="text-sm font-semibold text-[#e85521]">Open legacy setup</p>
+						<p class="text-sm font-semibold text-[#c2410c]">Open legacy setup</p>
 					</summary>
 
 					<div class="space-y-5 border-t p-4" style="border-color: var(--c-border)">
@@ -204,7 +204,7 @@
 						</div>
 
 						<div class="flex flex-wrap items-center gap-3">
-							<button class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+							<button class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 								style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)"
 								formaction="?/testZohoAuth" formmethod="POST" type="submit">
 								Test Zoho OAuth
@@ -217,7 +217,7 @@
 						</div>
 
 						<div class="flex flex-wrap items-center gap-3">
-							<button class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+							<button class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 								style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)"
 								formaction="?/testZohoMeeting" formmethod="POST" type="submit">
 								Test Zoho Meeting Create
@@ -249,7 +249,7 @@
 					<h2 class="text-xl font-semibold tracking-tight" style="color: var(--c-text)">Meeting defaults</h2>
 					<p class="mt-1 text-sm" style="color: var(--c-text2)">Default title, agenda, attendee behavior, and auto-create setting.</p>
 				</div>
-				<p class="text-sm font-semibold text-[#e85521]">Edit defaults</p>
+				<p class="text-sm font-semibold text-[#c2410c]">Edit defaults</p>
 			</summary>
 
 			<div class="space-y-4 border-t p-5" style="border-color: var(--c-border)">
@@ -263,22 +263,22 @@
 					<textarea class="{inputClass} min-h-32" style={inputStyle} id="zohoDefaultAgenda" name="zohoDefaultAgenda" placeholder="Add the default context that should go into each meeting.">{data.workspace.zohoDefaultAgenda ?? ''}</textarea>
 				</div>
 
-				<label class="flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition hover:border-[#e85521]"
+				<label class="flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition hover:border-[#c2410c]"
 					style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)">
-					<input checked={data.workspace.zohoAddAttendeeEmails} class="rounded accent-[#e85521]" name="zohoAddAttendeeEmails" type="checkbox" />
+					<input checked={data.workspace.zohoAddAttendeeEmails} class="rounded accent-[#c2410c]" name="zohoAddAttendeeEmails" type="checkbox" />
 					Add attendee emails to the meeting when possible.
 				</label>
 
-				<label class="flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition hover:border-[#e85521]"
+				<label class="flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition hover:border-[#c2410c]"
 					style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)">
-					<input checked={data.workspace.zohoAutoCreateMeetings} class="rounded accent-[#e85521]" name="zohoAutoCreateMeetings" type="checkbox" />
+					<input checked={data.workspace.zohoAutoCreateMeetings} class="rounded accent-[#c2410c]" name="zohoAutoCreateMeetings" type="checkbox" />
 					Automatically create a meeting as soon as a booking is confirmed.
 				</label>
 			</div>
 		</details>
 
 		<div class="flex justify-end pt-2">
-			<button class="rounded-xl px-6 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_20px_rgba(232,85,33,0.35)]" type="submit">
+			<button class="rounded-xl px-6 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_20px_rgba(194,65,12,0.35)]" type="submit">
 				Save settings
 			</button>
 		</div>

@@ -19,7 +19,7 @@
 
 		<!-- Left brand panel -->
 		<section class="rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between shadow-[var(--shadow-lg)]"
-			style="background: linear-gradient(145deg, #e85521 0%, #c94818 100%); color: white;">
+			style="background: var(--gradient-brand); color: white;">
 			<div class="flex items-start justify-between gap-4">
 				<p class="brand-wordmark text-white/80">PNP Connect</p>
 				<a
@@ -61,7 +61,7 @@
 				<div>
 					<label class="text-sm font-medium" for="name" style="color: var(--c-text2)">Your name</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521] outline-none"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c] outline-none"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="name"
 						name="name"
@@ -73,7 +73,7 @@
 				<div>
 					<label class="text-sm font-medium" for="email" style="color: var(--c-text2)">Email</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521] outline-none"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c] outline-none"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="email"
 						name="email"
@@ -86,7 +86,7 @@
 				<div>
 					<label class="text-sm font-medium" for="password" style="color: var(--c-text2)">Password</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521] outline-none"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c] outline-none"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="password"
 						name="password"
@@ -100,7 +100,7 @@
 				<div>
 					<label class="text-sm font-medium" for="confirmPassword" style="color: var(--c-text2)">Confirm password</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521] outline-none {passwordMismatch ? 'border-red-400 ring-1 ring-red-300' : ''}"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm transition focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c] outline-none {passwordMismatch ? 'border-red-400 ring-1 ring-red-300' : ''}"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="confirmPassword"
 						name="confirmPassword"
@@ -122,7 +122,7 @@
 
 				<div>
 					<button
-						class="w-full rounded-full px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_20px_rgba(232,85,33,0.35)] disabled:opacity-40 disabled:cursor-not-allowed"
+						class="w-full rounded-full px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_20px_rgba(194,65,12,0.35)] disabled:opacity-40 disabled:cursor-not-allowed"
 						type="submit"
 						disabled={!data.workspaceSlug || passwordMismatch}
 					>
@@ -134,7 +134,7 @@
 			<p class="mt-6 text-sm" style="color: var(--c-text2)">
 				Already have an account?
 				<a
-					class="font-medium underline hover:text-[#e85521] transition"
+					class="font-medium underline hover:text-[#c2410c] transition"
 					style="color: var(--c-text)"
 					href={`/customer/sign-in${data.workspaceSlug ? `?workspace=${data.workspaceSlug}` : ''}`}
 				>
@@ -143,7 +143,7 @@
 			</p>
 			<p class="mt-3 text-sm" style="color: var(--c-text2)">
 				Provider account?
-				<a class="font-medium underline hover:text-[#e85521] transition" style="color: var(--c-text)" href="/auth">Use provider sign in</a>
+				<a class="font-medium underline hover:text-[#c2410c] transition" style="color: var(--c-text)" href="/auth">Use provider sign in</a>
 			</p>
 		</section>
 	</div>

@@ -10,7 +10,7 @@
 
 			<!-- Sidebar -->
 			<aside class="rounded-2xl p-6 shadow-[var(--shadow-md)] flex flex-col"
-				style="background: linear-gradient(145deg, #e85521 0%, #c94818 100%); color: white;">
+				style="background: var(--gradient-brand); color: white;">
 				<p class="brand-script text-2xl md:text-3xl text-white/90">PNP Connect</p>
 				<div class="mt-6 border-t border-white/20 pt-5">
 					<h2 class="text-xl font-semibold tracking-tight text-white">{data.customerAccount.name}</h2>

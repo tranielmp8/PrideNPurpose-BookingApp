@@ -7,14 +7,14 @@
 		style="border-color: var(--c-border)">
 		<div class="flex flex-wrap gap-3">
 			<a
-				class="inline-flex w-full justify-center rounded-full border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521] sm:w-auto"
+				class="inline-flex w-full justify-center rounded-full border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c] sm:w-auto"
 				style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)"
 				href="/"
 			>
 				Back to home
 			</a>
 			<a
-				class="inline-flex w-full justify-center rounded-full px-4 py-2 text-sm font-semibold text-white pnp-btn-primary sm:w-auto shadow-[0_4px_16px_rgba(232,85,33,0.3)]"
+				class="inline-flex w-full justify-center rounded-full px-4 py-2 text-sm font-semibold text-white pnp-btn-primary sm:w-auto shadow-[0_4px_16px_rgba(194,65,12,0.3)]"
 				href="/book/lets-meet"
 			>
 				Back to booking page

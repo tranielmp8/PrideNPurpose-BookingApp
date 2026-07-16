@@ -44,7 +44,7 @@
 				<div class="rounded-[1.75rem] border p-5 pnp-muted" style="border-color: var(--c-border)">
 					<p class="text-xs font-semibold uppercase tracking-[0.25em]" style="color: var(--c-text3)">Booking page</p>
 					<a
-						class="mt-3 inline-flex rounded-full border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+						class="mt-3 inline-flex rounded-full border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 						style="border-color: var(--c-border); color: var(--c-text2)"
 						href={`/book/${data.workspace.slug}`}
 					>
@@ -53,7 +53,7 @@
 				</div>
 
 				<div class="rounded-[1.75rem] p-5 shadow-[var(--shadow-sm)]"
-					style="background: linear-gradient(135deg, #e85521 0%, #c94818 100%); color: white;">
+					style="background: var(--gradient-brand); color: white;">
 					<p class="text-xs font-semibold uppercase tracking-[0.25em] text-white/70">Also available</p>
 					<div class="mt-3 flex flex-wrap gap-3">
 						<a
@@ -108,7 +108,7 @@
 					<div>
 						<label class="text-sm font-medium" for="firstName" style="color: var(--c-text2)">First name</label>
 						<input
-							class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+							class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 							style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 							id="firstName" name="firstName" required value={getContactValues().firstName}
 						/>
@@ -116,7 +116,7 @@
 					<div>
 						<label class="text-sm font-medium" for="lastName" style="color: var(--c-text2)">Last name</label>
 						<input
-							class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+							class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 							style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 							id="lastName" name="lastName" required value={getContactValues().lastName}
 						/>
@@ -126,7 +126,7 @@
 				<div>
 					<label class="text-sm font-medium" for="email" style="color: var(--c-text2)">Email address</label>
 					<input
-						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+						class="mt-2 block w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="email" name="email" type="email" required value={getContactValues().email}
 					/>
@@ -135,14 +135,14 @@
 				<div>
 					<label class="text-sm font-medium" for="message" style="color: var(--c-text2)">Message</label>
 					<textarea
-						class="mt-2 block min-h-40 w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+						class="mt-2 block min-h-40 w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="message" name="message" required
 					>{getContactValues().message}</textarea>
 				</div>
 
 				<button
-					class="w-full rounded-full px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_20px_rgba(232,85,33,0.35)]"
+					class="w-full rounded-full px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_20px_rgba(194,65,12,0.35)]"
 					type="submit"
 				>
 					Send message

@@ -39,7 +39,7 @@
 					</p>
 					<div class="mt-4 flex flex-wrap gap-3">
 						<a
-							class="rounded-full border px-4 py-2 text-sm font-medium transition hover:border-[#e85521] hover:text-[#e85521]"
+							class="rounded-full border px-4 py-2 text-sm font-medium transition hover:border-[#c2410c] hover:text-[#c2410c]"
 							style="border-color: var(--c-border); color: var(--c-text2)"
 							href={`/manage/${item.manageToken}`}
 						>
@@ -47,7 +47,7 @@
 						</a>
 						{#if item.zohoJoinLink}
 							<a
-								class="rounded-full px-4 py-2 text-sm font-medium text-white pnp-btn-primary shadow-[0_4px_16px_rgba(232,85,33,0.3)]"
+								class="rounded-full px-4 py-2 text-sm font-medium text-white pnp-btn-primary shadow-[0_4px_16px_rgba(194,65,12,0.3)]"
 								href={item.zohoJoinLink}
 							>
 								Join meeting

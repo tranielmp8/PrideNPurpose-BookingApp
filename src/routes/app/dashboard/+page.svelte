@@ -60,7 +60,7 @@
 		<h2 class="text-lg font-semibold tracking-tight" style="color: var(--c-text)">Next steps</h2>
 		<ul class="mt-4 grid gap-3 text-sm leading-6 md:grid-cols-3">
 			{#each nextSteps as step}
-				<li class="border-l-2 border-[#e85521] pl-4" style="color: var(--c-text2)">{step}</li>
+				<li class="border-l-2 border-[#c2410c] pl-4" style="color: var(--c-text2)">{step}</li>
 			{/each}
 		</ul>
 	</section>
@@ -68,7 +68,7 @@
 	<section class="rounded-xl border overflow-hidden" style="border-color: var(--c-border)">
 		<div class="flex items-center justify-between gap-3 border-b px-5 py-4 pnp-muted" style="border-color: var(--c-border)">
 			<h2 class="text-lg font-semibold tracking-tight" style="color: var(--c-text)">Upcoming bookings</h2>
-			<a class="text-sm font-semibold text-[#e85521] underline hover:text-[#c94818] transition" href="/app/bookings">View all</a>
+			<a class="text-sm font-semibold text-[#c2410c] underline hover:text-[#7c2608] transition" href="/app/bookings">View all</a>
 		</div>
 
 		{#if data.upcomingBookings.length === 0}

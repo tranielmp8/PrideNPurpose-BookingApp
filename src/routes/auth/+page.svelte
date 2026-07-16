@@ -19,7 +19,7 @@
 				</div>
 
 				<a
-					class="rounded-full border px-4 py-2 text-sm font-semibold transition hover:text-[#e85521]"
+					class="rounded-full border px-4 py-2 text-sm font-semibold transition hover:text-[#c2410c]"
 					style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)"
 					href="/"
 				>
@@ -36,13 +36,13 @@
 					</p>
 					<div class="mt-6 flex flex-wrap gap-3">
 						<a
-							class="inline-flex rounded-full px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(232,85,33,0.3)]"
+							class="inline-flex rounded-full px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(194,65,12,0.3)]"
 							href="/auth/sign-in"
 						>
 							Provider sign in
 						</a>
 						<a
-							class="inline-flex rounded-full border px-5 py-3 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+							class="inline-flex rounded-full border px-5 py-3 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 							style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text2)"
 							href="/auth/sign-up"
 						>
@@ -60,13 +60,13 @@
 					</p>
 					<div class="mt-6 flex flex-wrap gap-3">
 						<a
-							class="inline-flex rounded-full px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(232,85,33,0.3)]"
+							class="inline-flex rounded-full px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(194,65,12,0.3)]"
 							href="/customer/sign-in"
 						>
 							Customer sign in
 						</a>
 						<a
-							class="inline-flex rounded-full border px-5 py-3 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+							class="inline-flex rounded-full border px-5 py-3 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 							style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text2)"
 							href="/customer/sign-up"
 						>

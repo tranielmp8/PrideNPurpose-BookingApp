@@ -180,7 +180,7 @@
 				<button
 					type="button"
 					onclick={() => { showLimitModal = false; }}
-					class="rounded-full border px-3 py-1.5 text-xs font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+					class="rounded-full border px-3 py-1.5 text-xs font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 					style="border-color: var(--c-border); color: var(--c-text2)"
 				>
 					Close
@@ -204,14 +204,14 @@
 				<button
 					type="button"
 					onclick={() => { showLimitModal = false; }}
-					class="rounded-full px-5 py-2.5 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(232,85,33,0.35)]"
+					class="rounded-full px-5 py-2.5 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(194,65,12,0.35)]"
 				>
 					Choose another service
 				</button>
 				<a
 					href={`/book/${page.params.slug}/contact`}
-					class="rounded-full border px-5 py-2.5 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
-					style="border-color: var(--c-border); color: var(--c-text2)"
+					class="rounded-full border px-5 py-2.5 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
+					style="border-color: var(--c-border); color: #c2410c"
 				>
 					Contact us
 				</a>
@@ -227,7 +227,7 @@
 		<section class="rounded-[2.5rem] border p-6 md:p-9 shadow-[var(--shadow-lg)] pnp-surface"
 			style="border-color: var(--c-border)">
 			<div>
-				<p class="text-base font-bold uppercase tracking-[0.18em] text-[#e85521]">
+				<p class="text-base font-bold uppercase tracking-[0.18em] text-[#c2410c]">
 					PNP Connect
 				</p>
 				<p class="mt-1 text-xs font-semibold uppercase tracking-[0.18em]" style="color: var(--c-text3)">
@@ -235,7 +235,7 @@
 				</p>
 			</div>
 			<h1 class="mt-5 font-serif text-4xl leading-tight tracking-tight md:text-6xl" style="color: var(--c-text)">
-				Connect with me, <span class="text-[#e85521]">Traniel Pride</span>, about your Vision!
+				Connect with me, <span class="text-[#c2410c]">Traniel Pride</span>, about your Vision!
 			</h1>
 			<p class="mt-5 text-base leading-7" style="color: var(--c-text2)">
 				{data.workspace.description ||
@@ -256,7 +256,7 @@
 				{/if}
 
 				<div class="rounded-[1.75rem] p-5 shadow-[var(--shadow-sm)]"
-					style="background: linear-gradient(135deg, #e85521 0%, #c94818 100%); color: white;">
+					style="background: var(--gradient-brand); color: white;">
 					<p class="text-xs font-semibold uppercase tracking-[0.25em] text-white/70">Booking link</p>
 					<p class="mt-2 text-sm leading-6 text-white">/book/{page.params.slug}</p>
 				</div>
@@ -267,8 +267,8 @@
 						Questions before booking or trouble with scheduling?
 					</p>
 					<a
-						class="mt-4 inline-flex rounded-full border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
-						style="border-color: var(--c-border); color: var(--c-text2)"
+						class="mt-4 inline-flex rounded-full border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
+						style="border-color: var(--c-border); color: #c2410c"
 						href={`/book/${page.params.slug}/contact`}
 					>
 						Contact us
@@ -314,7 +314,7 @@
 
 			{#if form?.confirmedBooking?.zohoJoinLink}
 				<div class="mt-4 rounded-[1.75rem] border px-5 py-4 text-sm pnp-muted" style="border-color: var(--c-border)">
-					<p class="font-semibold text-[#e85521]">Meeting link ready</p>
+					<p class="font-semibold text-[#c2410c]">Meeting link ready</p>
 					<p class="mt-2 break-all" style="color: var(--c-text2)">{form.confirmedBooking.zohoJoinLink}</p>
 				</div>
 			{/if}
@@ -334,19 +334,19 @@
 								<h3 class="text-lg font-semibold tracking-tight" style="color: var(--c-text)">1. Choose a service</h3>
 								<p class="mt-1 text-sm" style="color: var(--c-text2)">Selected: {getSelectedServiceName()}</p>
 							</div>
-							<p class="text-sm font-semibold text-[#e85521]">Open services</p>
+							<p class="text-sm font-semibold text-[#c2410c]">Open services</p>
 						</summary>
 
 						<div class="grid gap-4 border-t p-4 pnp-muted sm:p-5" style="border-color: var(--c-border)">
 							{#each data.services as service}
 								<div class="overflow-hidden rounded-[1.35rem] border-2 transition pnp-surface shadow-[var(--shadow-sm)]"
 									style={service.id === data.selectedServiceId
-										? 'border-color: #e85521; box-shadow: 0 0 0 4px rgba(232,85,33,0.15)'
+										? 'border-color: #c2410c; box-shadow: 0 0 0 4px rgba(194,65,12,0.15)'
 										: `border-color: var(--c-border)`}
 								>
 									<label class="grid cursor-pointer gap-4 p-4 sm:p-5 md:grid-cols-[auto_1fr_auto] md:items-start">
 										<input
-											class="mt-1 h-5 w-5 accent-[#e85521]"
+											class="mt-1 h-5 w-5 accent-[#c2410c]"
 											type="radio"
 											name="service"
 											value={service.id}
@@ -359,7 +359,7 @@
 													{service.name}
 												</span>
 												{#if service.id === data.selectedServiceId}
-													<span class="rounded-full bg-[#e85521] px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white">
+													<span class="rounded-full bg-[#c2410c] px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white">
 														Selected
 													</span>
 												{/if}
@@ -386,7 +386,7 @@
 									</label>
 
 									<details class="border-t pnp-muted" style="border-color: var(--c-border)">
-										<summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold transition hover:text-[#e85521] sm:px-5" style="color: var(--c-text2)">
+										<summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold transition hover:text-[#c2410c] sm:px-5" style="color: var(--c-text2)">
 											<span>Read more about this service</span>
 											<span class="text-xs uppercase tracking-[0.18em]" style="color: var(--c-text3)">Details</span>
 										</summary>
@@ -406,7 +406,7 @@
 								<h3 class="text-lg font-semibold tracking-tight" style="color: var(--c-text)">2. Choose a day</h3>
 								<p class="mt-1 text-sm" style="color: var(--c-text2)">Selected: {formatFriendlyDate(data.selectedDate)}</p>
 							</div>
-							<p class="text-sm font-semibold text-[#e85521]">Open calendar</p>
+							<p class="text-sm font-semibold text-[#c2410c]">Open calendar</p>
 						</summary>
 
 						<div class="grid gap-6 border-t p-5 xl:grid-cols-[1fr_220px]" style="border-color: var(--c-border)">
@@ -414,7 +414,7 @@
 								<div class="rounded-xl border p-4 pnp-muted sm:p-5" style="border-color: var(--c-border)">
 									<div class="flex flex-wrap items-center justify-between gap-3">
 										<a
-											class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+											class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 											style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text2)"
 											href={`?service=${data.selectedServiceId}&date=${getPreviousMonth()}`}
 										>
@@ -422,7 +422,7 @@
 										</a>
 										<p class="text-base font-semibold tracking-tight sm:text-lg" style="color: var(--c-text)">{getMonthLabel(data.selectedDate)}</p>
 										<a
-											class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+											class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 											style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text2)"
 											href={`?service=${data.selectedServiceId}&date=${getNextMonth()}`}
 										>
@@ -442,12 +442,12 @@
 											<a
 												class="flex h-10 items-center justify-center rounded-lg text-xs font-semibold transition sm:h-12 sm:text-sm"
 												style={day.isSelected
-													? 'background-color: #e85521; color: white; box-shadow: 0 8px 24px rgba(232,85,33,0.4);'
+													? 'background-color: #c2410c; color: white; box-shadow: 0 8px 24px rgba(194,65,12,0.4);'
 													: day.inMonth
 														? `background-color: var(--c-surface); color: var(--c-text);`
 														: `background-color: var(--c-muted); color: var(--c-text3);`}
 												class:ring-2={day.isToday && !day.isSelected}
-												class:ring-[#e85521]={day.isToday && !day.isSelected}
+												class:ring-[#c2410c]={day.isToday && !day.isSelected}
 												href={`?service=${data.selectedServiceId}&date=${day.dateKey}`}
 											>
 												{day.label}
@@ -460,7 +460,7 @@
 							<div>
 								<label class="text-sm font-medium" for="date-select" style="color: var(--c-text2)">Direct date pick</label>
 								<input
-									class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+									class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 									style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 									id="date-select"
 									name="date"
@@ -468,7 +468,7 @@
 									value={data.selectedDate}
 								/>
 								<button
-									class="mt-3 w-full rounded-xl px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(232,85,33,0.3)]"
+									class="mt-3 w-full rounded-xl px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(194,65,12,0.3)]"
 									type="submit"
 								>
 									Update calendar
@@ -485,7 +485,7 @@
 							<h3 class="text-lg font-semibold tracking-tight" style="color: var(--c-text)">3. Choose an available time</h3>
 							<p class="mt-1 text-sm" style="color: var(--c-text2)">{getSelectedServiceName()} in {data.timezone}</p>
 						</div>
-						<p class="text-sm font-semibold text-[#e85521]">{formatFriendlyDate(data.selectedDate)}</p>
+						<p class="text-sm font-semibold text-[#c2410c]">{formatFriendlyDate(data.selectedDate)}</p>
 					</summary>
 
 					{#if data.slots.length === 0}
@@ -500,12 +500,12 @@
 									onclick={() => { selectedSlot = slot.startAt.toISOString(); }}
 									class="grid w-full gap-2 px-5 py-4 text-left text-sm transition md:grid-cols-[1fr_auto] md:items-center"
 									style={isSelectedSlot(slot.startAt.toISOString())
-										? 'background-color: rgba(232,85,33,0.08); border-left: 3px solid #e85521;'
+										? 'background-color: rgba(194,65,12,0.08); border-left: 3px solid #c2410c;'
 										: `background-color: var(--c-surface);`}
 								>
 									<span class="block text-base font-semibold" style="color: var(--c-text)">{slot.label}</span>
 									<span class="text-xs font-semibold uppercase tracking-[0.18em]"
-										style={isSelectedSlot(slot.startAt.toISOString()) ? 'color: #e85521' : `color: var(--c-text3)`}>
+										style={isSelectedSlot(slot.startAt.toISOString()) ? 'color: #c2410c' : `color: var(--c-text3)`}>
 										{isSelectedSlot(slot.startAt.toISOString()) ? 'Selected' : 'Available'}
 									</span>
 								</button>
@@ -521,7 +521,7 @@
 							<h3 class="text-lg font-semibold tracking-tight" style="color: var(--c-text)">4. Confirm connection details</h3>
 							<p class="mt-1 text-sm" style="color: var(--c-text2)">Service: {getSelectedServiceName()}</p>
 						</div>
-						<p class="text-sm font-semibold text-[#e85521]">Open details</p>
+						<p class="text-sm font-semibold text-[#c2410c]">Open details</p>
 					</summary>
 
 					<form method="POST" action="?/createBooking" use:enhance class="space-y-5 border-t p-5 sm:p-6" style="border-color: var(--c-border)">
@@ -535,7 +535,7 @@
 						<div>
 							<label class="text-sm font-medium" for="slotStartAt" style="color: var(--c-text2)">Confirm your time</label>
 							<select
-								class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+								class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 								style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 								id="slotStartAt"
 								name="slotStartAt"
@@ -555,7 +555,7 @@
 							<div>
 								<label class="text-sm font-medium" for="name" style="color: var(--c-text2)">Your name</label>
 								<input
-									class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+									class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 									style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 									id="name"
 									name="name"
@@ -567,7 +567,7 @@
 							<div>
 								<label class="text-sm font-medium" for="email" style="color: var(--c-text2)">Email</label>
 								<input
-									class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+									class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 									style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 									id="email"
 									name="email"
@@ -581,7 +581,7 @@
 						<div>
 							<label class="text-sm font-medium" for="notes" style="color: var(--c-text2)">Notes</label>
 							<textarea
-								class="mt-2 block min-h-28 w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+								class="mt-2 block min-h-28 w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 								style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 								id="notes"
 								name="notes"
@@ -589,7 +589,7 @@
 						</div>
 
 						<button
-							class="w-full rounded-full px-5 py-3.5 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_20px_rgba(232,85,33,0.4)]"
+							class="w-full rounded-full px-5 py-3.5 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_20px_rgba(194,65,12,0.4)]"
 							type="submit"
 						>
 							Confirm connection
@@ -597,11 +597,11 @@
 
 						<p class="text-center text-xs leading-6" style="color: var(--c-text3)">
 							By confirming this connection, you agree to the
-							<a class="font-semibold underline underline-offset-4 hover:text-[#e85521] transition" style="color: var(--c-text2)" href={`/book/${page.params.slug}/terms`}>
+							<a class="font-semibold underline underline-offset-4 hover:text-[#c2410c] transition" style="color: var(--c-text2)" href={`/book/${page.params.slug}/terms`}>
 								Terms and Conditions
 							</a>
 							and acknowledge the
-							<a class="font-semibold underline underline-offset-4 hover:text-[#e85521] transition" style="color: var(--c-text2)" href={`/book/${page.params.slug}/privacy`}>
+							<a class="font-semibold underline underline-offset-4 hover:text-[#c2410c] transition" style="color: var(--c-text2)" href={`/book/${page.params.slug}/privacy`}>
 								Privacy Policy
 							</a>.
 						</p>

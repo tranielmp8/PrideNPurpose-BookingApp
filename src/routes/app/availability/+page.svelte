@@ -43,7 +43,7 @@
 				<h2 class="text-xl font-semibold tracking-tight" style="color: var(--c-text)">Booking rules</h2>
 				<p class="mt-1 text-sm" style="color: var(--c-text2)">Notice, change cutoff, booking window, and daily capacity.</p>
 			</div>
-			<p class="text-sm font-semibold text-[#e85521]">Edit rules</p>
+			<p class="text-sm font-semibold text-[#c2410c]">Edit rules</p>
 		</summary>
 
 		<form method="POST" action="?/updateBookingRules" use:enhance class="border-t p-5" style="border-color: var(--c-border)">
@@ -62,7 +62,7 @@
 								<span class="help-bubble" id={rule.helpId} role="tooltip">{rule.help}</span>
 							</span>
 						</div>
-						<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+						<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 							style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 							id={rule.id} name={rule.id} type="number" min="0" step="1" value={rule.value} placeholder="Optional" />
 						<p class="mt-2 text-xs leading-5" style="color: var(--c-text3)">{rule.hint}</p>
@@ -70,7 +70,7 @@
 				{/each}
 			</div>
 
-			<button class="mt-5 rounded-xl px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(232,85,33,0.3)]" type="submit">
+			<button class="mt-5 rounded-xl px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(194,65,12,0.3)]" type="submit">
 				Save rules
 			</button>
 		</form>
@@ -86,7 +86,7 @@
 		</div>
 
 		<details>
-			<summary class="cursor-pointer list-none border-b px-5 py-4 text-sm font-semibold text-[#e85521] transition hover:pnp-muted" style="border-color: var(--c-border)">
+			<summary class="cursor-pointer list-none border-b px-5 py-4 text-sm font-semibold text-[#c2410c] transition hover:pnp-muted" style="border-color: var(--c-border)">
 				Add weekly availability
 			</summary>
 			<form method="POST" action="?/createWeeklyWindow" use:enhance
@@ -94,7 +94,7 @@
 				style="border-color: var(--c-border)">
 				<div>
 					<label class="text-sm font-medium" for="dayOfWeek" style="color: var(--c-text2)">Day</label>
-					<select class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+					<select class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="dayOfWeek" name="dayOfWeek">
 						{#each data.days as day}
@@ -104,13 +104,13 @@
 				</div>
 				<div>
 					<label class="text-sm font-medium" for="startTime" style="color: var(--c-text2)">Start</label>
-					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="startTime" name="startTime" type="time" required value="09:00" />
 				</div>
 				<div>
 					<label class="text-sm font-medium" for="endTime" style="color: var(--c-text2)">End</label>
-					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="endTime" name="endTime" type="time" required value="17:00" />
 				</div>
@@ -127,7 +127,7 @@
 						<summary class="grid cursor-pointer list-none gap-3 px-5 py-4 transition md:grid-cols-[1fr_1fr_7rem] md:items-center">
 							<p class="font-semibold" style="color: var(--c-text)">{dayLabel(item.dayOfWeek)}</p>
 							<p class="text-sm" style="color: var(--c-text2)">{item.startTime} to {item.endTime}</p>
-							<p class="text-sm font-semibold text-[#e85521] md:text-right">
+							<p class="text-sm font-semibold text-[#c2410c] md:text-right">
 								<span class="group-open:hidden">Edit</span>
 								<span class="hidden group-open:inline">Close</span>
 							</p>
@@ -138,13 +138,13 @@
 								<input name="availabilityId" type="hidden" value={item.id} />
 								<div>
 									<label class="text-sm font-medium" for={`weekly-start-${item.id}`} style="color: var(--c-text2)">Start</label>
-									<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+									<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 										style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 										id={`weekly-start-${item.id}`} name="startTime" type="time" required value={item.startTime} />
 								</div>
 								<div>
 									<label class="text-sm font-medium" for={`weekly-end-${item.id}`} style="color: var(--c-text2)">End</label>
-									<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+									<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 										style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 										id={`weekly-end-${item.id}`} name="endTime" type="time" required value={item.endTime} />
 								</div>
@@ -172,19 +172,19 @@
 		</div>
 
 		<details>
-			<summary class="cursor-pointer list-none border-b px-5 py-4 text-sm font-semibold text-[#e85521] transition hover:pnp-muted" style="border-color: var(--c-border)">
+			<summary class="cursor-pointer list-none border-b px-5 py-4 text-sm font-semibold text-[#c2410c] transition hover:pnp-muted" style="border-color: var(--c-border)">
 				Add date override
 			</summary>
 			<form method="POST" action="?/createOverride" use:enhance class="grid gap-4 border-b p-5 pnp-muted md:grid-cols-2" style="border-color: var(--c-border)">
 				<div>
 					<label class="text-sm font-medium" for="overrideDate" style="color: var(--c-text2)">Date</label>
-					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="overrideDate" name="overrideDate" type="date" required />
 				</div>
 				<div>
 					<label class="text-sm font-medium" for="mode" style="color: var(--c-text2)">Mode</label>
-					<select class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+					<select class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="mode" name="mode">
 						<option value="unavailable">Blackout date</option>
@@ -193,18 +193,18 @@
 				</div>
 				<div>
 					<label class="text-sm font-medium" for="overrideStartTime" style="color: var(--c-text2)">Start time</label>
-					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="overrideStartTime" name="startTime" type="time" value="09:00" />
 				</div>
 				<div>
 					<label class="text-sm font-medium" for="overrideEndTime" style="color: var(--c-text2)">End time</label>
-					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-surface); color: var(--c-text);"
 						id="overrideEndTime" name="endTime" type="time" value="17:00" />
 				</div>
 				<div class="md:col-span-2">
-					<button class="rounded-xl px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(232,85,33,0.3)]" type="submit">
+					<button class="rounded-xl px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(194,65,12,0.3)]" type="submit">
 						Save override
 					</button>
 				</div>
@@ -265,8 +265,8 @@
 
 	.help-trigger:hover,
 	.help-trigger:focus-visible {
-		border-color: #e85521;
-		background: #e85521;
+		border-color: #c2410c;
+		background: #c2410c;
 		color: #ffffff;
 		outline: none;
 	}

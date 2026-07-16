@@ -99,7 +99,7 @@
 		</div>
 
 		<button
-			class="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(232,85,33,0.3)]"
+			class="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(194,65,12,0.3)]"
 			type="button"
 			onclick={openCreateModal}
 		>
@@ -137,7 +137,7 @@
 							<span class="mt-1 block text-sm leading-5" style="color: var(--c-text2)">{item.description || 'No description added.'}</span>
 							<span class="mt-2 flex flex-wrap gap-2 text-xs font-semibold">
 								{#if item.isIntroOffer}
-									<span class="rounded px-2 py-1 text-[#e85521]" style="background-color: rgba(232,85,33,0.1)">Intro</span>
+									<span class="rounded px-2 py-1 text-[#c2410c]" style="background-color: rgba(194,65,12,0.1)">Intro</span>
 								{/if}
 								{#if item.maxBookingsPerCustomer !== null}
 									<span class="rounded px-2 py-1 pnp-muted" style="color: var(--c-text2)">Max {item.maxBookingsPerCustomer}/customer</span>
@@ -162,8 +162,8 @@
 						</button>
 
 						<button class="text-left" type="button" onclick={() => openEditModal(item)}>
-							<span class={['inline-flex rounded-full px-3 py-1 text-xs font-semibold', item.isActive ? 'text-[#e85521]' : ''].join(' ')}
-								style={item.isActive ? 'background-color: rgba(232,85,33,0.1)' : `background-color: var(--c-muted); color: var(--c-text3)`}>
+							<span class={['inline-flex rounded-full px-3 py-1 text-xs font-semibold', item.isActive ? 'text-[#c2410c]' : ''].join(' ')}
+								style={item.isActive ? 'background-color: rgba(194,65,12,0.1)' : `background-color: var(--c-muted); color: var(--c-text3)`}>
 								{serviceStatus(item)}
 							</span>
 						</button>
@@ -172,7 +172,7 @@
 							<input name="serviceId" type="hidden" value={item.id} />
 							<input name="isActive" type="hidden" value={item.isActive ? 'true' : 'false'} />
 							<button
-								class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+								class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 								style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)"
 								type="submit"
 							>
@@ -214,7 +214,7 @@
 				</div>
 
 				<button
-					class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+					class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 					style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)"
 					type="button"
 					onclick={closeModal}
@@ -235,85 +235,85 @@
 
 				<div>
 					<label class="text-sm font-medium" for="name" style="color: var(--c-text2)">Service name</label>
-					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 						id="name" name="name" required value={getValue('name')} />
 				</div>
 
 				<div>
 					<label class="text-sm font-medium" for="durationMinutes" style="color: var(--c-text2)">Duration (min)</label>
-					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 						id="durationMinutes" name="durationMinutes" type="number" min="1" step="1" required value={getValue('durationMinutes')} />
 				</div>
 
 				<div>
 					<label class="text-sm font-medium" for="price" style="color: var(--c-text2)">Price</label>
-					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 						id="price" name="price" type="number" min="0" step="0.01" placeholder="Optional" value={getValue('price')} />
 				</div>
 
 				<div>
 					<label class="text-sm font-medium" for="currencyCode" style="color: var(--c-text2)">Currency</label>
-					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm uppercase outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm uppercase outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 						id="currencyCode" name="currencyCode" maxlength="3" value={getValue('currencyCode')} />
 				</div>
 
 				<div>
 					<label class="text-sm font-medium" for="bufferBeforeMinutes" style="color: var(--c-text2)">Buffer before (min)</label>
-					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 						id="bufferBeforeMinutes" name="bufferBeforeMinutes" type="number" min="0" step="1" value={getValue('bufferBeforeMinutes')} />
 				</div>
 
 				<div>
 					<label class="text-sm font-medium" for="bufferAfterMinutes" style="color: var(--c-text2)">Buffer after (min)</label>
-					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 						id="bufferAfterMinutes" name="bufferAfterMinutes" type="number" min="0" step="1" value={getValue('bufferAfterMinutes')} />
 				</div>
 
 				<div>
 					<label class="text-sm font-medium" for="maxBookingsPerCustomer" style="color: var(--c-text2)">Max bookings per customer</label>
-					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+					<input class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 						id="maxBookingsPerCustomer" name="maxBookingsPerCustomer" type="number" min="0" step="1" placeholder="Optional" value={getValue('maxBookingsPerCustomer')} />
 				</div>
 
 				<div class="grid gap-3">
-					<label class="flex items-start gap-3 rounded-xl border px-4 py-3 text-sm transition cursor-pointer hover:border-[#e85521]"
+					<label class="flex items-start gap-3 rounded-xl border px-4 py-3 text-sm transition cursor-pointer hover:border-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)">
-						<input class="mt-1 rounded accent-[#e85521]" name="isIntroOffer" type="checkbox" checked={getChecked('isIntroOffer')} />
+						<input class="mt-1 rounded accent-[#c2410c]" name="isIntroOffer" type="checkbox" checked={getChecked('isIntroOffer')} />
 						<span>Intro session or first-step offer</span>
 					</label>
 				</div>
 
 				<div class="md:col-span-2">
 					<label class="text-sm font-medium" for="description" style="color: var(--c-text2)">Description</label>
-					<textarea class="mt-2 block min-h-28 w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+					<textarea class="mt-2 block min-h-28 w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 						id="description" name="description">{getValue('description')}</textarea>
 				</div>
 
 				<div class="md:col-span-2">
 					<label class="text-sm font-medium" for="confirmationMessage" style="color: var(--c-text2)">Confirmation email override</label>
-					<textarea class="mt-2 block min-h-28 w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521] focus:border-[#e85521]"
+					<textarea class="mt-2 block min-h-28 w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c] focus:border-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 						id="confirmationMessage" name="confirmationMessage" placeholder="Optional. Overrides the workspace default for this service.">{getValue('confirmationMessage')}</textarea>
 				</div>
 
 				<div class="flex flex-col-reverse gap-3 border-t pt-5 md:col-span-2 md:flex-row md:justify-end" style="border-color: var(--c-border)">
 					<button
-						class="rounded-xl border px-5 py-3 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+						class="rounded-xl border px-5 py-3 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 						style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text2)"
 						type="button" onclick={closeModal}
 					>
 						Cancel
 					</button>
 					<button
-						class="rounded-xl px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(232,85,33,0.3)]"
+						class="rounded-xl px-5 py-3 text-sm font-semibold text-white pnp-btn-primary shadow-[0_4px_16px_rgba(194,65,12,0.3)]"
 						type="submit"
 					>
 						{modalMode === 'edit' ? 'Save changes' : 'Create service'}

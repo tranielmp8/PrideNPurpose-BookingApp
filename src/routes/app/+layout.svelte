@@ -46,8 +46,8 @@
 						class={[
 							'rounded-xl border-l-4 px-4 py-2.5 text-sm font-semibold transition',
 							isActive(item.href)
-								? 'border-[#e85521] bg-[#e85521]/10 text-[#e85521]'
-								: 'border-transparent pnp-nav-link hover:bg-[#e85521]/8'
+								? 'border-[#c2410c] bg-[#c2410c]/10 text-[#c2410c]'
+								: 'border-transparent pnp-nav-link hover:bg-[#c2410c]/8'
 						]}
 						href={item.href}
 						aria-current={isActive(item.href) ? 'page' : undefined}
@@ -60,7 +60,7 @@
 			<div class="mt-auto pt-6">
 				<form method="POST" action="/auth/sign-out">
 					<button
-						class="w-full rounded-xl border px-4 py-2.5 text-sm font-semibold pnp-nav-link transition hover:border-[#e85521] hover:bg-[#e85521]/8"
+						class="w-full rounded-xl border px-4 py-2.5 text-sm font-semibold pnp-nav-link transition hover:border-[#c2410c] hover:bg-[#c2410c]/8"
 						style="border-color: var(--c-border); background-color: var(--c-muted)"
 						type="submit"
 					>

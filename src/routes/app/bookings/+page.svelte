@@ -52,7 +52,7 @@
 	function getStatusBadgeStyle(status: Booking['status']) {
 		if (status === 'cancelled') return 'background-color: rgba(239,68,68,0.12); color: #ef4444';
 		if (status === 'completed') return 'background-color: rgba(16,185,129,0.12); color: #10b981';
-		return 'background-color: rgba(232,85,33,0.12); color: #e85521';
+		return 'background-color: rgba(194,65,12,0.12); color: #c2410c';
 	}
 
 	function openActionModal(item: Booking, type: PendingAction['type']) {
@@ -149,7 +149,7 @@
 												{item.status}
 											</span>
 										</div>
-										<p class="text-sm font-semibold text-[#e85521] md:text-right">
+										<p class="text-sm font-semibold text-[#c2410c] md:text-right">
 											<span class="group-open:hidden">Open</span>
 											<span class="hidden group-open:inline">Close</span>
 										</p>
@@ -195,7 +195,7 @@
 												<div>
 													<label class="text-sm font-medium" for={`reschedule-date-${item.id}`} style="color: var(--c-text2)">New date</label>
 													<input
-														class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+														class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 														style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 														id={`reschedule-date-${item.id}`}
 														name="rescheduleDate"
@@ -207,7 +207,7 @@
 												<div>
 													<label class="text-sm font-medium" for={`reschedule-time-${item.id}`} style="color: var(--c-text2)">New time</label>
 													<input
-														class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#e85521]"
+														class="mt-2 block w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2410c]"
 														style="border-color: var(--c-border); background-color: var(--c-muted); color: var(--c-text);"
 														id={`reschedule-time-${item.id}`}
 														name="rescheduleTime"
@@ -236,7 +236,7 @@
 										{:else}
 											<form class="mt-5" method="POST" action="?/archiveBooking" use:enhance>
 												<input name="bookingId" type="hidden" value={item.id} />
-												<button class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+												<button class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 													style="border-color: var(--c-border); color: var(--c-text2)" type="submit">
 													Archive
 												</button>
@@ -270,7 +270,7 @@
 				<p class="mt-3 text-sm leading-6" style="color: var(--c-text2)">{modalCopy.copy}</p>
 
 				<div class="mt-6 flex flex-wrap justify-end gap-3">
-					<button class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#e85521] hover:text-[#e85521]"
+					<button class="rounded-xl border px-4 py-2 text-sm font-semibold transition hover:border-[#c2410c] hover:text-[#c2410c]"
 						style="border-color: var(--c-border); color: var(--c-text2)"
 						onclick={closeActionModal} type="button">
 						Go back
