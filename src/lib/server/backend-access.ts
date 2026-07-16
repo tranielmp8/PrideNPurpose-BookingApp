@@ -4,11 +4,18 @@ function normalizeEmail(email: string | null | undefined) {
 	return email?.trim().toLowerCase() ?? '';
 }
 
+function getBackendOwnerEmails() {
+	return (env.BACKEND_OWNER_EMAIL ?? '')
+		.split(',')
+		.map(normalizeEmail)
+		.filter(Boolean);
+}
+
 export function isBackendOwner(email: string | null | undefined) {
-	const ownerEmail = normalizeEmail(env.BACKEND_OWNER_EMAIL);
-	return ownerEmail.length > 0 && normalizeEmail(email) === ownerEmail;
+	const normalizedEmail = normalizeEmail(email);
+	return normalizedEmail.length > 0 && getBackendOwnerEmails().includes(normalizedEmail);
 }
 
 export function isBackendOwnerConfigured() {
-	return normalizeEmail(env.BACKEND_OWNER_EMAIL).length > 0;
+	return getBackendOwnerEmails().length > 0;
 }
